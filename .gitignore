@@ -1,7 +1,8 @@
 *.o
 *.pdf
 *~
-
+*.out
+stats
 literature/
 description/
 bin/

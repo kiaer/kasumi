@@ -1,3 +1,0 @@
-# KASUMI TMTO Attack
-
-Todo.

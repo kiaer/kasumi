@@ -3,7 +3,6 @@
 #include <time.h>
 #include "kasumi.h"
 
-//#define ROL16(x, y) ((((x)<<(y)) | ((x)>>(16-(y)))) & 0xFFFF)
 #define ROL16(a,b) (uint16_t)((a<<b)|(a>>(16-b)))
 
 extern uint16_t KLi1[8], KLi2[8];
@@ -72,6 +71,7 @@ static uint16_t fi(uint16_t ki, uint16_t input){
 
     left = (uint16_t)(S9[left] ^ right);
     right = (uint16_t)(S7[right] ^ (left & 0x7F));
+    //   printf("hej");
 
     return (((uint16_t) (right << 9)) + left);
 
@@ -93,6 +93,7 @@ static uint32_t fo(uint32_t input, int round){
     left ^= KOi3[round];
     left = fi(KIi3[round], left);
     left ^= right;
+    //printf("hej");
 
     //skal maaske shiftz
     return (((uint32_t) right) << 16) + left;
@@ -178,7 +179,7 @@ int main() {
 
     clock_t start, end;
     double cpu_time_used;
-    start = clock();
+
     uint16_t key[8] = {
         0x9900, 0xAABB, 0xCCDD, 0xEEFF, 0x1122, 0x3344, 0x5566, 0x7788
     };
@@ -187,8 +188,8 @@ int main() {
         0xFEDCBA09, 0x87654321
     };
     int n;
-
-    for (n = 0; n <= 10000000; n++){
+    start = clock();
+    for (n = 0; n <= 100000000; n++){
         keyschedule(key);
         kasumi_enc(text);
     }

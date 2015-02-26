@@ -1,7 +1,7 @@
 TARGET = bin/kasumi
 LIBS = -lm
 CC = gcc
-CFLAGS = -Ofast -g -Wall
+CFLAGS = -Ofast -g -Wall -pg
 
 .PHONY: default all clean
 
@@ -18,7 +18,7 @@ HEADERS = $(wildcard src/cipher/*.h)
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
+	$(CC) $(OBJECTS) -pg -Wall $(LIBS) -o $@
 
 clean:
 	-rm -f src/cipher/*.o
