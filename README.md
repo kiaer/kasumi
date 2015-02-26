@@ -37,4 +37,4 @@ At the current state of the implemented cipher, the current benchmark results ha
 
 ## Choice of parameters and table
 
-The project will include scripts for calculating paramater choices for the TMTO attack. All scripts are made for sage mathmatics. 
+The project will include scripts for calculating paramater choices for the TMTO attack. All scripts are made for sage mathematics.

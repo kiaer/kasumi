@@ -13,13 +13,14 @@ OBJECTS = $(patsubst %.c, %.o, $(wildcard src/cipher/*.c))
 HEADERS = $(wildcard src/cipher/*.h)
 
 %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -pg -Wall $(LIBS) -o $@
+	@mkdir -p bin
+	@$(CC) $(OBJECTS) -pg -Wall $(LIBS) -o $@
 
 clean:
-	-rm -f src/cipher/*.o
-	-rm -f $(TARGET)
+	@-rm -f src/cipher/*.o
+	@-rm -f $(TARGET)
