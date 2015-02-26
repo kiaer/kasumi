@@ -18,7 +18,7 @@ At the current state of the implemented cipher, the current benchmark results ha
 | Total bit encyrpted             | 640000000              | 640000000              |
 
 
-| Yoga 2 pro 2.0 ghz - cki impl. |                     |             |              |               |
+| Yoga 2.0 ghz                   |                     |             |              |               |
 |:-------------------------------|:--------------------|:------------|:-------------|:--------------|
 |GCC compile flags.              |Time in sec (average)|Cycles in tot|Cycles per bit|Cycles per byte|
 | None                           | 7,2322              | 20973380000 | 32,77090625  | 262,16725     |
@@ -26,7 +26,7 @@ At the current state of the implemented cipher, the current benchmark results ha
 | O3                             | 1,8945              | 5494050000  | 8,584453125  | 68,675625     |
 | Ofast                          | 1,897               | 5501300000  | 8,59578125   | 68,76625      |
 
-| Yoga 2 pro 2.0 ghz - cki impl. |                     |             |              |               |
+| Zenbook 2.0 ghz                |                     |             |              |               |
 |:-------------------------------|:--------------------|:------------|:-------------|:--------------|
 |GCC compile flags.              |Time in sec (average)|Cycles in tot|Cycles per bit|Cycles per byte|
 | None                           | 6,885               | 20655000000 | 32,2734375   | 258,1875      |
