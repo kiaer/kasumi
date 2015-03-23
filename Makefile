@@ -1,7 +1,7 @@
-TARGET = bin/kasumi
+TARGET = bin/KasumiTable
 LIBS = -lm
 CC = gcc
-CFLAGS = -Ofast -g -Wall -pg
+CFLAGS = -Ofast -g -Wall
 
 .PHONY: default all clean
 
@@ -9,8 +9,8 @@ default: clean $(TARGET)
 all: default
 cipher: clean $(TARGET)
 
-OBJECTS = $(patsubst %.c, %.o, $(wildcard src/cipher/*.c))
-HEADERS = $(wildcard src/cipher/*.h)
+OBJECTS = $(patsubst %.c, %.o, $(wildcard src/*.c))
+HEADERS = $(wildcard src/*.h)
 
 %.o: %.c $(HEADERS)
 	@$(CC) $(CFLAGS) -c $< -o $@

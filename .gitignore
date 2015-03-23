@@ -2,6 +2,7 @@
 *.pdf
 *~
 *.out
+*.sage.py
 stats
 literature/
 description/

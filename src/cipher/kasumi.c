@@ -111,8 +111,9 @@ static uint32_t fl(uint32_t input, int round){
     return (((uint32_t) left) << 16) + right;
 }
 
-void kasumi_enc(uint32_t *text){
+uint16_t * kasumi_enc(uint32_t *text){
     uint32_t left, right, temp;
+    static uint16_t enc[4];
     left = text[0];
     right = text[1];
 
@@ -127,31 +128,42 @@ void kasumi_enc(uint32_t *text){
 
         left ^= temp;
     }while( n<=7 );
-    text[0] = left;
-    text[1] = right;
+    /* text[0] = left; */
+    /* text[1] = right; */
+    
+    /* int i; */
+    /* printf("\n 0x"); */
+    /* for (i = 0; i < 2; i++) */
+    /*     printf("%04x", text[i]); */
+    enc[0] = (uint16_t)(left >> 16);
+    enc[1] = (uint16_t)(left & 0xFFFF);
+    enc[2] = (uint16_t)(right >> 16);
+    enc[3] = (uint16_t)(right & 0xFFFF);
+    
+    return enc;
 }
 
-void kasumi_dec(uint32_t *text){
-    uint32_t left, right, temp;
-    left = text[0];
-    right = text[1];
-    // printf("0x%.8x%.8x\n", left, right);
+/* void kasumi_dec(uint32_t *text){ */
+/*     uint32_t left, right, temp; */
+/*     left = text[0]; */
+/*     right = text[1]; */
+/*     // printf("0x%.8x%.8x\n", left, right); */
 
-    int n = 7;
-    do{ temp = fo( right, n );
-        temp = fl( temp, n-- );
+/*     int n = 7; */
+/*     do{ temp = fo( right, n ); */
+/*         temp = fl( temp, n-- ); */
 
-        left ^= temp;
+/*         left ^= temp; */
 
-        temp = fl( left, n );
-        temp = fo( temp, n-- );
+/*         temp = fl( left, n ); */
+/*         temp = fo( temp, n-- ); */
 
-        right ^= temp;
-    }while( n >= 0 );
-    text[0] = left;
-    text[1] = right;
-    //    printf("0x%.8x%.8x\n", left, right);
-}
+/*         right ^= temp; */
+/*     }while( n >= 0 ); */
+/*     text[0] = left; */
+/*     text[1] = right; */
+/*     //    printf("0x%.8x%.8x\n", left, right); */
+/* } */
 
 void keyschedule(uint16_t *key){
     static uint16_t C[] = {
@@ -175,57 +187,57 @@ void keyschedule(uint16_t *key){
     }
 }
 
-int main() {
+/* int main() { */
 
-    clock_t start, end;
-    double cpu_time_used;
+/*     clock_t start, end; */
+/*     double cpu_time_used; */
 
-    uint16_t key[8] = {
-        0x9900, 0xAABB, 0xCCDD, 0xEEFF, 0x1122, 0x3344, 0x5566, 0x7788
-    };
+/*     uint16_t key[8] = { */
+/*         0x9900, 0xAABB, 0xCCDD, 0xEEFF, 0x1122, 0x3344, 0x5566, 0x7788 */
+/*     }; */
 
-    uint32_t text[2] = {
-        0xFEDCBA09, 0x87654321
-    };
-    int n;
-    start = clock();
-    for (n = 0; n <= 100000000; n++){
-        keyschedule(key);
-        kasumi_enc(text);
-    }
-    end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("Time used: %f \n", cpu_time_used);
+/*     uint32_t text[2] = { */
+/*         0xFEDCBA09, 0x87654321 */
+/*     }; */
+/*     int n; */
+/*     start = clock(); */
+/*     for (n = 0; n <= 100000000; n++){ */
+/*         keyschedule(key); */
+/*         kasumi_enc(text); */
+/*     } */
+/*     end = clock(); */
+/*     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; */
+/*     printf("Time used: %f \n", cpu_time_used); */
 
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KLi1[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KLi2[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KOi1[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KOi2[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KOi3[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KIi1[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KIi2[i]); */
-    /* printf("\n"); */
-    /* for (i = 0; i < 8; i++) */
-    /*     printf("%04x ", KIi3[i]); */
-    /* printf("\n"); */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KLi1[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KLi2[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KOi1[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KOi2[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KOi3[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KIi1[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KIi2[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     /\* for (i = 0; i < 8; i++) *\/ */
+/*     /\*     printf("%04x ", KIi3[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
 
-    /* printf("0x"); */
-    /* for (i = 0; i < 2; i++) */
-    /*     printf("%02x", text[i]); */
-    /* printf("\n"); */
-    //kasumi_dec(text);
-    return 0;
-}
+/*     /\* printf("0x"); *\/ */
+/*     /\* for (i = 0; i < 2; i++) *\/ */
+/*     /\*     printf("%02x", text[i]); *\/ */
+/*     /\* printf("\n"); *\/ */
+/*     //kasumi_dec(text); */
+/*     return 0; */
+/* } */
