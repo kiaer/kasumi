@@ -1,9 +1,17 @@
+#C
 *.o
+
+#misc files
 *.pdf
 *~
 *.out
-*.sage.py
 stats
+*.png
+
+#sage
+*.sage.py
+
+#folders to ignore
 literature/
 description/
 bin/

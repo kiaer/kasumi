@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <pthread.h>
 
 #include "cipher/kasumi.c"
 
@@ -65,6 +66,7 @@ int main(){
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
+
     tableGenerator(text);
     return 0;
 }
