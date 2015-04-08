@@ -2,16 +2,34 @@ import sys
 from sage.all import *
 I = 64.0
 N = 2**I
-mx=[1,1,1,1]
+mx=[1,1,1,1,1,1,1,1,1,1]
+my=[1,1,1,1,1,1,1,1,1,1]
+results=[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+resultst=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+MX=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+
+
 def eq1(y,h):
     x=var('x')
-    sol = solve(2**(64/y)*((2**(64/x))**2)==h*N,x,solution_dict=True);sol
+    sol = solve(2**(y)*((2**(x))**2)==h*N,x,solution_dict=True);sol
     return [ abs(n(s[x])) for s in sol]
-def T(hmsc,hps,Hcr,y):
-    return n((1/hmsc+1/6)*(hps/Hcr)*(2**(64/y))**2)
 
+def mtl(hmsc):
+    a=16
+    for h in range(0,len(mx)):
+        my[h]=(a,eq1(a,hmsc)[0])
+        a=a+1
+    return my
+
+def T(hmsc,hps,Hcr,y):
+    return n((1/hmsc+1/6)*(hps/Hcr)*(2**(y))**2)*2
+
+def TL(t,l):
+    return t*l*2
 def M(n,hs,x,y):
-    return (n*hs)/(2**(64/x)*(2**(64/y)))*2**(64/x)
+    return (n*hs)/(2**(x)*(2**(y)))*2**(x)
+def ML(m,l):
+    return m*l
 #Htc=(((1/Hmsc)+(1/6))*(1/(Hcr**3)))*Hps*(ln(1-Hps))**2
 def CalcStuffs(hps,hmsc):
     ##############
@@ -31,15 +49,43 @@ def CalcStuffs(hps,hmsc):
 
     print(" For probability: %.2f and matrix stopping constant: %.2f\n Has coverage: %.4f \n tm-coeif: %.4f \n Precomputational cost: %.4f\n"%(hps,hmsc,Hcr,Htc,Hpc))
 
-    a=1.5
-    for h in range(0,len(mx)):
-        mx[h]=(a,eq1(a,hmsc)[0])
-        a=a+0.50
+
    # print(mx)
     for k in range(0,len(mx)):
-        print("     For m: 2^%i and t: 2^%i \n     Time: 2^%i \n     Memory: 2^%i\n"%(log(2**(64/mx[k][0]))/log(2) , log(2**(64/mx[k][1]))/log(2) , log(T(hmsc,hps,Hcr,mx[k][1]))/log(2.0) ,log(M(N,n(Hpc),mx[k][0],mx[k][1]))/log(2.0)))
+        results[k]=(n(log(2**(mx[k][0]))/log(2)),n(log(2**(mx[k][1]))/log(2)),n(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))/log(2)))
+        resultst[k]=((n(2**(mx[k][1])),n(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))))
+        #MX[k]=(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)),T(hmsc,hps,Hcr,mx[k][1]))
+        MX[k]=(ML(2**(mx[k][0]),n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))*(1.25*10**(-13)),TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))))
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n"%(log(2**(mx[k][0]))/log(2) , log(2**(mx[k][1]))/log(2),log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))/log(2), log(TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))))/log(2.0) ,log(M(N,n(Hpc),mx[k][0],mx[k][1]))/log(2.0)))
     print("\n\n")
+    print(mx)
+    var('t','j','l','z')
+    #a=list_plot((1/(Hcr*Hpc))*(-ln(1-hps))*t,(t,0,10))
+    #a=points(results,plotjoined=True).rotateZ(pi/2)
+    a=list_plot_loglog(resultst,base=2,plotjoined=True,title="Hellman %.2f for %.2f"%(hmsc,hps),marker='o')
+    #a=list_plot(resultst,plotjoined=True,title="Hellman for %.2f"%(hps),marker='o')
 
-CalcStuffs(0.5768,2.25)
-CalcStuffs(0.5768,1)
-CalcStuffs(0.9,1)
+    a.axes_labels(['t','l'])
+
+    a.save('tables/%.2fhej.png'%(hps))
+
+    g=list_plot_semilogy(MX,base=2,plotjoined=True,title="Hellman %.2f for %.2f"%(hmsc,hps),marker='o')
+   # g=list_plot(MX,plotjoined=True,title="Hellman for %.2f"%(hps),marker='o')
+    g.axes_labels(['M','T'])
+
+    g.save('tables/%.2fMT.png'%(hps))
+    return g
+
+
+
+mx=mtl(1)
+comps=plot([],title='Comparison 1')
+comp=CalcStuffs(0.5768,1)+CalcStuffs(0.73,1)+CalcStuffs(0.90,1)+comps
+comp.axes_labels(['M in TB','T'])
+comp.show()
+comp.save("tables/compare 1.png")
+comps1=plot([],title='Comparison 2.25')
+comp1=CalcStuffs(0.5768,2.25)+CalcStuffs(0.73,2.25)+CalcStuffs(0.90,2.25)+comps1
+comp1.axes_labels(['M in TB','T'])
+comp1.show()
+comp1.save("tables/compare 2.25.png")
