@@ -1,4 +1,5 @@
 TARGET = bin/KasumiTable
+TARGETC = bin/kasumi_test
 LIBS = -lm
 CC = gcc
 CFLAGS = -Ofast -g -Wall
@@ -7,10 +8,12 @@ CFLAGS = -Ofast -g -Wall
 
 default: clean $(TARGET)
 all: default
-cipher: clean $(TARGET)
+cipher: cleanciph $(TARGETC)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard src/*.c))
 HEADERS = $(wildcard src/*.h)
+#OBJECTSCIPH = $(wildcard src/cipher/*.c)
+#HEADERSCIPH = $(wildcard src/cipher/*.h)
 
 %.o: %.c $(HEADERS)
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -18,9 +21,20 @@ HEADERS = $(wildcard src/*.h)
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
+	@echo "Compiling RainbowTable generator.."
 	@mkdir -p bin
 	@$(CC) $(OBJECTS) -pg -Wall $(LIBS) -o $@
+
+$(TARGETC): $(OBJECTSCIPH)
+	@echo "Compiling cipher.."
+	@mkdir -p bin
+	@$(CC) src/cipher/kasumi_test.c -pg $(CFLAGS) -o $@
+	@echo "Cipher compiled with" $(CFLAGS)
 
 clean:
 	@-rm -f src/cipher/*.o
 	@-rm -f $(TARGET)
+
+cleanciph:
+	@-rm -f src/cipher/*.o
+	@-rm -f $(TARGETC)
