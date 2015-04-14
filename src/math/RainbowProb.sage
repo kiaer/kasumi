@@ -48,22 +48,29 @@ for i in xrange(0,3):
         m = 2**(37 + (0.5 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
+        temp = "$2^{%.2f}$" % log(m, 2)
+        lstm2.append(temp)
+        #print "$2^{%.2f}$" % log(m, 2)
+        temp = "$2^{%.2f}$" % log(t, 2)
         lstt.append(t)
-        # lstm.append()
-        # lstt.append()
+        lstt2.append(temp)
         print "t: 2^%f" % (float(log(t)/log(2)))
         print "m: 2^%f" % (float(log(m)/log(2)))
         print "Rmsc calculated: %f" % rmsc
         print "Memory used: " + str(memory()) + "TB"
+        temp = "$2^{%.2f}$" % log(time_for_online(), 2)
         lsttime.append(time_for_online())
+        lsttime2.append(temp)
+        temp = "$%.2f$" % memory()
         lstmem.append(memory())
+        lstmem2.append(temp)
         print "Time used for offline phase: 2^" + str(float(log(time_for_offline())/log(2)))
         print "Time used for online phase: 2^" + str(float(log(time_for_online())/log(2)))
-    f = open('rainbowtab.tex', 'a')
-    col = [lstm, lstt, lstmem, lsttime]
-    #Prob, RMSC, l, Offline comp
-    infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline())/log(2)))
-    f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
+    # f = open('rainbowtab.tex', 'a')
+    # col = [lstm2, lstt2, lstmem2, lsttime2]
+    # #Prob, RMSC, l, Offline compp
+    # infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline())/log(2)))
+    # f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
 
     plottitle = "Rainbow coefficents for %i %% succesrate" % (rps[i] * 100)
 
