@@ -4,7 +4,7 @@ from sage.all import *
 N = 2**64
 t = 2**10
 m = 2**20
-l = 1
+l = 3
 rps = [0.58, 0.73, 0.90]
 rmsc = 0.0
 
@@ -34,9 +34,13 @@ plot_all_calc = plot([])
 
 for i in xrange(0,3):
     lstm = []
+    lstm2 = []
     lstt = []
+    lstt2 = []
     lsttime = []
+    lsttime2 = []
     lstmem = []
+    lstmem2 = []
     print "Proberbility required set to: %f with tables set: %i" % (rps[i], l)
     rmsc = calc_rmsc(rps[i])
     for x in xrange(0, 18):
@@ -45,6 +49,8 @@ for i in xrange(0,3):
         t = solve_mt(m, rmsc)
         lstm.append(m)
         lstt.append(t)
+        # lstm.append()
+        # lstt.append()
         print "t: 2^%f" % (float(log(t)/log(2)))
         print "m: 2^%f" % (float(log(m)/log(2)))
         print "Rmsc calculated: %f" % rmsc
@@ -53,6 +59,11 @@ for i in xrange(0,3):
         lstmem.append(memory())
         print "Time used for offline phase: 2^" + str(float(log(time_for_offline())/log(2)))
         print "Time used for online phase: 2^" + str(float(log(time_for_online())/log(2)))
+    f = open('rainbowtab.tex', 'a')
+    col = [lstm, lstt, lstmem, lsttime]
+    #Prob, RMSC, l, Offline comp
+    infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline())/log(2)))
+    f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
 
     plottitle = "Rainbow coefficents for %i %% succesrate" % (rps[i] * 100)
 
@@ -70,9 +81,9 @@ for i in xrange(0,3):
     plot_all_calc += (plot2)
 
 plot_all_coef.axes_labels(["m", "t"])
-plot_all_coef.show()
+#plot_all_coef.show()
 plot_all_coef.save('RainbowAllCoef.png')
 
 plot_all_calc.axes_labels(["M", "T"])
-plot_all_calc.show()
+#plot_all_calc.show()
 plot_all_calc.save('RainbowAllCalc.png')
