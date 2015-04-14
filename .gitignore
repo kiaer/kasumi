@@ -36,8 +36,10 @@ stats
 *.out
 *.synctex.gz
 
+
 #folders to ignore
 literature/
 description/
 bin/
+auto/
 
