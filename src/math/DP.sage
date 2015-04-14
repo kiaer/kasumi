@@ -5,7 +5,9 @@ N = 2**I
 mx=[1,1,1,1,1,1,1,1,1,1]
 my=[1,1,1,1,1,1,1,1,1,1]
 result=[(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1)]
+matrix=[]
 m=10
+
 #mzero= m/(1-e^(-tmax/t))
 
 #dtmp=dtc/(dps*(ln(1-dps))**2)
@@ -80,17 +82,22 @@ def CalcStuffs(dps,dmsc,th):
     print(" For probability: %.2f and matrix stopping constant: %.2f\n Has coverage: %.4f \n tm-coeif: %.5f \n dtmp: %.5f \n Precomputational cost: %.4f\n"%(dps,dmsc,dcr,dtc,dtmp,dpc))
 
 
+
+    matrix.append(("dps: %.2f"%(dps),"dmsc: %.2f"%(dmsc),"dcr: %.2f"%dcr,"dtc: %.2f"%dtc,"dpc: %.2f"%dpc,"dtmp %.2f"%dtmp,))
+    matrix.append(("m","t","l","M","T","M in tb"))
    # print(mx)
     for k in range(0,len(mx)):
+
         Ms=n(M(2**(mx[k][0]),L(dcr,dmsc,dps,mx[k][1])))
         TT=n(T(dmsc,dps,dcr,2**(mx[k][1]),th))
         Ts=n(2**(mx[k][1])*L(dcr,dmsc,dps,mx[k][1]))
        # print(2**(mx[k][1]))
         #print(L(dcr,dmsc,dps,mx[k][1]))
         result[k]=(Ms*(1.25*10**(-13)),Ts)
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n Tcoif: %.2f \n"%(log(2**(mx[k][0]))/log(2), log(2**(mx[k][1]))/log(2),log(L(dcr,dmsc,dps,mx[k][1]))/log(2),log(Ts)/log(2.0),log(Ms)/log(2),DTC(dmsc,dcr,dps,2**(mx[k][1]),th)))
+        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(L(dcr,dmsc,dps,mx[k][1]),2)),"$2^{%.2f}$"%log(Ms,2),"$2^{%.2f}$"%log(Ts,2),"$%.2f$ TB"%(Ms*(1.25*10**(-13)))))
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n Tcoif: %.2f \n"%(log(2**(mx[k][0]),2), log(2**(mx[k][1]),2),log(L(dcr,dmsc,dps,mx[k][1]),2),log(Ts,2),log(Ms,2),DTC(dmsc,dcr,dps,2**(mx[k][1]),th)))
     print("\n\n")
-
+    matrix.append(("","","","","",""))
     g=list_plot_semilogy(result,base=2,plotjoined=True,title="DP %.2f for %.2f"%(dmsc,dps),marker='o')
    # g=list_plot(MX,plotjoined=True,title="Hellman for %.2f"%(hps),marker='o')
     g.axes_labels(['M','T'])
@@ -104,6 +111,8 @@ comp=CalcStuffs(0.60,0.562047,10)+CalcStuffs(0.73,0.562047,10)+CalcStuffs(0.90,0
 comp.axes_labels(['M in TB','T'])
 comp.show()
 comp.save("tables/compare DP with large th.png")
+f=open("DP_table.tex", 'w')
+f.write(latex(table(rows=matrix)))
 
 #mx=mtl(2.59169)
 #CalcStuffs(0.60,1.26453,2.59169)
