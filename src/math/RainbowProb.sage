@@ -77,20 +77,20 @@ for i in xrange(0,3):
     plot = list_plot_loglog(zip(lstm,lstt), plotjoined = True,base=2, title=plottitle, color='red', marker='o')
     plot.axes_labels(["m", "t"])
     #plot.show()
-    plot.save('RainbowCoef' + str(rps[i] * 100) + '.png')
+    plot.save('graphs/RainbowCoef' + str(rps[i] * 100) + '.png')
 
     plot2 = list_plot_semilogy(zip(lstmem, lsttime), plotjoined = True, base=2, title=plottitle, color='blue', marker='o')
     plot2.axes_labels(["M", "T"])
     #plot2.show()
-    plot2.save('RainbowTime' + str(rps[i] * 100) + '.png')
+    plot2.save('graphs/RainbowTime' + str(rps[i] * 100) + '.png')
     
     plot_all_coef  += (plot)
     plot_all_calc += (plot2)
 
 plot_all_coef.axes_labels(["m", "t"])
 #plot_all_coef.show()
-plot_all_coef.save('RainbowAllCoef.png')
+plot_all_coef.save('graphs/RainbowAllCoef.png')
 
 plot_all_calc.axes_labels(["M", "T"])
 #plot_all_calc.show()
-plot_all_calc.save('RainbowAllCalc.png')
+plot_all_calc.save('graphs/RainbowAllCalc.png')
