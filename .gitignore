@@ -6,6 +6,7 @@
 *~
 *.out
 stats
+test
 
 #sage
 *.sage.py

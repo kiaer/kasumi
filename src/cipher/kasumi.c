@@ -8,8 +8,8 @@
 extern uint16_t KLi1[8], KLi2[8];
 extern uint16_t KOi1[8], KOi2[8], KOi3[8];
 extern uint16_t KIi1[8], KIi2[8], KIi3[8];
-
-static uint16_t fi(uint16_t ki, uint16_t input){
+//__attribute__ ((noinline)) is used for profiling remember to remove
+static __attribute__ ((noinline)) uint16_t fi(uint16_t ki, uint16_t input){
 
     uint16_t left, right;
 
@@ -76,6 +76,18 @@ static uint16_t fi(uint16_t ki, uint16_t input){
     return (((uint16_t) (right << 9)) + left);
 
 }
+//__attribute__ ((noinline)) is used for profiling remember to remove
+static __attribute__ ((noinline)) uint32_t fl(uint32_t input, int round){
+    uint16_t left, right;
+    left = (uint16_t) (input >> 16);
+    right = (uint16_t) (input) & 0xFFFF;
+
+    right ^= ROL16((left & KLi1[round]), 1);
+    left ^= ROL16((right | KLi2[round]), 1);
+
+    //mangler maaske shift
+    return (((uint32_t) left) << 16) + right;
+}
 
 static uint32_t fo(uint32_t input, int round){
     uint16_t left, right;
@@ -93,23 +105,12 @@ static uint32_t fo(uint32_t input, int round){
     left ^= KOi3[round];
     left = fi(KIi3[round], left);
     left ^= right;
-    //printf("hej");
+
 
     //skal maaske shiftz
     return (((uint32_t) right) << 16) + left;
 }
 
-static uint32_t fl(uint32_t input, int round){
-    uint16_t left, right;
-    left = (uint16_t) (input >> 16);
-    right = (uint16_t) (input) & 0xFFFF;
-
-    right ^= ROL16((left & KLi1[round]), 1);
-    left ^= ROL16((right | KLi2[round]), 1);
-
-    //mangler maaske shift
-    return (((uint32_t) left) << 16) + right;
-}
 
 uint16_t * kasumi_enc(uint32_t *text){
     uint32_t left, right, temp;
@@ -124,13 +125,14 @@ uint16_t * kasumi_enc(uint32_t *text){
         right ^= temp;
 
         temp = fo( right, n );
+
         temp = fl( temp, n++ );
 
         left ^= temp;
     }while( n<=7 );
     /* text[0] = left; */
     /* text[1] = right; */
-    
+
     /* int i; */
     /* printf("\n 0x"); */
     /* for (i = 0; i < 2; i++) */
@@ -139,7 +141,7 @@ uint16_t * kasumi_enc(uint32_t *text){
     enc[1] = (uint16_t)(left & 0xFFFF);
     enc[2] = (uint16_t)(right >> 16);
     enc[3] = (uint16_t)(right & 0xFFFF);
-    
+
     return enc;
 }
 
@@ -186,5 +188,3 @@ void keyschedule(uint16_t *key){
         KIi3[n] = Kprime[(n+7)&0x7];
     }
 }
-
-

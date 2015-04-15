@@ -12,8 +12,7 @@ uint16_t * keyGen(){
     fp = fopen("/dev/urandom", "r");
     fread(&data, 1, byte_count, fp);
     fclose(fp);
-    for (i = 4; i < 8; i++){
-        data[i] = data[(i + 4) % 8];
+    for (i = 4; i < 8; i++){        data[i] = data[(i + 4) % 8];
     }
     return data;
 }
