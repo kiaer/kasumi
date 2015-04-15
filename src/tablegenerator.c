@@ -12,7 +12,8 @@ uint16_t * keyGen(){
     fp = fopen("/dev/urandom", "r");
     fread(&data, 1, byte_count, fp);
     fclose(fp);
-    for (i = 4; i < 8; i++){        data[i] = data[(i + 4) % 8];
+    for (i = 4; i < 8; i++){
+        data[i] = data[(i + 4) % 8];
     }
     return data;
 }
@@ -21,20 +22,21 @@ void tableGenerator(uint32_t * text){
 
     int m, t, i;
     uint16_t *temp;
-    uint16_t key[8], ep[4], sp[4];
+    uint16_t key[8], ep[4];
     FILE *write_ptr;
     write_ptr = fopen("test.bin","wb");
      for(m = 0; m < 5; m++){
         temp = keyGen();
-        for (i = 0; i < 4; i++){
-            sp[i] = temp[i];
-        }
+        /* for (i = 0; i < 4; i++){ */
+        /*     sp[i] = temp[i];
+               }*/
         for (i = 0; i < 8; i++){
             key[i] = temp[i];
         }
-        //printf("\n 0x ");
-        for (i = 0; i < 4; i++)
-            printf(" %04x ", sp[i]);
+
+        /* printf("\n 0x "); */
+        /* for (i = 0; i < 4; i++) */
+        /*     printf(" %04x ", sp[i]); */
         for (t = 0; t < 10; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
@@ -66,7 +68,8 @@ int main(){
     /* uint16_t key[4] = { */
     /*     0x9900, 0xAABB, 0xCCDD, 0xEEFF */
     /* }; */
-    uint16_t buffer[4];
+    int amountOfKeys=5;
+    uint16_t buffer[amountOfKeys*4];
     FILE *ptr;
 
 
@@ -79,12 +82,14 @@ int main(){
     ptr = fopen("test.bin","rb");  // r for read, b for binary
 
     fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer
-    int i,j;
+    int i,j,cnt,cnt1;
     printf("\n Read \n");
-    for(j = 0; j<4 ; j++){
+    for(j = 0; j<amountOfKeys ; j++){
         printf(" 0x ");
+        cnt=j*4;
          for(i = 0; i<4; i++){
-             printf(" %04x ", buffer[j+i]);
+             cnt1=cnt+i;
+             printf(" %04x ", buffer[cnt1]);
          } // prints a series of bytes}
         printf("\n");
     }

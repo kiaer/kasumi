@@ -23,7 +23,7 @@ def mtl(hmsc):
     return my
 
 def T(hmsc,hps,Hcr,y):
-    return n((1/hmsc+1/6)*(hps/Hcr)*(2**(y))**2)*2
+    return n((1/hmsc+1/6)*(hps/Hcr)*((2**(y))**2))
 
 def TL(t,l):
     return t*l*2
@@ -60,9 +60,10 @@ def CalcStuffs(hps,hmsc):
         resultst[k]=((n(2**(mx[k][1])),n(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))))
         #MX[k]=(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)),T(hmsc,hps,Hcr,mx[k][1]))
         MX[k]=(ML(2**(mx[k][0]),n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))*(1.25*10**(-13)),TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))))
-        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2)),"$2^{%.2f}$"%log(M(N,n(Hpc),mx[k][0],mx[k][1]),2),"$2^{%.2f}$"% log(TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))),2) ,"$%.2f$ TB"%(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)))))
+        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2)),"$2^{%.2f}$"%log(M(N,n(Hpc),mx[k][0],mx[k][1]),2),"$2^{%.2f}$"% log(T(hmsc,hps,Hcr,mx[k][1]),2) ,"$%.2f$ TB"%(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)))))
 
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: %.2f\n"%(log(2**(mx[k][0]),2) , log(2**(mx[k][1]),2),log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2), log(TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))),2) ,M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13))))
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: %.2f\n"%(log(2**(mx[k][0]),2) , log(2**(mx[k][1]),2),log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2), log(T(hmsc,hps,Hcr,mx[k][1]),2),M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13))))
+        print()
     print("\n\n")
     matrix.append(("","","","","",""))
     print(mx)
