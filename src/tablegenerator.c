@@ -12,7 +12,8 @@ uint16_t * keyGen(){
     fp = fopen("/dev/urandom", "r");
     fread(&data, 1, byte_count, fp);
     fclose(fp);
-    for (i = 4; i < 8; i++){        data[i] = data[(i + 4) % 8];
+    for (i = 4; i < 8; i++){
+        data[i] = data[(i + 4) % 8];
     }
     return data;
 }
@@ -21,20 +22,20 @@ void tableGenerator(uint32_t * text){
 
     int m, t, i;
     uint16_t *temp;
-    uint16_t key[8], ep[4], sp[4];
+    uint16_t key[8], ep[4];
     FILE *write_ptr;
     write_ptr = fopen("test.bin","wb");
      for(m = 0; m < 5; m++){
         temp = keyGen();
-        for (i = 0; i < 4; i++){
-            sp[i] = temp[i];
-        }
+        /* for (i = 0; i < 4; i++){ */
+        /*     sp[i] = temp[i]; */
+        /* } */
         for (i = 0; i < 8; i++){
             key[i] = temp[i];
         }
         //printf("\n 0x ");
-        for (i = 0; i < 4; i++)
-            printf(" %04x ", sp[i]);
+        /* for (i = 0; i < 4; i++) */
+        /*     printf(" %04x ", sp[i]); */
         for (t = 0; t < 10; t++){
             keyschedule(key);
             temp = kasumi_enc(text);

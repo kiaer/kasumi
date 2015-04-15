@@ -33,7 +33,7 @@ $(TARGETC): $(OBJECTSCIPH)
 	@echo "Cipher compiled with" $(CFLAGS)
 
 clean:
-	@-rm -f src/cipher/*.o
+	@-rm -f src/*.o
 	@-rm -f $(TARGET)
 
 cleanciph:
