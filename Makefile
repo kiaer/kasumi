@@ -23,12 +23,13 @@ HEADERS = $(wildcard src/*.h)
 $(TARGET): $(OBJECTS)
 	@echo "Compiling RainbowTable generator.."
 	@mkdir -p bin
-	@$(CC) $(OBJECTS) -pg -Wall $(LIBS) -o $@
+	@$(CC) $(OBJECTS) $(LIBS) -o $@
+	@echo "Tablegenerator compiled with" $(CFLAGS)
 
 $(TARGETC): $(OBJECTSCIPH)
 	@echo "Compiling cipher.."
 	@mkdir -p bin
-	@$(CC) src/cipher/kasumi_test.c -pg $(CFLAGS) -o $@
+	@$(CC) src/cipher/kasumi_test.c $(CFLAGS) -pg -o $@
 	@echo "Cipher compiled with" $(CFLAGS)
 
 clean:
