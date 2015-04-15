@@ -19,12 +19,13 @@ uint16_t * keyGen(){
 }
 
 void tableGenerator(uint32_t * text){
-    
+
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[4], sp[4];
-    
-    for(m = 0; m < 1000; m++){
+    FILE *write_ptr;
+    write_ptr = fopen("test.bin","wb");
+     for(m = 0; m < 5; m++){
         temp = keyGen();
         for (i = 0; i < 4; i++){
             sp[i] = temp[i];
@@ -32,41 +33,61 @@ void tableGenerator(uint32_t * text){
         for (i = 0; i < 8; i++){
             key[i] = temp[i];
         }
-        printf("\n 0x");
+        //printf("\n 0x ");
         for (i = 0; i < 4; i++)
-            printf("%04x", sp[i]);
-        for (t = 0; t < 10048576; t++){
-            keyschedule(key);            
+            printf(" %04x ", sp[i]);
+        for (t = 0; t < 10; t++){
+            keyschedule(key);
             temp = kasumi_enc(text);
             for (i = 0; i < 8; i++){
                 key[i] = temp[i % 4];
             }
         }
+
         for (i = 0; i < 4; i++){
             ep[i] = key[i];
         }
-        printf("\n 0x");
+        printf("\n 0x ");
         for (i = 0; i < 4; i++)
-            printf("%04x", ep[i]);
+            printf(" %04x ", ep[i]);
+
+        fwrite(ep,sizeof(ep),1,write_ptr);
     }
-    
+     fclose(write_ptr);
+
     /* int i; */
     /* uint16_t * key2 = keyGen(); */
     /* printf("\n 0x"); */
     /* for (i = 0; i < 4; i++) */
     /*     printf("%04x", key2[i]); */
-    
+
 }
 
 int main(){
     /* uint16_t key[4] = { */
     /*     0x9900, 0xAABB, 0xCCDD, 0xEEFF */
     /* }; */
+    uint16_t buffer[4];
+    FILE *ptr;
+
 
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
 
+
     tableGenerator(text);
+    ptr = fopen("test.bin","rb");  // r for read, b for binary
+
+    fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer
+    int i,j;
+    printf("\n Read \n");
+    for(j = 0; j<4 ; j++){
+        printf(" 0x ");
+         for(i = 0; i<4; i++){
+             printf(" %04x ", buffer[j+i]);
+         } // prints a series of bytes}
+        printf("\n");
+    }
     return 0;
 }
