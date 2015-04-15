@@ -7,6 +7,7 @@
 *.out
 stats
 test
+*.bin
 
 #sage
 *.sage.py
