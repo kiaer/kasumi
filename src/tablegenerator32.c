@@ -22,7 +22,7 @@ void tableGenerator(uint32_t * text){
 
     int m, t, i;
     uint16_t *temp;
-    uint16_t key[4], ep[2];
+    uint16_t key[8], ep[2];
     FILE *write_ptr;
     write_ptr = fopen("test32.bin","wb");
      for(m = 0; m < 5; m++){
@@ -30,7 +30,7 @@ void tableGenerator(uint32_t * text){
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
-        for (i = 0; i < 4; i++){
+        for (i = 0; i < 8; i++){
             key[i] = temp[i];
         }
 
@@ -40,12 +40,12 @@ void tableGenerator(uint32_t * text){
         for (t = 0; t < 10; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            for (i = 0; i < 4; i++){
+            for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
         }
 
-        for (i = 0; i < 4; i++){
+        for (i = 0; i < 2; i++){
             ep[i] = key[i];
         }
         printf("\n 0x ");
