@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <time.h>
+
 #include "kasumi.h"
 
 #define ROL16(a,b) (uint16_t)((a<<b)|(a>>(16-b)))
@@ -113,6 +113,7 @@ static uint32_t fo(uint32_t input, int round){
 
 
 uint16_t * kasumi_enc(uint32_t *text){
+
     uint32_t left, right, temp;
     static uint16_t enc[4];
     left = text[0];
@@ -130,13 +131,7 @@ uint16_t * kasumi_enc(uint32_t *text){
 
         left ^= temp;
     }while( n<=7 );
-    /* text[0] = left; */
-    /* text[1] = right; */
 
-    /* int i; */
-    /* printf("\n 0x"); */
-    /* for (i = 0; i < 2; i++) */
-    /*     printf("%04x", text[i]); */
     enc[0] = (uint16_t)(left >> 16);
     enc[1] = (uint16_t)(left & 0xFFFF);
     enc[2] = (uint16_t)(right >> 16);

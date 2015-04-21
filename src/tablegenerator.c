@@ -28,13 +28,13 @@ void tableGenerator(uint32_t * text){
      for(m = 0; m < 5; m++){
         temp = keyGen();
         /* for (i = 0; i < 4; i++){ */
-        /*     sp[i] = temp[i];
-               }*/
+
+        /*     sp[i] = temp[i]; */
+        /* } */
         for (i = 0; i < 8; i++){
             key[i] = temp[i];
         }
-
-        /* printf("\n 0x "); */
+        //printf("\n 0x ");
         /* for (i = 0; i < 4; i++) */
         /*     printf(" %04x ", sp[i]); */
         for (t = 0; t < 10; t++){
