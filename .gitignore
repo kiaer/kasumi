@@ -8,6 +8,7 @@
 stats
 test
 *.bin
+src/*.bin
 
 #sage
 *.sage.py

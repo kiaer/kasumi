@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <pthread.h>
 #include <time.h>
 #include <openssl/md5.h>
 #include "cipher/kasumi.c"
 
+<<<<<<< HEAD
 uint16_t * keyGen(int m){
     int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
@@ -20,7 +20,6 @@ uint16_t * keyGen(int m){
         data[i] = arrToInt;
         cntr=cntr+2;
     }
-
     return data;
 }
 
