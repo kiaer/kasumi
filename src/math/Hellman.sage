@@ -28,7 +28,7 @@ def T(hmsc,hps,Hcr,y):
 def TL(t,l):
     return t*l*2
 def M(n,hs,x,y):
-    return (n*hs)/(2**(x)*(2**(y)))*2**(x)
+    return (n*hs)/(2**(x)*(2**(y)))*2**(x)*2**(6)
 def ML(m,l):
     return m*l
 #Htc=(((1/Hmsc)+(1/6))*(1/(Hcr**3)))*Hps*(ln(1-Hps))**2

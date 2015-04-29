@@ -58,7 +58,7 @@ def DTC2(dmsc,dcr,dps,t,th):
     return null
 
 def M(x,y):
-    return x*y
+    return x*y * 64
 
 def L(dcr,dmsc,dps,x):
     return (1/(dcr*dmsc))*(-ln(1-dps))*(2**(x))
