@@ -2,32 +2,38 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <time.h>
-
+#include <openssl/md5.h>
 #include "cipher/kasumi.c"
 
-uint16_t * keyGen(){
-    int i;
-    int byte_count = 4;
+uint16_t * keyGen(int m){
+    int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
-    FILE *fp;
-    fp = fopen("/dev/urandom", "r");
-    fread(&data, 1, byte_count, fp);
-    fclose(fp);
-    for (i = 2; i < 8; i++){
-        data[i] = data[(i + 6) % 8];
+    unsigned char c[MD5_DIGEST_LENGTH];
+    MD5_CTX mdContext;
+    MD5_Init (&mdContext);
+    MD5_Update (&mdContext,&m, sizeof(m));
+    MD5_Final (c,&mdContext);
+    for (i = 0; i < 8; i++){
+        arrToInt=0;
+        for(j=cntr;j<=cntr+1;j++)
+            arrToInt =(arrToInt<<8) | c[j%4];
+        data[i] = arrToInt;
+        cntr=cntr+2;
     }
+
     return data;
 }
 
 void tableGenerator(uint32_t * text){
-
+    //int mMax=10;
+    int mMax=33554432;
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];
     FILE *write_ptr;
     write_ptr = fopen("test32.bin","wb");
-    for(m = 0; m < 33554432; m++){
-        temp = keyGen();
+    for(m = 0; m <mMax ; m++){
+        temp = keyGen(m);
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
@@ -52,7 +58,7 @@ void tableGenerator(uint32_t * text){
         for (i = 0; i < 2; i++){
             ep[i] = key[i];
         }
-        
+
         /* printf("\n 0x "); */
         /* for (i = 0; i < 2; i++) */
         /*     printf(" %04x ", ep[i]); */
