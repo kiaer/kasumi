@@ -25,7 +25,7 @@ uint16_t * keyGen(int m){
 
 void tableGenerator(uint32_t * text){
     //int mMax=10;
-    int mMax=33554432;
+    int mMax=33554;
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];

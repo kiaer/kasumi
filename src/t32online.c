@@ -5,8 +5,9 @@
 #include <openssl/md5.h>
 #include "cipher/kasumi.c"
 
-uint16_t * keyGen(uint32_t * m){
+uint16_t * reduction(uint32_t * m){
     int i;
+
     static uint16_t data[8];
 
     for (i = 0; i < 8; i++){
@@ -15,69 +16,59 @@ uint16_t * keyGen(uint32_t * m){
         else
             data[i] = m[0]<<0;
     }
-    for (i = 0; i < 8; i++)
-             printf(" %04x ", data[i]);
 
     return data;
 }
 
-void onlinePhase(uint32_t * text){
+void inTable(uint32_t *text){
+    uint8_t buffer[4];
+    uint32_t endpoint;
+
+    FILE *ptr;
+    ptr = fopen("test32.bin","rb");  // r for read, b for binary */
+    for(;;){
+        size_t n=fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */
+
+        endpoint = buffer[1]<<24 | buffer[0]<<16 | buffer[3]<<8 | buffer[2];
+
+        //printf(" %x ",endpoint);
+        if(endpoint==text[0])
+            printf("Huzzah %08x",buffer[0]);
+        if(n==0){break;}
+    }
+
+}
+
+void onlinePhase(uint32_t * ciphertext){
     int t, i,arrToInt,cntr=0;
     uint16_t *temp;
-    uint32_t keys[236];
     uint16_t key[8];
-    FILE *ptr;
-            temp = keyGen(text);
-        /* for (i = 0; i < 4; i++){ */
-        /*     sp[i] = temp[i];
-               }*/
+
+    inTable(ciphertext);
+    temp = reduction(ciphertext);
+
+    for (i = 0; i < 8; i++){
+        key[i] = temp[i];
+        printf("%4x ",temp[i]);
+    }
+
+    for (t = 0; t < 236; t++){
+        keyschedule(key);
+        temp = kasumi_enc(ciphertext);
         for (i = 0; i < 8; i++){
-            key[i] = temp[i];
+            key[i] = temp[i % 2];
         }
+        arrToInt=0;
+        for(i=cntr;i<=cntr+1;i++)
+            arrToInt =(arrToInt<<16) | key[i%4];
 
         /* printf("\n 0x "); */
         /* for (i = 0; i < 8; i++) */
-        /*     printf(" %04x ", key[i]); */
-        for (t = 0; t < 236; t++){
-            keyschedule(key);
-            temp = kasumi_enc(text);
-            for (i = 0; i < 8; i++){
-                key[i] = temp[i % 2];
-            }
-            arrToInt=0;
-            for(i=cntr;i<=cntr+1;i++)
-                arrToInt =(arrToInt<<16) | key[i%4];
-            keys[t] = arrToInt;
-
-            /* printf("\n 0x "); */
-            /* for (i = 0; i < 8; i++) */
             /*     printf(" %04x ", key[i]); */
         }
 
 
 
-        for (i = 0; i < 236; i++){
-            printf("\n 0x ");
-
-            printf(" %08x ", keys[i]);
-
-        }
-        uint32_t buffer[2000000];
-
-         ptr = fopen("test32.bin","rb");  // r for read, b for binary */
-         fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */
-
-
-         int j;
-         printf("\n Read \n");
-
-         for(j = 0; j<236 ; j++){
-
-             for (i=0;i<2000000;i++){
-                 if(buffer[i]==keys[j])
-                     printf("Huzzah %08x",buffer[j]);
-             }
-         }
 
 
     /* int i; */
@@ -96,12 +87,16 @@ int main(){
     /* FILE *ptr; */
 
 
-    uint32_t text[2] = {
-        0xFEDCBA09, 0x87654321
+    /* uint32_t text[2] = { */
+    /*     0xFEDCBA09, 0x87654321 */
+    /* }; */
+
+    uint32_t ciphertext[2] = {
+        0x51489622, 0x6caa4f20
     };
 
 
-    onlinePhase(text);
+    onlinePhase(ciphertext);
 
     return 0;
 
