@@ -3,8 +3,6 @@
 #include <time.h>
 #include <openssl/md5.h>
 #include "cipher/kasumi.c"
-
-<<<<<<< HEAD
 uint16_t * keyGen(int m){
     int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
@@ -25,7 +23,7 @@ uint16_t * keyGen(int m){
 
 void tableGenerator(uint32_t * text){
     //int mMax=10;
-    int mMax=33554;
+    int mMax=33554432;
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];
