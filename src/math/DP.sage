@@ -35,7 +35,7 @@ def T(dmsc,dps,dcr,t,th):
 
 
 def mtl(dmsc):
-    m=16
+    m=4
     for h in range(0,len(mx)):
         my[h]=(m,eq1(m,dmsc)[0])
         m=m+1
@@ -58,7 +58,7 @@ def DTC2(dmsc,dcr,dps,t,th):
     return null
 
 def M(x,y):
-    return x*y * 64
+    return x*y
 
 def L(dcr,dmsc,dps,x):
     return (1/(dcr*dmsc))*(-ln(1-dps))*(2**(x))
@@ -88,7 +88,7 @@ def CalcStuffs(dps,dmsc,th):
    # print(mx)
     for k in range(0,len(mx)):
 
-        Ms=n(M(2**(mx[k][0]),L(dcr,dmsc,dps,mx[k][1])))
+        Ms=n(M(2**(mx[k][0]),L(dcr,dmsc,dps,mx[k][1]))*64)
         TT=n(T(dmsc,dps,dcr,2**(mx[k][1]),th))
         Ts=n(2**(mx[k][1])*L(dcr,dmsc,dps,mx[k][1]))
        # print(2**(mx[k][1]))
@@ -102,7 +102,7 @@ def CalcStuffs(dps,dmsc,th):
    # g=list_plot(MX,plotjoined=True,title="Hellman for %.2f"%(hps),marker='o')
     g.axes_labels(['M','T'])
 
-    g.save('tables/%.2fMT.png'%(dps))
+    g.save('graphs/%.2fMT.png'%(dps))
     return g
 
 mx=mtl(0.562047)
@@ -110,7 +110,7 @@ comps=plot([],title='Comparison DP')
 comp=CalcStuffs(0.60,0.562047,10)+CalcStuffs(0.73,0.562047,10)+CalcStuffs(0.90,0.562047,10)+comps
 comp.axes_labels(['M in TB','T'])
 comp.show()
-comp.save("tables/compare DP with large th.png")
+comp.save("graphs/compare DP with large th.png")
 f=open("DP_table.tex", 'w')
 f.write(latex(table(rows=matrix)))
 

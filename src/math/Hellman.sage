@@ -16,7 +16,7 @@ def eq1(y,h):
     return [ abs(n(s[x])) for s in sol]
 
 def mtl(hmsc):
-    a=20
+    a=6
     for h in range(0,len(mx)):
         my[h]=(a,eq1(a,hmsc)[0])
         a=a+1
@@ -59,10 +59,10 @@ def CalcStuffs(hps,hmsc):
         results[k]=(n(log(2**(mx[k][0]))/log(2)),n(log(2**(mx[k][1]))/log(2)),n(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2)))
         resultst[k]=((n(2**(mx[k][1])),n(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))))
         #MX[k]=(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)),T(hmsc,hps,Hcr,mx[k][1]))
-        MX[k]=(ML(2**(mx[k][0]),n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))*(1.25*10**(-13)),TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))))
-        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2)),"$2^{%.2f}$"%log(M(N,n(Hpc),mx[k][0],mx[k][1]),2),"$2^{%.2f}$"% log(T(hmsc,hps,Hcr,mx[k][1]),2) ,"$%.2f$ TB"%(M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13)))))
+        MX[k]=(ML(2**(mx[k][0]),n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))))*64*(1.25*10**(-13)),TL(2**mx[k][1],n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1])))))
+        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2)),"$2^{%.2f}$"%log(M(N,n(Hpc),mx[k][0],mx[k][1])*64,2),"$2^{%.2f}$"% log(T(hmsc,hps,Hcr,mx[k][1]),2) ,"$%.2f$ TB"%(M(N,n(Hpc),mx[k][0],mx[k][1])*64*(1.25*10**(-13)))))
 
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: %.2f\n"%(log(2**(mx[k][0]),2) , log(2**(mx[k][1]),2),log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2), log(T(hmsc,hps,Hcr,mx[k][1]),2),M(N,n(Hpc),mx[k][0],mx[k][1])*(1.25*10**(-13))))
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: %.2f\n"%(log(2**(mx[k][0]),2) , log(2**(mx[k][1]),2),log(n((1/(Hcr*hmsc))*(-ln(1-hps))*(2**(mx[k][1]))),2), log(T(hmsc,hps,Hcr,mx[k][1]),2),M(N,n(Hpc),mx[k][0],mx[k][1])*64*(1.25*10**(-13))))
         print()
     print("\n\n")
     matrix.append(("","","","","",""))
@@ -75,13 +75,13 @@ def CalcStuffs(hps,hmsc):
 
     a.axes_labels(['t','l'])
 
-    a.save('tables/%.2fhej.png'%(hps))
+    a.save('graphs/%.2fhej.png'%(hps))
 
     g=list_plot_semilogy(MX,base=2,plotjoined=True,title="Hellman %.2f for %.2f"%(hmsc,hps),marker='o')
    # g=list_plot(MX,plotjoined=True,title="Hellman for %.2f"%(hps),marker='o')
     g.axes_labels(['M','T'])
 
-    g.save('tables/%.2fMT.png'%(hps))
+    g.save('graphs/%.2f %.2f Hellman.png'%(hps,hmsc))
     return g
 
 
@@ -91,11 +91,11 @@ comps=plot([],title='Comparison 1')
 comp=CalcStuffs(0.5768,1)+CalcStuffs(0.73,1)+CalcStuffs(0.90,1)+comps
 comp.axes_labels(['M in TB','T'])
 comp.show()
-comp.save("tables/compare 1.png")
+comp.save("graphs/compare 1.png")
 comps1=plot([],title='Comparison 2.25')
 comp1=CalcStuffs(0.5768,2.25)+CalcStuffs(0.73,2.25)+CalcStuffs(0.90,2.25)+comps1
 comp1.axes_labels(['M in TB','T'])
 comp1.show()
-comp1.save("tables/compare 2.25.png")
+comp1.save("graphs/compare 2.25.png")
 f=open("HM_table.tex", 'w')
 f.write(latex(table(rows=matrix)))

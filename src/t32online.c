@@ -26,26 +26,31 @@ void inTable(uint32_t *text){
     int i;
     FILE *ptr;
     ptr = fopen("test32.bin","rb");  // r for read, b for binary */
-    for(i =0;i<10;i++){
+    for(;;){
         size_t n=fread(buffer,sizeof(buffer),1,ptr);
 
         endpoint = buffer[1]<<24 | buffer[0]<<16 | buffer[3]<<8 | buffer[2];
 
-        printf(" %x ",endpoint);
-        if(endpoint==text[0])
-            printf("Huzzah %08x",buffer[0]);
+        //printf(" %x ",endpoint);
+        if(endpoint==text[0]){
+            printf("Huzzah : ");
+            for(i=0;i<4;i++)
+                printf("%02x",buffer[i]);
+            printf("%04x",text[0]);
+            printf("\n");
+        }
         if(n==0){break;}
     }
 
 }
 
-void onlinePhase(uint32_t * ciphertext){
-    int t, i,arrToInt,cntr=0;
+void onlinePhase(uint32_t * ciphertext, uint32_t * text){
+    int t, i,arrToInt;
     uint16_t *temp;
     uint32_t tempCipher[2];
     uint16_t key[8];
 
-    inTable(ciphertext);
+    //inTable(ciphertext);
     temp = reduction(ciphertext);
 
     for (i = 0; i < 8; i++){
@@ -54,15 +59,20 @@ void onlinePhase(uint32_t * ciphertext){
 
     for (t = 0; t < 236; t++){
         keyschedule(key);
-        temp = kasumi_enc(ciphertext);
+        temp = kasumi_enc(text);
         for (i = 0; i < 8; i++){
             key[i] = temp[i % 2];
+            printf("%04x",temp[i]);
         }
+        printf("\n");
         arrToInt=0;
-        for(i=cntr;i<=cntr+1;i++)
-            arrToInt =(arrToInt<<16) | temp[i%4];
+        for(i=0;i<4;i++)
+            arrToInt =(arrToInt<<16) | temp[i];
         tempCipher[0]=arrToInt;
-        inTable(tempCipher);
+        for(i=0;i<2;i++)
+            printf("cipher  %8x \n",tempCipher[i]);
+
+        //inTable(tempCipher);
         /* printf("\n 0x "); */
         /* for (i = 0; i < 8; i++) */
             /*     printf(" %04x ", key[i]); */
@@ -88,16 +98,16 @@ int main(){
     /* FILE *ptr; */
 
 
-    /* uint32_t text[2] = { */
-    /*     0xFEDCBA09, 0x87654321 */
-    /* }; */
+    uint32_t text[2] = {
+         0xFEDCBA09, 0x87654321
+     };
 
     uint32_t ciphertext[2] = {
         0x51489622, 0x6caa4f20
     };
 
 
-    onlinePhase(ciphertext);
+    onlinePhase(ciphertext, text);
 
     return 0;
 
