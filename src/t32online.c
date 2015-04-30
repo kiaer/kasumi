@@ -45,7 +45,7 @@ void onlinePhase(uint32_t * ciphertext){
     uint16_t key[8];
 
     inTable(ciphertext);
-    temp = reduction(ciphertext);
+    gotemp = reduction(ciphertext);
 
     for (i = 0; i < 8; i++){
         key[i] = temp[i];
@@ -61,35 +61,12 @@ void onlinePhase(uint32_t * ciphertext){
         arrToInt=0;
         for(i=cntr;i<=cntr+1;i++)
             arrToInt =(arrToInt<<16) | key[i%4];
-
-        /* printf("\n 0x "); */
-        /* for (i = 0; i < 8; i++) */
-            /*     printf(" %04x ", key[i]); */
         }
 
-
-
-
-
-    /* int i; */
-    /* uint16_t * key2 = keyGen(); */
-    /* printf("\n 0x"); */
-    /* for (i = 0; i < 4; i++) */
-    /*     printf("%04x", key2[i]); */
 
 }
 
 int main(){
-    /* uint16_t key[4] = { */
-    /*     0x9900, 0xAABB, 0xCCDD, 0xEEFF */
-    /* }; */
-    /* int amountOfKeys=5; */
-    /* FILE *ptr; */
-
-
-    /* uint32_t text[2] = { */
-    /*     0xFEDCBA09, 0x87654321 */
-    /* }; */
 
     uint32_t ciphertext[2] = {
         0x51489622, 0x6caa4f20
