@@ -27,42 +27,43 @@ void tableGenerator(uint32_t * text){
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];
-    FILE *write_ptr;
-    write_ptr = fopen("test32.bin","wb");
+    //FILE *write_ptr;
+    //write_ptr = fopen("test32.bin","wb");
     for(m = 0; m <mMax ; m++){
         temp = keyGen(m);
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
         for (i = 0; i < 8; i++){
-            key[i] = temp[i];
+            key[i] = temp[i %2 ];
         }
 
-        /* printf("\n 0x "); */
-        /* for (i = 0; i < 8; i++) */
-        /*     printf(" %04x ", key[i]); */
+        /* /\* printf("\n 0x "); *\/ */
+        /* /\* for (i = 0; i < 8; i++) *\/ */
+        /* /\*     printf(" %04x ", key[i]); *\/ */
         for (t = 0; t < 236; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
             for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
-            /* printf("\n 0x "); */
-            /* for (i = 0; i < 8; i++) */
-            /*     printf(" %04x ", key[i]); */
+            for(i=0;i<2;i++)
+                printf(" %04x ",key[i]);
+
+            printf("\n");
         }
 
         for (i = 0; i < 2; i++){
             ep[i] = key[i];
         }
 
-        /* printf("\n 0x "); */
-        /* for (i = 0; i < 2; i++) */
-        /*     printf(" %04x ", ep[i]); */
-
-        fwrite(ep,sizeof(ep),1,write_ptr);
+        printf("\n ep-> 0x ");
+        for (i = 0; i < 2; i++)
+             printf(" %04x ", ep[i]);
+        break;
+        //fwrite(ep,sizeof(ep),1,write_ptr);
     }
-    fclose(write_ptr);
+    //fclose(write_ptr);
 
     /* int i; */
     /* uint16_t * key2 = keyGen(); */

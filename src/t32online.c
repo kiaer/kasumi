@@ -5,107 +5,116 @@
 #include <openssl/md5.h>
 #include "cipher/kasumi.c"
 
-uint16_t * reduction(uint32_t * m){
-    int i;
-
+uint16_t * reduction(uint32_t m){
     static uint16_t data[8];
-
-    for (i = 0; i < 8; i++){
-        if(i%2==0)
-            data[i] = m[0]>>16;
-        else
-            data[i] = m[0]<<0;
-    }
+    data[0]=m>>16;
+    data[1]=m;
 
     return data;
 }
+uint16_t * keyGen(int m){
+    int j,i, arrToInt,cntr=0;
+    static uint16_t data[8];
+    unsigned char c[MD5_DIGEST_LENGTH];
+    MD5_CTX mdContext;
+    MD5_Init (&mdContext);
+    MD5_Update (&mdContext,&m, sizeof(m));
+    MD5_Final (c,&mdContext);
+    for (i = 0; i < 8; i++){
+        arrToInt=0;
+        for(j=cntr;j<=cntr+1;j++)
+            arrToInt =(arrToInt<<8) | c[j%4];
+        data[i] = arrToInt;
+        cntr=cntr+2;
+    }
+    return data;
+}
 
-void inTable(uint32_t *text){
-    uint8_t buffer[4];
-    uint32_t endpoint;
-    int i;
+int inTable(uint32_t text){
+    uint16_t buffer[100000];
+    uint32_t endpoint[50000];
+    int cntr = 0,i,k=0;
     FILE *ptr;
     ptr = fopen("test32.bin","rb");  // r for read, b for binary */
     for(;;){
         size_t n=fread(buffer,sizeof(buffer),1,ptr);
-
-        endpoint = buffer[1]<<24 | buffer[0]<<16 | buffer[3]<<8 | buffer[2];
-
+        //endpoint = buffer[0]<<24 | buffer[1]<<16 | buffer[2]<<8 | buffer[3];
+        k=0;
+        for(i=0;i<50000;i++){
+            // printf(" %i ",k);
+            endpoint[i] = buffer[k]<<16 | buffer[k+1];
+            k=k+2;
         //printf(" %x ",endpoint);
-        if(endpoint==text[0]){
-            printf("Huzzah : ");
-            for(i=0;i<4;i++)
-                printf("%02x",buffer[i]);
-            printf("%04x",text[0]);
-            printf("\n");
+        if(endpoint[i]==text){
+
+            return cntr;
         }
-        if(n==0){break;}
+        cntr = cntr+1;
+        }
+        if(n==0){return -1;}
     }
 
 }
 
+
 void onlinePhase(uint32_t * ciphertext, uint32_t * text){
-    int t, i,arrToInt;
-    uint16_t *temp;
-    uint32_t tempCipher[2];
-    uint16_t key[8];
+    int t, i,k;
+    uint16_t *temp,*temp2;
+    uint32_t ep;
+    uint32_t cipher[2];
+    uint16_t key[8],keys[8];
 
-    //inTable(ciphertext);
-    temp = reduction(ciphertext);
-
+    int dobreak = 0;
+    inTable(ciphertext[0]);
+    temp = reduction(ciphertext[0]);
+    //reduciton function
     for (i = 0; i < 8; i++){
-        key[i] = temp[i];
+        key[i] = temp[i%2];
     }
 
-    for (t = 0; t < 236; t++){
+
+    for (t = 0; t < 236 && dobreak==0; t++){
         keyschedule(key);
         temp = kasumi_enc(text);
+
+        //reduction function
         for (i = 0; i < 8; i++){
             key[i] = temp[i % 2];
-            printf("%04x",temp[i]);
+             }
+        ep = key[0]<<16 | key[1];
+        i=inTable(ep);
+        if(i>=0){
+            temp2 = keyGen(i);
+            for (i = 0; i < 8; i++){
+                keys[i] = temp2[i%2];
+            }
+            for (k = 0; k < 236 && dobreak==0; k++){
+                keyschedule(keys);
+                temp2 = kasumi_enc(text);
+                cipher[0] = temp2[0]<<16 | temp2[1];
+                cipher[1] = temp2[2]<<16 | temp2[3];
+                if(cipher[0]==ciphertext[0]&&cipher[1]==ciphertext[1]){
+                    printf("Key found %i steps into chain \n", k);
+                    printf("Key is the following: %04x \n",ep);
+                    dobreak=1;
+                    break;
+                }
+                for (i = 0; i < 8; i++){
+                    keys[i] = temp2[i % 2];
+                }
+            }
         }
-        printf("\n");
-        arrToInt=0;
-        for(i=0;i<4;i++)
-            arrToInt =(arrToInt<<16) | temp[i];
-        tempCipher[0]=arrToInt;
-        for(i=0;i<2;i++)
-            printf("cipher  %8x \n",tempCipher[i]);
-
-        //inTable(tempCipher);
-        /* printf("\n 0x "); */
-        /* for (i = 0; i < 8; i++) */
-            /*     printf(" %04x ", key[i]); */
-        }
-
-
-
-
-
-    /* int i; */
-    /* uint16_t * key2 = keyGen(); */
-    /* printf("\n 0x"); */
-    /* for (i = 0; i < 4; i++) */
-    /*     printf("%04x", key2[i]); */
-
+    }
 }
 
 int main(){
-    /* uint16_t key[4] = { */
-    /*     0x9900, 0xAABB, 0xCCDD, 0xEEFF */
-    /* }; */
-    /* int amountOfKeys=5; */
-    /* FILE *ptr; */
-
-
     uint32_t text[2] = {
          0xFEDCBA09, 0x87654321
      };
 
     uint32_t ciphertext[2] = {
-        0x51489622, 0x6caa4f20
+        0x591361f4, 0xdd05ce2f
     };
-
 
     onlinePhase(ciphertext, text);
 
