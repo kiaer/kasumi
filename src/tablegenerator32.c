@@ -27,8 +27,8 @@ void tableGenerator(uint32_t * text){
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];
-    //FILE *write_ptr;
-    //write_ptr = fopen("test32.bin","wb");
+    FILE *write_ptr;
+    write_ptr = fopen("test32.bin","wb");
     for(m = 0; m <mMax ; m++){
         temp = keyGen(m);
         /* for (i = 0; i < 4; i++){ */
@@ -61,9 +61,9 @@ void tableGenerator(uint32_t * text){
         for (i = 0; i < 2; i++)
              printf(" %04x ", ep[i]);
         break;
-        //fwrite(ep,sizeof(ep),1,write_ptr);
+        fwrite(ep,sizeof(ep),1,write_ptr);
     }
-    //fclose(write_ptr);
+    fclose(write_ptr);
 
     /* int i; */
     /* uint16_t * key2 = keyGen(); */
