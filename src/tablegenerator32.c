@@ -23,7 +23,7 @@ uint16_t * keyGen(int m){
 
 void tableGenerator(uint32_t * text){
     //int mMax=10;
-    int mMax=33554432;
+    int mMax=33554432, lMax=236;
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[2];
@@ -34,6 +34,8 @@ void tableGenerator(uint32_t * text){
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
+
+        temp = keyGen(*temp);
         for (i = 0; i < 8; i++){
             key[i] = temp[i %2 ];
         }
@@ -41,26 +43,26 @@ void tableGenerator(uint32_t * text){
         /* /\* printf("\n 0x "); *\/ */
         /* /\* for (i = 0; i < 8; i++) *\/ */
         /* /\*     printf(" %04x ", key[i]); *\/ */
-        for (t = 0; t < 236; t++){
+        for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
+            temp=keyGen(*temp);
             for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
-            for(i=0;i<2;i++)
-                printf(" %04x ",key[i]);
+            // for(i=0;i<2;i++)
+            //    printf(" %04x ",key[i]);
 
-            printf("\n");
+            //printf("\n");
         }
 
         for (i = 0; i < 2; i++){
             ep[i] = key[i];
         }
 
-        printf("\n ep-> 0x ");
-        for (i = 0; i < 2; i++)
-             printf(" %04x ", ep[i]);
-        break;
+        // printf("\n ep-> 0x ");
+        // for (i = 0; i < 2; i++)
+        //     printf(" %04x ", ep[i]);
         fwrite(ep,sizeof(ep),1,write_ptr);
     }
     fclose(write_ptr);

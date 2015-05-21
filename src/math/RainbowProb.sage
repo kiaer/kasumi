@@ -20,7 +20,7 @@ def solve_mt(m, rm):
     return 2**(float(log(a[0][x])/log(2)))
 
 def memory():
-    return m * l * (1.25 * 10**-13) * 64
+    return m * l * (1.25 * 10**-13) * 32
 
 def time_for_offline(rm):
     return N * rm * l
@@ -54,7 +54,7 @@ for i in xrange(0,3):
     for x in xrange(0, 18):
         print ""
         #31.5
-        m = 2**(25 + (0.5 * x))
+        m = 2**(23 + (0.5 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
         temp = "$2^{%.2f}$" % log(m, 2)
@@ -92,7 +92,7 @@ for i in xrange(0,3):
 #     plot2.axes_labels(["M", "T"])
 #     #plot2.show()
 #     plot2.save('graphs/RainbowTime' + str(rps[i] * 100) + '.png')
-    
+
 #     plot_all_coef  += (plot)
 #     plot_all_calc += (plot2)
 
