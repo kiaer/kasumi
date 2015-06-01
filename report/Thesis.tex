@@ -1,0 +1,102 @@
+%==================================================================================================
+%   LUKES THESIS TEMPLATE 1.2
+%   -------------------------
+%   This template is based upon the offcial IMM PhD Thesis template, it is enhanced with a number
+%   of new features and a number of errors have fixed. This template is intended to be complied to
+%   PDF using PDFLATEX and is tested using the MiKTeX 2.9 LaTeX distribution.
+%   It is based on the official DTU-IMM Thesis template by Finn Kuno Christensen in 2009.
+%   Small bugfixes by Kasper Laursen in 2012 and 2013.
+%   Small updates by Finn Kuno Christensen/Henning Christiansen in 2015.
+%   -------------------------
+%   Last Updated: 2015-01-08
+%==================================================================================================
+%
+%==================================================================================================
+% DOCUMENT SETUP
+%==================================================================================================
+\documentclass[10pt,twoside]{book}                  %Official DTU-IMM Thesis document setup
+%
+%Set to 'print' for printed version, use 'net' for online version
+\def\thesisversion{print}
+%
+%==================================================================================================
+% PACKAGES
+%==================================================================================================
+\usepackage{LukeThesis}                             %Import Thesis base style
+%input{PhDMacros}                                   %Thesis specific macros
+%
+%==================================================================================================
+% THESIS PROPERTIES (Modifiy these fields with your details)
+%==================================================================================================
+\def\thesisauthor{Jonathan Becktor and Christian Kiær}                     %Author
+\def\thesistitle{TMTO Attack on the 3G Block Cipher Kasumi}               %Title
+\def\thesishandin{25-June}                       %Submission date (Day-Month}
+\def\thesisdegree{B.Sc.}                              %Degree ('B.Eng', 'B.Sc.', 'M.Sc.' or 'PhD')
+\def\thesisyear{2015}                               %Submission year
+\def\thesisnumber{????}                             %DTU-IMM Serial number (do not include year)
+\def\thesisISSN{0000-0000}                          %ISSN number
+\def\thesiskeywords{Keywords are, comma separated}  %PDF keywords
+\derivethesisprops                                  %Derive dependent properties
+%
+%==================================================================================================
+% SECTION NUMBERING SETUP
+%==================================================================================================
+\setcounter{tocdepth}{2}                            %2 adds sections up to subsections
+\setcounter{secnumdepth}{3}                         %Subsubsections get a number when this is 3
+%
+%==================================================================================================
+% THESIS STRUCTURE  (Modifiy to include more chapters etc)
+%==================================================================================================
+\begin{document}
+%------------------------
+%Pre-frontmatter material
+%------------------------
+\prefrontmatter
+%--------------------
+%Frontmatter material
+%--------------------
+\frontmatter
+\pagenumbering{roman}                               %Set frontmatter numbering style
+\input{SummaryUK}                                   %English summary of Thesis
+\markboth{}{}                                       %Set headings (left)(right)
+\input{SummaryDK}                                   %Danish summary of Thesis
+\markboth{}{}                                       %Set headings (left)(right)
+\input{Preface}                                     %Preface
+\markboth{}{}                                       %Set headings (left)(right)
+\input{Acknowledgements}                            %Acknowledgements
+\markboth{}{}                                       %Set headings (left)(right)
+%------------------
+% Table of contents
+%------------------
+\newpage\mbox{}\newpage
+\chaptermark{Contents}
+\pdfbookmark{\contentsname}{toc}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\sectionmark{Contents}
+\addtolength{\parskip}{-\baselineskip}
+\tableofcontents
+\addtolength{\parskip}{\baselineskip}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%-------------
+% Main content
+%-------------
+\mainmatter
+\include{intro}                                  %Chapter 1
+\appendix
+\include{Appendix1}                                 %Appendix A
+%-----------
+% Backmatter
+%-----------
+\backmatter
+\chaptermark{Bibliography}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\sectionmark{Bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}        %Force addition of Bibliography to TOC
+\bibliographystyle{alpha}                           %Use alpha codes for references
+\bibliography{References}                           %Bibliography file called
+\end{document}
+% % % EOF % % %
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
