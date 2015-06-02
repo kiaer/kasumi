@@ -2,30 +2,32 @@
 #include <stdint.h>
 #include <pthread.h>
 
-#include "cipher/kasumi.c"
+#include "cipher/kasumi.h"
+#include "misc.h"
 
-uint16_t * keyGen(){
-    int i;
-    int byte_count = 8;
-    static uint16_t data[8];
-    FILE *fp;
-    fp = fopen("/dev/urandom", "r");
-    fread(&data, 1, byte_count, fp);
-    fclose(fp);
-    for (i = 4; i < 8; i++){
-        data[i] = data[(i + 4) % 8];
-    }
-    return data;
-}
+/* uint16_t * keyGen(){ */
+/*     int i; */
+/*     int byte_count = 8; */
+/*     static uint16_t data[8]; */
+/*     FILE *fp; */
+/*     fp = fopen("/dev/urandom", "r"); */
+/*     fread(&data, 1, byte_count, fp); */
+/*     fclose(fp); */
+/*     for (i = 4; i < 8; i++){ */
+/*         data[i] = data[(i + 4) % 8]; */
+/*     } */
+/*     return data; */
+/* } */
 
 void tableGenerator(uint32_t * text){
+
     int m, t, i;
     uint16_t *temp;
     uint16_t key[8], ep[4];
     FILE *write_ptr;
     write_ptr = fopen("test.bin","wb");
      for(m = 0; m < 5; m++){
-        temp = keyGen();
+        temp = keyGen(m);
         /* for (i = 0; i < 4; i++){ */
 
         /*     sp[i] = temp[i]; */

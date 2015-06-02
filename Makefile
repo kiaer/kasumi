@@ -1,8 +1,8 @@
-TARGET = bin/KasumiTable
+TARGET = bin/tmto
 TARGETC = bin/kasumi_test
-LIBS = -lm
+LIBS = -lm src/cipher/kasumi.c -lssl -lcrypto
 CC = gcc
-CFLAGS = -Ofast -g -Wall -lssl -lcrypto
+CFLAGS = -Ofast -g -Wall
 
 .PHONY: default all clean
 
@@ -11,17 +11,17 @@ all: default
 cipher: cleanciph $(TARGETC)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard src/*.c))
-HEADERS = $(wildcard src/*.h)
+HEADERS = $(wildcard src/*.h -I/usr/include/openssl)
 #OBJECTSCIPH = $(wildcard src/cipher/*.c)
 #HEADERSCIPH = $(wildcard src/cipher/*.h)
 
 %.o: %.c $(HEADERS)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@ 
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	@echo "Compiling RainbowTable generator.."
+	@echo "Compiling TMTO.."
 	@mkdir -p bin
 	@$(CC) $(OBJECTS) $(LIBS) -o $@
 	@echo "Tablegenerator compiled with" $(CFLAGS)

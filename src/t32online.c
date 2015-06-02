@@ -3,8 +3,10 @@
 #include <pthread.h>
 #include <time.h>
 #include <openssl/md5.h>
-#include "cipher/kasumi.c"
 #include <stdlib.h>
+
+#include "cipher/kasumi.h"
+#include "misc.h"
 
 
 uint16_t * reduction(uint32_t m){
@@ -14,23 +16,7 @@ uint16_t * reduction(uint32_t m){
 
     return data;
 }
-uint16_t * keyGen(int m){
-    int j,i, arrToInt,cntr=0;
-    static uint16_t data[8];
-    unsigned char c[MD5_DIGEST_LENGTH];
-    MD5_CTX mdContext;
-    MD5_Init (&mdContext);
-    MD5_Update (&mdContext,&m, sizeof(m));
-    MD5_Final (c,&mdContext);
-    for (i = 0; i < 8; i++){
-        arrToInt=0;
-        for(j=cntr;j<=cntr+1;j++)
-            arrToInt =(arrToInt<<8) | c[j%4];
-        data[i] = arrToInt;
-        cntr=cntr+2;
-    }
-    return data;
-}
+
 
 int inTable(uint32_t text){
     uint16_t buffer[10000];
@@ -65,8 +51,8 @@ int inTable(uint32_t text){
 
 
 int onlinePhase(uint32_t * ciphertext, uint32_t * text){
-    int t, i,k;
-    uint16_t *temp,*temp2;
+    int t, i, k;
+    uint16_t * temp, * temp2;
     uint32_t ep;
     uint32_t cipher[2];
     uint16_t key[8],keys[8];
@@ -90,7 +76,7 @@ int onlinePhase(uint32_t * ciphertext, uint32_t * text){
              }
         ep = key[0]<<16 | key[1];
         i=inTable(ep);
-        if(i>=0){
+        if(i >= 0){
 
             temp2 = keyGen(i);
 
@@ -133,16 +119,16 @@ uint16_t * randomme(){
 }
 
 void online(){
-    int i,j=0,cntr=0;
-    uint16_t key[8],*temp;
+    int i, j = 0, cntr = 0;
+    uint16_t key[8], * temp;
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
     /* uint32_t ciphertext[2] = { */
-    /*     0x591361f4, 0xdd05ce2f */n
+    /*     0x591361f4, 0xdd05ce2f */
     /* }; */
     uint32_t ciphertext[2];
-    while(j<10){
+    while(j < 10){
         //srand(time(NULL));
         //printf("%i\n",r);
         //temp = keyGen(r);
@@ -162,7 +148,4 @@ void online(){
     }
     printf("%i\n",cntr);
     printf("%i\n",(cntr/j *100));
-    return 0;
-
-
 }

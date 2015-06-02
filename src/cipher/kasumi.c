@@ -112,7 +112,7 @@ static uint32_t fo(uint32_t input, int round){
 }
 
 
-uint16_t * kasumi_enc(uint32_t *text){
+extern uint16_t * kasumi_enc(uint32_t *text){
 
     uint32_t left, right, temp;
     static uint16_t enc[4];
@@ -130,7 +130,7 @@ uint16_t * kasumi_enc(uint32_t *text){
         temp = fl( temp, n++ );
 
         left ^= temp;
-    }while( n<=7 );
+    }while( n <= 7 );
 
     enc[0] = (uint16_t)(left >> 16);
     enc[1] = (uint16_t)(left & 0xFFFF);
@@ -140,7 +140,7 @@ uint16_t * kasumi_enc(uint32_t *text){
     return enc;
 }
 
-void kasumi_dec(uint32_t *text){
+extern void kasumi_dec(uint32_t *text){
     uint32_t left, right, temp;
     left = text[0];
     right = text[1];

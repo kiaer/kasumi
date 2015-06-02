@@ -5,10 +5,9 @@
 #include <stdint.h>
 #include <openssl/md5.h>
 
-/* #include "tablegenerator.c" */
-#include "tablegenerator32.c"
-/* #include "t32online.c" */
-/* #include "cipher/kasumi.c" */
+#include "tablegenerator.h"
+#include "tablegenerator32.h"
+#include "t32online.h"
 
 int
 main (int argc, char **argv)
@@ -28,17 +27,18 @@ main (int argc, char **argv)
             break;
         case 't':
             printf("Generating 32-bit rainbow table...\n");
-            tableGenerator(text); 
+            tableGenerator32(text); 
             break;
         case 'o':
             printf("Online phase performed on 32-bit table... \n");
-            /* online(); */
+            online();
             break;
         case 'b':
             printf("Generating 64-bit rainbow table...\n");
+            tableGenerator(text);
             break;
         case 'k':
-            printf("Online phase performed on 64-bit table... \n");
+            printf("Online phase performed on 64-bit table... \n NOT FOUND");
             break;
         case '?':
             err = 1;

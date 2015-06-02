@@ -2,35 +2,37 @@
 #include <stdint.h>
 #include <time.h>
 #include <openssl/md5.h>
-#include "cipher/kasumi.c"
 
-uint16_t * keyGen(int m){
-    int j,i, arrToInt,cntr=0;
-    static uint16_t data[8];
-    unsigned char c[MD5_DIGEST_LENGTH];
-    MD5_CTX mdContext;
-    MD5_Init (&mdContext);
-    MD5_Update (&mdContext,&m, sizeof(m));
-    MD5_Final (c,&mdContext);
-    for (i = 0; i < 8; i++){
-        arrToInt=0;
-        for(j=cntr;j<=cntr+1;j++)
-            arrToInt =(arrToInt<<8) | c[j%4];
-        data[i] = arrToInt;
-        cntr=cntr+2;
-    }
-    return data;
-}
+#include "cipher/kasumi.h"
+#include "misc.h"
 
-void tableGenerator(uint32_t * text){
+/* uint16_t * keyGen(int m){ */
+/*     int j,i, arrToInt,cntr=0; */
+/*     static uint16_t data[8]; */
+/*     unsigned char c[MD5_DIGEST_LENGTH]; */
+/*     MD5_CTX mdContext; */
+/*     MD5_Init (&mdContext); */
+/*     MD5_Update (&mdContext,&m, sizeof(m)); */
+/*     MD5_Final (c,&mdContext); */
+/*     for (i = 0; i < 8; i++){ */
+/*         arrToInt=0; */
+/*         for(j=cntr;j<=cntr+1;j++) */
+/*             arrToInt =(arrToInt<<8) | c[j%4]; */
+/*         data[i] = arrToInt; */
+/*         cntr=cntr+2; */
+/*     } */
+/*     return data; */
+/* } */
+
+void tableGenerator32(uint32_t * text){
     //int mMax=10;
-    int mMax=33554432, lMax=236;
+    int mMax = 33554432, lMax = 236;
     int m, t, i;
-    uint16_t *temp;
+    uint16_t * temp;
     uint16_t key[8], ep[2];
-    FILE *write_ptr;
-    write_ptr = fopen("test32.bin","wb");
-    for(m = 0; m <mMax ; m++){
+    FILE * write_ptr;
+    write_ptr = fopen("test32.bin", "wb");
+    for(m = 0; m < mMax ; m++){
         temp = keyGen(m);
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
@@ -47,7 +49,7 @@ void tableGenerator(uint32_t * text){
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            temp=keyGen(*temp);
+            temp = keyGen(*temp);
             for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
