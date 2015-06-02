@@ -12,3 +12,4 @@ uint16_t KOi1[8], KOi2[8], KOi3[8];
 uint16_t KIi1[8], KIi2[8], KIi3[8];
 
 #endif //__KASUMI_H__
+

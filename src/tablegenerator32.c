@@ -3,6 +3,7 @@
 #include <time.h>
 #include <openssl/md5.h>
 #include "cipher/kasumi.c"
+
 uint16_t * keyGen(int m){
     int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
