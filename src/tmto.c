@@ -16,7 +16,7 @@ main (int argc, char **argv)
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
-    static char usage[] = "usage: %s [-dmp] -f fname [-s sname] name [name ...]\n";
+    static char usage[] = "usage: %s TODO\n";
 
 
     while ((c = getopt (argc, argv, "tobkh")) != -1)
