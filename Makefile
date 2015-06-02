@@ -2,7 +2,7 @@ TARGET = bin/KasumiTable
 TARGETC = bin/kasumi_test
 LIBS = -lm
 CC = gcc
-CFLAGS = -Ofast -g -Wall
+CFLAGS = -Ofast -g -Wall -lssl -lcrypto
 
 .PHONY: default all clean
 

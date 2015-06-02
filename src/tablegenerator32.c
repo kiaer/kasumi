@@ -75,35 +75,35 @@ void tableGenerator(uint32_t * text){
 
 }
 
-int main(){
-    /* uint16_t key[4] = { */
-    /*     0x9900, 0xAABB, 0xCCDD, 0xEEFF */
-    /* }; */
-    /* int amountOfKeys=5; */
-    /* uint16_t buffer[amountOfKeys*4]; */
-    /* FILE *ptr; */
+/* int main(){ */
+/*     /\* uint16_t key[4] = { *\/ */
+/*     /\*     0x9900, 0xAABB, 0xCCDD, 0xEEFF *\/ */
+/*     /\* }; *\/ */
+/*     /\* int amountOfKeys=5; *\/ */
+/*     /\* uint16_t buffer[amountOfKeys*4]; *\/ */
+/*     /\* FILE *ptr; *\/ */
 
 
-    uint32_t text[2] = {
-        0xFEDCBA09, 0x87654321
-    };
+/*     uint32_t text[2] = { */
+/*         0xFEDCBA09, 0x87654321 */
+/*     }; */
 
 
-    tableGenerator(text);
-    /* ptr = fopen("test32.bin","rb");  // r for read, b for binary */
+/*     tableGenerator(text); */
+/*     /\* ptr = fopen("test32.bin","rb");  // r for read, b for binary *\/ */
 
-    /* fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */
-    /* int i,j,cnt,cnt1; */
-    /* printf("\n Read \n"); */
-    /* for(j = 0; j<amountOfKeys ; j++){ */
-    /*     printf(" 0x "); */
-    /*     cnt=j*2; */
-    /*      for(i = 0; i<2; i++){ */
-    /*          cnt1=cnt+i; */
-    /*          printf(" %04x ", buffer[cnt1]); */
-    /*      } // prints a series of bytes} */
-    /*     printf("\n"); */
-    /* } */
-    return 0;
+/*     /\* fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer *\/ */
+/*     /\* int i,j,cnt,cnt1; *\/ */
+/*     /\* printf("\n Read \n"); *\/ */
+/*     /\* for(j = 0; j<amountOfKeys ; j++){ *\/ */
+/*     /\*     printf(" 0x "); *\/ */
+/*     /\*     cnt=j*2; *\/ */
+/*     /\*      for(i = 0; i<2; i++){ *\/ */
+/*     /\*          cnt1=cnt+i; *\/ */
+/*     /\*          printf(" %04x ", buffer[cnt1]); *\/ */
+/*     /\*      } // prints a series of bytes} *\/ */
+/*     /\*     printf("\n"); *\/ */
+/*     /\* } *\/ */
+/*     return 0; */
 
-}
+/* } */

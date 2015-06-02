@@ -132,14 +132,14 @@ uint16_t * randomme(){
     return data;
 }
 
-int main(){
+void online(){
     int i,j=0,cntr=0;
     uint16_t key[8],*temp;
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
     /* uint32_t ciphertext[2] = { */
-    /*     0x591361f4, 0xdd05ce2f */
+    /*     0x591361f4, 0xdd05ce2f */n
     /* }; */
     uint32_t ciphertext[2];
     while(j<10){
