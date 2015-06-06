@@ -16,7 +16,13 @@ main (int argc, char **argv)
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
-    static char usage[] = "usage: %s TODO\n";
+    static char usage[] = "usage: %s [command] \n \
+                             -t      Generates 32-bit Rainbow Table \n \
+                             -o      Performs online phase on 32-bit Rainbow Table \n \
+                             -b      Generates 64-bit Rainbow Table \n \
+                             -k      Performs online phase on 64-bit Rainbow Table \n \
+                             -h      Prints the very helpful usage message..";
+   
 
 
     while ((c = getopt (argc, argv, "tobkh")) != -1)
@@ -26,7 +32,7 @@ main (int argc, char **argv)
             fprintf(stderr, usage, argv[0]);
             break;
         case 't':
-            printf("Generating 32-bit rainbow table...\n");
+            printf("Generating 32-bit Rainbow Table...\n");
             tableGenerator32(text); 
             break;
         case 'o':
@@ -44,7 +50,10 @@ main (int argc, char **argv)
             err = 1;
             break;
         }
-
+    if (argc == 1) {
+        fprintf(stderr, usage, argv[0]);
+        exit(1);
+    }
     if (err) {
         fprintf(stderr, usage, argv[0]);
         exit(1);
