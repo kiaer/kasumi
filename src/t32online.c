@@ -131,8 +131,8 @@ void online(){
     while(j < 10){
         //srand(time(NULL));
         //printf("%i\n",r);
-        //temp = keyGen(r);
-        temp = randomme();
+        temp = keyGen(j);
+//        temp = randomme();
         printf("--> %04x \n",temp[0]);
         for(i=0;i<8;i++){
             *(key+i)=temp[i%2];

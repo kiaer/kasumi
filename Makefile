@@ -1,6 +1,6 @@
 TARGET = bin/tmto
 TARGETC = bin/kasumi_test
-LIBS = -lm src/cipher/kasumi.c -lssl -lcrypto
+LIBS = -lm -lssl -lcrypto
 CC = gcc
 CFLAGS = -Ofast -g -Wall
 

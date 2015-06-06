@@ -37,8 +37,6 @@ void tableGenerator32(uint32_t * text){
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
-
-        temp = keyGen(*temp);
         for (i = 0; i < 8; i++){
             key[i] = temp[i %2 ];
         }
@@ -49,7 +47,6 @@ void tableGenerator32(uint32_t * text){
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            temp = keyGen(*temp);
             for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
