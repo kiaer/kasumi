@@ -1,9 +1,6 @@
-\chapter{Theory}
-
-\section{Kasumi}
-
+\chapter{Kasumi}
 The KASUMI block cipher is used in the GSM 
-\subsection{Key schedule}
+\section{Key schedule}
 The keyschedule of the Kasumi cipher calculates all of the round keys,
 from the given input key. The 128-bit key is split into eight 16-bit
 subkeys, where $K_1,..K_8$ is a concatenation of subsequent 16-bit of
@@ -26,7 +23,7 @@ Thereafter eight round keys are generated as follows:
   KIi3 &= K'_{i+7}\\
 \end{align*}
 
-\subsection{Algorithm}
+\section{Algorithm}
 The Kasumi algorithm takes an 64-bit word as an input. This word is
 split into two halves.
 \[ inputword = R_o || L_o\]
@@ -48,18 +45,8 @@ After the last round the output ciphertext is the concatenation of the
 outputs.
 \[cipher = R_8 || L_8\]
 
-#TODO
+TODO
 FL OG FO OG FI
-
-\section{TMTO-Attack}
-
-
-
-\subsection{Hellman Tables}
-
-\subsection{Distinguished Points Tables}
-
-\subsection{Rainbow Tables}
 
 %%% Local Variables:
 %%% mode: latex
