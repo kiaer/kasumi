@@ -8,7 +8,8 @@ The idea is similar to a naive table lookup where all possible keys K have been 
 
 
 \subsection*{Precomputation phase}
-Like any other tmto the table itself is generated in the precomputational phase. Each table is fixed for a single plaintext.
+Like any other tmto the table itself is generated in the precomputational phase. Each table is fixed for a single plaintext. The plaintext is encrypted with the selected encryption function E, the key is a arbitarily selected from all possible N keys. This results in the ciphertext C which is in turn used as the next key for the next encryption of the plaintext. A reduction function is applied to C which has the purpose to reduce the bit length of C and re-randomize the output.
+
 The Helman tradof has 3 main parameters, m, t and l and they decide the size of the table that will be generated.
 m is the amount of rows, t is the columns, and l is the amount of times they are repeated.
 Certain requirements are put on these parameters, The size of m*t*t must not be much larger or much smaller than N.
@@ -18,10 +19,58 @@ N is the keysize of the cipher we are trying to break. We use a Matrix stopping 
 
 By selecting the parameters the table can be generated. This is done by selecting m random starting points, $ sp^{k}_1,sp^{k}_2,...,sp^{k}_m E N$. Each startingpoint is then used as the start of their chain and with recursion the chain links are computed by $ x^{k}_{i,j}=F_k( x^{k}_{i,j-1})$ for $0<j<=t$. When the endpoint is reached it is stored as a pair with the startpoint ${( sp^{k}_{i}, ep^{k}_{i})}^{m}_{i=1}$.
 The Hellman table/matrix is usually visualized like so:
-\\sad
+\\
 \begin{figure}[t]
+  figure from Making better tmto paper
   \includegraphics[width=8cm]{figures/HellmanMatrix.png}
-\centering
+  \centering
 \end{figure}
+
+  Here the starting points are sp they are equal to x which is the first element of the chain. It is then encrypted with the current encryption scheme and the reduction function is applied. This is doen t times and $e_t$ is the endpoint.
+
+  ## insert drawing of how Helman chain works
+  Each row/chain from figure 1 is built the way shown in figure2. E is the encryption K is the key SP start point R reduction function and X is the ciphertext for each chain link. When a table is generated it should contain m touples of (SP,EP) and every chain should contain t+1 keys which results in m x (t+1) keys. This should mean that our tables coverage should be m x t, this is not always the case due to merges.
+  There are m $x$ t different chain links and it can happen that some of them merge.
+\subsubsection {Multiple Tables}
+
+  \subsubsection{Merges}
+  Merges happen when in some point of the generation two chains have the same chain link there is a collision and the chains merge. This can be caused by the reduction function, if the reduction function reduces the size of bits of the Ciphertext. If we have ciphertext1 12345678 and ciphertext2 12345679 we have 32 bits here but our encryption only takes 28 bits then this would be a merge if the reduction function just removes the last 4 bit. The chains have now merged and the following intermediate points(chains) will now be the same. This affects coverage, if the merge happens 10 steps into the chain the coverage  will have 10 - t less keys since the two chains will be duplicate.
+
+  ## illustration of merges
+  \subsubsection{Loops}
+  Loops occur when a intermediete point(chain link) points back to a previously reached chain link. This also decreases the tables coverage.
+
+  ## figur for chain looping
+
+  A loop will loop around in the same chain links untill it reaches t.
+
 \subsection*{Online phase}
+Once a table is generated and we have a matching text ciphertext pair (y=F(x)) the online phase can commence.\\
+The given ciphertext is used as the key for the encryption and we compute a single chain. This is done the same way as shown in figure 2 each link computed is matched with the computed Hellman table. This is done for all indicies l in the table if a match isnt found the algorithm will report faliure.\\
+
+Whenever a match is found the corresponding SP is returned. The chain is now partially regenerated to obtain $X_{tmp}=x^k_{i,t-j}=F^{t-j}_k(sp^k_i)$. Which should be the key the text was encrypted with:\\
+$F^j_k(x_{tmp})=F^j_k(F^(t-j)_k(sp^k_i))=ep^k_i=y^k_j=F^{j-1}_k(y_1)=F^j_k(x) $.
+\\
+
+
+\subsubsection{False Alarms}
+False alarms happen when in the onlinephase a match is found, but the chain did not contain a valid key. This can happen when a merge has happend earlier when two different chains point to the same end point.
+\\
+Skal mere paa her
+
 \subsection*{Analasys}
+This section will address the success probability, cost of resolving alarms, tradeofcurve, memory Usage, precomputational time and online time.
+
+\subsubsection{Success probability}
+The success probability of the table is found by calculalting how many keys that are covered in our table. Increasing the size of the table will increase the probability that the key is in it. The amount of keys that are covered depends on the amount of startpoints and the size of each chain. The success ratio of a single table can be calculated the following way:
+
+Lower bound from hellman paper
+$\frac{|HM|}{N}>=\frac{1}{N}\sum^{t}_{j=1}\sum^{m}_{i=1}(1-\frac{it}{N})^{j} $
+When the tables are prcessed and assuming the reduction functions provide independent results the success probability becomes:
+
+
+\subsubsection{cost of resolving alarms}
+\subsubsection{tradeofcurve}
+\subsubsection{Memory Usage}
+\subsubsection{Precomputational time}
+\subsubsection{Online time}

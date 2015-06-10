@@ -1,57 +1,33 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <time.h>
-#include <openssl/md5.h>
-
 #include "cipher/kasumi.h"
 #include "misc.h"
 
-/* uint16_t * keyGen(int m){ */
-/*     int j,i, arrToInt,cntr=0; */
-/*     static uint16_t data[8]; */
-/*     unsigned char c[MD5_DIGEST_LENGTH]; */
-/*     MD5_CTX mdContext; */
-/*     MD5_Init (&mdContext); */
-/*     MD5_Update (&mdContext,&m, sizeof(m)); */
-/*     MD5_Final (c,&mdContext); */
-/*     for (i = 0; i < 8; i++){ */
-/*         arrToInt=0; */
-/*         for(j=cntr;j<=cntr+1;j++) */
-/*             arrToInt =(arrToInt<<8) | c[j%4]; */
-/*         data[i] = arrToInt; */
-/*         cntr=cntr+2; */
-/*     } */
-/*     return data; */
-/* } */
-
-uint16_t * gg(uint32_t m){
-    static uint16_t data[8];
-    data[0]=m>>16;
-    data[1]=m;
-    return data;
-}
 
 void tableGenerator32(uint32_t * text){
-    //int mMax=33554432;
+    //int mMax=10;
     int mMax = 33554432, lMax = 236;
-    int m, t, i;
+    int m, t, i, r;
     uint16_t * temp;
-    uint16_t key[8], ep[2];
+    uint16_t key[8], ep[2],sp[2];
     FILE * write_ptr;
-    for (i = 0; i < 8; i++){
-        key[i] = 0;
-    }
-    write_ptr = fopen("tableWOmd55s.bin", "wb");
+    write_ptr = fopen("SpEp.bin", "wb");
     for(m = 0; m < mMax ; m++){
-        temp = gg(m);
-        /* for (i = 0; i < 4; i++){ */
-        /*     sp[i] = temp[i];
-               }*/
+        srand(m);
+        r = rand();
+        temp = keyGen(r);
+        for (i = 0; i < 2; i++){
+             sp[i] = temp[i];
+               }
+        fwrite(sp,sizeof(sp),1,write_ptr);
+        /* printf("\n ep-> 0x "); */
+        /* for (i = 0; i < 2; i++) */
+        /*      printf(" %04x ", sp[i]); */
         for (i = 0; i < 8; i++){
-            key[i] = temp[i % 2 ];
+            key[i] = temp[i %2 ];
         }
-        /* if(m%1000==0) */
-        /*     printf("%i %04x %04x\n",m,key[0],key[1]); */
 
         /* /\* printf("\n 0x "); *\/ */
         /* /\* for (i = 0; i < 8; i++) *\/ */
@@ -59,16 +35,14 @@ void tableGenerator32(uint32_t * text){
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            for (i = 0; i < 2; i++){
+            for (i = 0; i < 8; i++){
                 key[i] = temp[i % 2];
             }
-            /* printf("%i %i ",m,t); */
-            /* for(i=0;i<2;i++) */
-            /*     printf("%04x",key[i]); */
+            // for(i=0;i<2;i++)
+            //    printf(" %04x ",key[i]);
 
-            /* printf("\n"); */
+            //printf("\n");
         }
-
 
         for (i = 0; i < 2; i++){
             ep[i] = key[i];
@@ -77,6 +51,7 @@ void tableGenerator32(uint32_t * text){
         // printf("\n ep-> 0x ");
         // for (i = 0; i < 2; i++)
         //     printf(" %04x ", ep[i]);
+
         fwrite(ep,sizeof(ep),1,write_ptr);
     }
     fclose(write_ptr);
