@@ -37,6 +37,7 @@ src/*.bin
 *.mtc1
 *.out
 *.synctex.gz
+!report/figures/*
 
 
 #folders to ignore
