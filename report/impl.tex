@@ -4,7 +4,6 @@
 The implemenation of the KASUMI follows the theory described in the
 chapter \nameref{ch:kas}.
 
-
 \subsection{Benchmarks and Performance}
 The benchmarks of the KASUMI cipher implemented is performed on two
 laptops. The Laptops will each compute the encryption on 64-bit of
@@ -77,8 +76,7 @@ attribute \textit{noinline} must be included for each function. This
 takes away some of the optimzations done by the Ofast compile
 flag. Not supringsingly it shows that \textit{fi} and
 \textit{keyschedule} takes up the most computational
-power. Since \textit{fi} is used in every round of the cipher and it
-requires lookups in a predefined table for every computation, this
+power. Since \textit{fi} requires lookups in a predefined table for every computation, this
 could be seen as expected. As for the keyschedule, it's recalculated
 in each encryption and therefore will require a new computation in
 each new encryption done. 
@@ -101,6 +99,7 @@ Intel compiler has not been performed. Kilder?
 \section{Online Phase}
 
 \section{Usage}
+
 
 
 %%% Local Variables:
