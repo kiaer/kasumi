@@ -2,7 +2,7 @@
 \label{ch:kas}
 The KASUMI block cipher is used in the GSM asd
 \section{Key schedule}
-The keyschedule of the Kasumi cipher calculates all of the round keys,
+The keyschedule of the KASUMI cipher calculates all of the round keys,
 from the given input key. The 128-bit key is split into eight 16-bit
 subkeys, where $K_1,..K_8$ is a concatenation of subsequent 16-bit of
 the original 128-bit key $K$.
@@ -25,9 +25,9 @@ Thereafter eight round keys are generated as follows:
 \end{align*}
 
 \section{Algorithm}
-The Kasumi algorithm takes an 64-bit word as an input. This word is
+The KASUMI algorithm takes an 64-bit word as an input. This word is
 split into two halves.
-\[ inputword = R_o || L_o\]
+\[ inputword = L_o || R_o\]
 In each round of the algorithm the right half of the input is XOR'ed
 with the output of the round functions. Thereafter the right and left
 values are swapped. 
@@ -40,15 +40,49 @@ function is used for odd and even rounds of the algorithm.
 
 An odd round consists of the following:
 \[F_{i = odd} = FO(KO_i, KI_i, FL(KL_i, L_{i - 1})) \]
-Whereas an even round is performed as follows:
+Whereas an even round is performed as follows: 
 \[F_{i = even} = FL(KL_i, FO(KO_i,KI_i, L_{i - 1})) \]
 After the last round the output ciphertext is the concatenation of the
 outputs.
-\[cipher = R_8 || L_8\]
+\[cipher = L_8 || R_8\]
 
-TODO
-FL OG FO OG FI
+\subsection{FO Function}
+The FO function takes an 32-bit $i$. This input is split into two
+16-bit halves, consisting of the 16 leftmost bits and rightmost bits.
+\[i = left_0 || right_o\]
+The 
+BESKRIV ROUNDKEY
+\begin{align*}
+  right_i &= FI(L_{i-1} \oplus KOi_i, KIi_i) \oplus R_{i - 1}\\
+  left_i &= right_{i - 1}
+\end{align*}
 
+\[o = left_3' || right_3'\]
+\subsection{FL Function}
+As in FO, the FL function takes an input of 32-bit $i$ and split it into
+halves of 16-bit.
+\[i = left || right\]
+
+BESKRIV ROUNDKEY
+
+\begin{align*}
+  right' &= right \oplus ROL16(L \lor KLi1)\\
+  left' &= left \oplus ROL16(right \land KLi2)
+\end{align*}
+
+\[o = left' || right'\]
+\subsection{FI Function}
+The FI function takes a 16-bit input $i$ and a 16-bit input $Ki$,
+where $Ki$ corresponds to a given roundkey from the keyschedule. The
+roundkeys alternate for each round and is a key from either $KIi1$, $KIi2$
+or $KIi3$.
+
+As in the previous functions $i$ is split into two, but in FI it
+consist of the leftmost 9 bits and rightmost 7 bits.
+\[ i = left_o || right_o \]
+
+
+\[o = left_3 || right_3\]
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "Thesis"
