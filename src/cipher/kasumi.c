@@ -105,8 +105,6 @@ static __attribute__ ((noinline)) uint32_t fo(uint32_t input, int round){
     left ^= KOi3[round];
     left = fi(KIi3[round], left);
     left ^= right;
-
-
     //skal maaske shiftz
     return (((uint32_t) right) << 16) + left;
 }
@@ -138,28 +136,6 @@ extern __attribute__ ((noinline)) uint16_t * kasumi_enc(uint32_t *text){
     enc[3] = (uint16_t)(right & 0xFFFF);
 
     return enc;
-}
-
-extern __attribute__ ((noinline)) void kasumi_dec(uint32_t *text){
-    uint32_t left, right, temp;
-    left = text[0];
-    right = text[1];
-    // printf("0x%.8x%.8x\n", left, right);
-
-    int n = 7;
-    do{ temp = fo( right, n );
-        temp = fl( temp, n-- );
-
-        left ^= temp;
-
-        temp = fl( left, n );
-        temp = fo( temp, n-- );
-
-        right ^= temp;
-    }while( n >= 0 );
-    text[0] = left;
-    text[1] = right;
-    //    printf("0x%.8x%.8x\n", left, right);
 }
 
 void keyschedule(uint16_t *key){

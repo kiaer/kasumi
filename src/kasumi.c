@@ -140,28 +140,6 @@ extern uint16_t * kasumi_enc(uint32_t *text){
     return enc;
 }
 
-extern void kasumi_dec(uint32_t *text){
-    uint32_t left, right, temp;
-    left = text[0];
-    right = text[1];
-    // printf("0x%.8x%.8x\n", left, right);
-
-    int n = 7;
-    do{ temp = fo( right, n );
-        temp = fl( temp, n-- );
-
-        left ^= temp;
-
-        temp = fl( left, n );
-        temp = fo( temp, n-- );
-
-        right ^= temp;
-    }while( n >= 0 );
-    text[0] = left;
-    text[1] = right;
-    //    printf("0x%.8x%.8x\n", left, right);
-}
-
 void keyschedule(uint16_t *key){
     static uint16_t C[] = {
         0x0123,0x4567,0x89AB,0xCDEF, 0xFEDC,0xBA98,0x7654,0x3210 };
