@@ -24,7 +24,7 @@ $(TARGET): $(OBJECTS)
 	@echo "Compiling TMTO.."
 	@mkdir -p bin
 	@$(CC) $(OBJECTS) $(LIBS) -o $@
-	@echo "Tablegenerator compiled with" $(CFLAGS)
+	@echo "TMTO-attack compiled with" $(CFLAGS)
 
 $(TARGETC): $(OBJECTSCIPH)
 	@echo "Compiling cipher.."
