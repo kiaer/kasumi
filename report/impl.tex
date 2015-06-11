@@ -1,7 +1,11 @@
 \chapter{Implementation}
 \section{KASUMI Cipher}
 \subsection{Implementation}
-\subsection{Benchmarks}
+The implemenation of the KASUMI follows the theory described in the
+chapter \nameref{ch:kas}.
+
+
+\subsection{Benchmarks and Performance}
 The benchmarks of the KASUMI cipher implemented is performed on two
 laptops. The Laptops will each compute the encryption on 64-bit of
 data 10.000.000 times. An average time of ten runs of this test is
@@ -24,7 +28,9 @@ The tests will be performed with the
 GCC-compiler \footnote{The Gnu Compiler Collection -
   https://gcc.gnu.org/}. They will be performed with different compile
 flags for optimization, consisting of no flags, O2, O3 and Ofast as
-these are the most common flags for optimization. 
+these are the most common flags for optimization. The two tables
+\ref{tab:zen} and \ref{tab:yoga} will show the results of the KASUMI
+tests.
 \begin{table}[h!]
     \begin{tabular}{l|l|l|l|l}
      Zenbook 1.8 ghz.  & ~                     & ~             & ~              & ~               \\
@@ -36,8 +42,7 @@ these are the most common flags for optimization.
     \end{tabular}
     \caption{Zenbook i7 benchmarks}
     \label{tab:zen}
-\end{table}\\
-asd
+\end{table}
 \begin{table}[h!]
     \begin{tabular}{l|l|l|l|l}
      Yoga 2 pro 2.0 ghz. & ~                     & ~             & ~              & ~               \\
@@ -51,10 +56,45 @@ asd
     \label{tab:yoga}
 \end{table}\\
 
+
+For analysis of the performance of the cipher, gprof \footnote{GNU
+  Profiler - https://sourceware.org/binutils/docs/gprof/} is used to
+analyze each function and get a clear idea of which functions might
+cause slowdowns. The following output is produced from running the
+tests and analyzing with gprof:
+\begin{lstlisting}[caption=Gprof output,captionpos=b,label=lst:grpof]
+    %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 38.56      0.53     0.53 240000024     2.20     2.20  fi
+ 23.50      0.85     0.32                             keyschedule
+ 18.36      1.10     0.25 80000008     3.14     9.75  fo
+ 12.49      1.27     0.17 80000008     2.14     2.14  fl
+  4.41      1.33     0.06                             kasumi_enc
+\end{lstlisting}
+Note that for getting an somewhat accurate representation of the time usage of
+each function, the functions of the cipher cannot be inlined. Thus the
+attribute \textit{noinline} must be included for each function. This
+takes away some of the optimzations done by the Ofast compile
+flag. Not supringsingly it shows that \textit{fi} and
+\textit{keyschedule} takes up the most computational
+power. Since \textit{fi} is used in every round of the cipher and it
+requires lookups in a predefined table for every computation, this
+could be seen as expected. As for the keyschedule, it's recalculated
+in each encryption and therefore will require a new computation in
+each new encryption done. 
+
+If we consider the results of \ref{lst:grpof} and look at both
+\ref{tab:zen} and \ref{tab:yoga}, this shows us that for each byte
+encrypted around 17 cycles of the CPU is used on generating the
+keyschedule. That leaves around 50 cylces remaining for the actual
+encryption of a text.
+
+Since most of the actual computations TODO assembly vs C? Find kilder?
+
 Further optimization could be gained by using a different compiler. As
 both test machines contain Intels i7 CPUs, noticeable performance
-increases could be gained by using a Intel compiler.
-
+increases could be gained by using a Intel compiler. Tests with the
+Intel compiler has not been performed. Kilder?
 
 \section{Tablegenerator}
 
