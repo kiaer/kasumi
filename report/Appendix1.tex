@@ -1,2 +1,41 @@
 \chapter{Appendix}
+\section{Installation}
+Get the source:
 
+\quad\code{\$ git clone \url{https://github.com/kiaer/kasumi.git}}
+
+Build the TMTO-attack. This will generate the executable
+\code{bin/tmto}
+
+\quad\code{\$ make }
+
+The executable \code{tmto} can now be executed with an appropriate
+flag:
+
+\quad\code{\$ ./bin/tmto [command]}
+
+The following commands is available to use with \code{tmto}:
+\begin{verbatim}
+usage: ./bin/tmto [command] 
+                -t      Generates 32-bit Rainbow Table 
+                -o      Performs online phase on 32-bit Rainbow Table 
+                -b      Generates 64-bit Rainbow Table 
+                -k      Performs online phase on 64-bit Rainbow Table 
+                -h      Prints the very helpful usage message.. 
+\end{verbatim}
+
+Generating a table for either the 32-bit or the 64-bit key, the table
+is stored in the kasumi root folder as either \code{table32.bin} or
+\code{table64.bin}. The onlinephase will perform the attack on its
+respective table.
+
+Generation of the cipher, for test purposes is also possible:
+
+\quad\code{\$ make cipher}
+
+An executable \code{bin/kasumi\_test} is created. 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "Thesis"
+%%% End:
