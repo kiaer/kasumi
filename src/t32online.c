@@ -19,11 +19,10 @@ uint16_t * reduction(uint32_t m){
 
 
 int inTable(uint32_t text){
-    uint16_t buffer[10000];
-    uint32_t endpoint[5000];
+    uint16_t buffer[300000];
+    uint32_t endpoint;
     int cntr = 0,i,k=0;
     FILE *ptr;
-;
     ptr = fopen("test32.bin","rb");  // r for read, b for binary */
     // printf("as \n");
     for(;;){
@@ -34,11 +33,11 @@ int inTable(uint32_t text){
 
         for(i=0;i<5000;i++){
             //printf(" %i ",k);
-            endpoint[i] = buffer[k]<<16 | buffer[k+1];
+            endpoint = buffer[k]<<16 | buffer[k+1];
             k=k+2;
         //printf(" %x ",endpoint);
             // printf("%i\n",i);
-        if(endpoint[i]==text){
+        if(endpoint==text){
             fclose(ptr);
             return cntr;
         }
@@ -59,17 +58,14 @@ int onlinePhase(uint32_t * ciphertext, uint32_t * text){
     uint32_t ep;
     uint32_t cipher[2];
     uint16_t key[8],keys[8];
-
     int dobreak = 0;
     //printf("2\n");
     inTable(ciphertext[0]);
-
     temp = reduction(ciphertext[0]);
     //reduciton function
     for (i = 0; i < 8; i++){
         key[i] = temp[i%2];
     }
-
 
     for (t = 0; t < 236 && dobreak==0; t++){
         keyschedule(key);

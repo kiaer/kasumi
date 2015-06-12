@@ -9,7 +9,7 @@ extern uint16_t KLi1[8], KLi2[8];
 extern uint16_t KOi1[8], KOi2[8], KOi3[8];
 extern uint16_t KIi1[8], KIi2[8], KIi3[8];
 //__attribute__ ((noinline))  //is used for profiling remember to remove
-static  __attribute__ ((noinline)) uint16_t fi(uint16_t ki, uint16_t input){
+static  uint16_t fi(uint16_t ki, uint16_t input){
 
     uint16_t left, right;
 
@@ -77,7 +77,7 @@ static  __attribute__ ((noinline)) uint16_t fi(uint16_t ki, uint16_t input){
 
 }
 //__attribute__ ((noinline)) is used for profiling remember to remove
-static __attribute__ ((noinline)) uint32_t fl(uint32_t input, int round){
+static uint32_t fl(uint32_t input, int round){
     uint16_t left, right;
     left = (uint16_t) (input >> 16);
     right = (uint16_t) (input) & 0xFFFF;
@@ -89,7 +89,7 @@ static __attribute__ ((noinline)) uint32_t fl(uint32_t input, int round){
     return (((uint32_t) left) << 16) + right;
 }
 
-static __attribute__ ((noinline)) uint32_t fo(uint32_t input, int round){
+static  uint32_t fo(uint32_t input, int round){
     uint16_t left, right;
     left = (uint16_t)(input >> 16);
     right = (uint16_t) (input & 0xFFFF);
@@ -110,7 +110,7 @@ static __attribute__ ((noinline)) uint32_t fo(uint32_t input, int round){
 }
 
 
-extern __attribute__ ((noinline)) uint16_t * kasumi_enc(uint32_t *text){
+extern  uint16_t * kasumi_enc(uint32_t *text){
 
     uint32_t left, right, temp;
     static uint16_t enc[4];
@@ -142,6 +142,7 @@ void keyschedule(uint16_t *key){
     static uint16_t C[] = {
         0x0123, 0x4567, 0x89AB, 0xCDEF,
         0xFEDC, 0xBA98, 0x7654, 0x3210};
+
     uint16_t Kprime[8];
     int n;
 
@@ -160,4 +161,3 @@ void keyschedule(uint16_t *key){
         KIi3[n] = Kprime[(n+7)&0x7];
     }
 }
-2

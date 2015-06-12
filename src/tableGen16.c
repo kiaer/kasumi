@@ -101,7 +101,7 @@ uint16_t * gg(uint32_t m){
     return data;
 }
 
-void tableGenerator32(uint32_t * text){
+void tableGenerator(uint32_t * text){
     //int mMax=33554432;
     //int mMax = 33554432, lMax = 236;
     int mMax = 4096, lMax = 69;
@@ -113,7 +113,7 @@ void tableGenerator32(uint32_t * text){
     n = (struct node*) malloc(sizeof(struct node));
     n->next=NULL;
     head=NULL;
-    write_ptr = fopen("table16bit.bin", "wb");
+    write_ptr = fopen("table16bitMD5.bin", "wb");
     for(m = 0; m < mMax ; m++){
         temp = keyGen(m);
         if(m==99)
@@ -121,9 +121,42 @@ void tableGenerator32(uint32_t * text){
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
-        for (i = 0; i < 8; i++){
-            key[i] = temp[i % 1 ];
+
+        if(m%8==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else if(m%7==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else if(m%6==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else if(m%5==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else if(m%4==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
         }
+        else if(m%3==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else if(m%2==0){
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }else{
+            for (i = 0; i < 8; i++){
+                key[i] = temp[3];
+            }
+        }
+
         search(key[0]);
 
         /* if(m%1000==0) */
@@ -133,10 +166,26 @@ void tableGenerator32(uint32_t * text){
         /* /\* for (i = 0; i < 8; i++) *\/ */
         /* /\*     printf(" %04x ", key[i]); *\/ */
         for (t = 0; t < lMax; t++){
-            keyschedule(key);
+            keyschedule(keyGen(key[0]);
             temp = kasumi_enc(text);
-            for (i = 0; i < 8; i++){
-                key[i] = temp[i % 1];
+
+            if(t%4==0){
+                for (i = 0; i < 8; i++){
+                    key[i] = temp[3];
+                }
+            }
+            else if(t%3==0){
+                for (i = 0; i < 8; i++){
+                    key[i] = temp[2];
+                }
+            }else if(m%2==0){
+                for (i = 0; i < 8; i++){
+                    key[i] = temp[1];
+                }
+            }else{
+                for (i = 0; i < 8; i++){
+                    key[i] = temp[2];
+                }
             }
 
             search(key[0]);
@@ -181,7 +230,7 @@ int main(){
     };
 
 
-    tableGenerator32(text);
+    tableGenerator(text);
     /* ptr = fopen("test32.bin","rb");  // r for read, b for binary */
 
     /* fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */

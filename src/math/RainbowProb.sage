@@ -3,9 +3,9 @@ from sage.all import *
 from sage.symbolic.integration.integral import definite_integral
 
 
-N = 2**32
-t = 2**10
-m = 2**20
+N = 2**16
+t = 2**2
+m = 2**10
 l = 1
 rps = [0.58, 0.73, 0.90]
 rmsc = 0.0
@@ -20,7 +20,7 @@ def solve_mt(m, rm):
     return 2**(float(log(a[0][x])/log(2)))
 
 def memory():
-    return m * l * (1.25 * 10**-13) * 32
+    return m * l * (1.25 * 10**-13) * 16
 
 def time_for_offline(rm):
     return N * rm * l
@@ -51,10 +51,10 @@ for i in xrange(0,3):
     lstmem2 = []
     print "Proberbility required set to: %f with tables set: %i" % (rps[i], l)
     rmsc = calc_rmsc(rps[i])
-    for x in xrange(0, 18):
+    for x in xrange(0, 10):
         print ""
         #31.5
-        m = 2**(23 + (0.5 * x))
+        m = 2**(8 + (0.5 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
         temp = "$2^{%.2f}$" % log(m, 2)

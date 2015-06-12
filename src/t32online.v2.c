@@ -18,23 +18,20 @@ uint16_t * reduction(uint32_t m){
 
 
 int inTable(uint32_t key,uint32_t * ciphertext, uint32_t * text){
-    uint16_t  buffer[400], *temp2,keys[8];
+    uint16_t  buffer[3000000], *temp2, keys[8];
     uint32_t endpoint,ep;
     uint32_t cipher[2];
     int cntr = 0,i,j,y,k;
     FILE *ptr;
-    for (i = 0; i < 8; i++){
-        keys[i] = 0;
-    }
     //printf("key -> %x\n",key);
-    ptr = fopen("tableWOmd55.bin","rb");  // r for read, b for binary */
+    ptr = fopen("table32bit.bin","rb");  // r for read, b for binary */
     //miss=0;
     for(;;){
         size_t n=fread(buffer,sizeof(buffer),1,ptr);
         //endpoint = buffer[0]<<24 | buffer[1]<<16 | buffer[2]<<8 | buffer[3];
         //printf("1\n");
         k=0;
-        for(i=0;i<200;i++){
+        for(i=0;i<500000;i++){
             // printf(" %i ",k);
             endpoint = buffer[k] << 16 | buffer [k+1] ;
 
@@ -43,10 +40,10 @@ int inTable(uint32_t key,uint32_t * ciphertext, uint32_t * text){
                 // printf("--------------- hit %x\n",endpoint);
                 temp2 = reduction(cntr);
 
-                for (y = 0; y < 2; y++){
+                for (y = 0; y < 8; y++){
                     keys[y] = temp2[y % 2];
                 }
-                for (j = 0; j < 400 ; j++){
+                for (j = 0; j < 236 ; j++){
                     keyschedule(keys);
                     temp2 = kasumi_enc(text);
                     cipher[0] = temp2[0]<<16 | temp2[1];
@@ -56,13 +53,13 @@ int inTable(uint32_t key,uint32_t * ciphertext, uint32_t * text){
                     //printf("cipher --- %08x %08x %i \n",*cipher,cipher[0],j);
                     if(cipher[0]==ciphertext[0]&&cipher[1]==ciphertext[1]){
                         printf("Key found %i steps into chain \n", j);
-                        printf("Key is the following: %04x \n",ep);
+                        printf("Key is the following: %08x \n",ep);
                         // printf("miss /> %i\n",miss);
                         fclose(ptr);
                         return 1;
                         break;
                     }
-                    for (y = 0; y < 2; y++){
+                    for (y = 0; y < 8; y++){
                         keys[y] = temp2[y % 2];
                     }
                 }
@@ -86,29 +83,23 @@ int onlinePhase(uint32_t * ciphertext, uint32_t * text){
     uint16_t * temp;
     uint32_t ep;
     uint16_t key[8];
-    for (i = 0; i < 8; i++){
-        key[i] = 0;
-    }
     inTable(ciphertext[0],ciphertext,text);
     temp = reduction(ciphertext[0]);
     //reduciton function
-    for (i = 0; i < 2; i++){
+    for (i = 0; i < 8; i++){
         key[i] = temp[i%2];
     }
 
-    for (t = 0; t < 236; t++){
+    for (t = 0; t < 235; t++){
         keyschedule(key);
         temp = kasumi_enc(text);
 
 //reduction function
-        for (i = 0; i < 2; i++){
+        for (i = 0; i < 8; i++){
             key[i] = temp[i % 2];
-
              }
-
-
         ep = key[0]<<16 | key[1];
-        printf("%i %x\n",t,ep);
+        //printf("%i %x\n",t,ep);
         i=inTable(ep,ciphertext,text);
         if (i>0)
             return 1;
@@ -134,9 +125,6 @@ int main(){
     uint32_t text[2] = {
         0xFEDCBA09, 0x87654321
     };
-    for (i = 0; i < 8; i++){
-        key[i] = 0;
-    }
     /* uint16_t key[8] = { */
     /*     0xCC9C,0xBB8A,0xCC9C,0xBB8A,0xCC9C,0xBB8A,0xCC9C,0xBB8A */
     /* } */
@@ -147,10 +135,10 @@ int main(){
     while(j < 10){
         //srand(time(NULL));
         //printf("%i\n",r);
-        temp = reduction(j);
-        //temp = randomme();
+        //temp = reduction(j);
+        temp = randomme();
         printf("///////////////////////////////////\n");
-        for(i=0;i<2;i++){
+        for(i=0;i<8;i++){
            key[i]=temp[i%2];
         }
         keyschedule(key);
