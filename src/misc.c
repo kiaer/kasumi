@@ -25,3 +25,47 @@ uint16_t * keyGen(int m){
     }
     return data;
 }
+
+uint16_t reduction(int n, uint16_t * tempkey){
+    uint16_t key;
+    //printf("key -> %x",key[0]);
+    key = tempkey[0]+n;
+    //printf("%i\n",n);
+    /* key[1]=ep>>32; */
+    /* key[2]=ep>>16; */
+    /* key[3]=ep; */
+     /* if(t%8==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%7==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%6==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%5==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%4==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%3==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else if(t%2==0){ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* }else{ */
+    /*     for (i = 0; i < 8; i++){ */
+    /*         key[i] = tempkey[3]; */
+    /*     } */
+    /* } */
+    return key;
+}

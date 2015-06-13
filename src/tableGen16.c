@@ -107,7 +107,7 @@ void tableGenerator(uint32_t * text){
     int mMax = 4096, lMax = 69;
     int m, t, i;
     uint16_t * temp;
-    uint16_t key[8], ep[1];
+    uint16_t * key, ep[1];
     FILE * write_ptr;
     struct node *n;
     n = (struct node*) malloc(sizeof(struct node));
@@ -116,47 +116,10 @@ void tableGenerator(uint32_t * text){
     write_ptr = fopen("table16bitMD5.bin", "wb");
     for(m = 0; m < mMax ; m++){
         temp = keyGen(m);
-        if(m==99)
-            printf("--> %x %i \n",temp[0], m);
-        /* for (i = 0; i < 4; i++){ */
-        /*     sp[i] = temp[i];
-               }*/
-
-        if(m%8==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else if(m%7==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else if(m%6==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else if(m%5==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else if(m%4==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }
-        else if(m%3==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else if(m%2==0){
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }else{
-            for (i = 0; i < 8; i++){
-                key[i] = temp[3];
-            }
-        }
-
+        //key = reduction(m,temp);
+        /* if(m==96) */
+        /*     printf("--> %x %i \n",key[0], m); */
+        key=temp;
         search(key[0]);
 
         /* if(m%1000==0) */
@@ -166,28 +129,14 @@ void tableGenerator(uint32_t * text){
         /* /\* for (i = 0; i < 8; i++) *\/ */
         /* /\*     printf(" %04x ", key[i]); *\/ */
         for (t = 0; t < lMax; t++){
-            keyschedule(keyGen(key[0]);
+            keyschedule(key);
             temp = kasumi_enc(text);
-
-            if(t%4==0){
-                for (i = 0; i < 8; i++){
-                    key[i] = temp[3];
-                }
+            //printf("%x\n",temp[0]);
+            for(i=0; i < 8; i++){
+                key[i]=reduction(t,temp);
             }
-            else if(t%3==0){
-                for (i = 0; i < 8; i++){
-                    key[i] = temp[2];
-                }
-            }else if(m%2==0){
-                for (i = 0; i < 8; i++){
-                    key[i] = temp[1];
-                }
-            }else{
-                for (i = 0; i < 8; i++){
-                    key[i] = temp[2];
-                }
-            }
-
+            // printf("%x\n",key[0]);
+            //  printf("//////////////////\n");
             search(key[0]);
             /* printf("%i %i ",m,t); */
             /* for(i=0;i<2;i++) */
