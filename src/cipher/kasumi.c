@@ -140,7 +140,8 @@ extern __attribute__ ((noinline)) uint16_t * kasumi_enc(uint32_t *text){
 
 void keyschedule(uint16_t *key){
     static uint16_t C[] = {
-        0x0123,0x4567,0x89AB,0xCDEF, 0xFEDC,0xBA98,0x7654,0x3210 };
+        0x0123, 0x4567, 0x89AB, 0xCDEF,
+        0xFEDC, 0xBA98, 0x7654, 0x3210};
     uint16_t Kprime[8];
     int n;
 
