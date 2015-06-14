@@ -103,24 +103,25 @@ uint16_t * gg(uint32_t m){
 
 void tableGenerator(uint32_t * text){
     //int mMax=33554432;
-    //int mMax = 33554432, lMax = 236;
-    int mMax = 4096, lMax = 69;
+    int mMax = 33554432, lMax = 236;
+    //int mMax = 40, lMax = 10,cntr=0;
     int m, t, i;
     uint16_t * temp;
-    uint16_t * key, ep[1];
+    uint16_t * key, ep[2];
+    uint32_t tp;
     FILE * write_ptr;
     struct node *n;
     n = (struct node*) malloc(sizeof(struct node));
     n->next=NULL;
     head=NULL;
-    write_ptr = fopen("table16bitMD5.bin", "wb");
+    write_ptr = fopen("table32bit.bin", "wb");
     for(m = 0; m < mMax ; m++){
         temp = keyGen(m);
         //key = reduction(m,temp);
         /* if(m==96) */
         /*     printf("--> %x %i \n",key[0], m); */
         key=temp;
-        search(key[0]);
+        //search(key[0]);
 
         /* if(m%1000==0) */
         /*     printf("%i %04x %04x\n",m,key[0],key[1]); */
@@ -131,32 +132,37 @@ void tableGenerator(uint32_t * text){
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            //printf("%x\n",temp[0]);
+            // printf("%x\n",temp[0]);
+            tp = reduction32(t,temp);
+            //printf("%08x\n",tp);
+            temp[0]=tp>>16;
+            temp[1]=tp;
             for(i=0; i < 8; i++){
-                key[i]=reduction(t,temp);
+                key[i]=temp[i%2];
             }
             // printf("%x\n",key[0]);
             //  printf("//////////////////\n");
-            search(key[0]);
+            //search(key[0]);
             /* printf("%i %i ",m,t); */
             /* for(i=0;i<2;i++) */
             /*     printf("%04x",key[i]); */
 
             /* printf("\n"); */
-            /* cntr = cntr+1; */
+            //cntr = cntr+1;
         }
 
-            ep[0] = key[0];
+        for(i=0;i<2;i++)
+            ep[i] = key[i];
 
 
-        // printf("\n ep-> 0x ");
+            //printf("count is -> %i\n",count());
         // for (i = 0; i < 2; i++)
         //     printf(" %04x ", ep[i]);
         fwrite(ep,sizeof(ep),1,write_ptr);
     }
 
     fclose(write_ptr);
-    printf("count is -> %i\n",count());
+    //printf("count is -> %i\n",count());
     /* int i; */
     /* uint16_t * key2 = keyGen(); */
     /* printf("\n 0x"); */

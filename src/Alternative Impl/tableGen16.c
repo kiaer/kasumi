@@ -27,12 +27,12 @@
 
 struct node{
     int cntr;
-    uint32_t data;
+    uint16_t data;
     struct node *next;
 }*head;
 
 
-void append(uint32_t num )
+void append(uint16_t num )
 {
     struct node *temp;
     temp=(struct node *)malloc(sizeof(struct node));
@@ -50,7 +50,7 @@ void append(uint32_t num )
     }
 }
 
-void search(uint32_t num)
+void search(uint16_t num)
 {
     struct node *n;
     int found = 0;
@@ -101,32 +101,26 @@ uint16_t * gg(uint32_t m){
     return data;
 }
 
-void tableGenerator32(uint32_t * text){
+void tableGenerator(uint32_t * text){
     //int mMax=33554432;
-    int mMax = 33554432, lMax = 236;
-    //int mMax = 4096, lMax = 69;
+    //int mMax = 33554432, lMax = 236;
+    int mMax = 40, lMax = 10,cntr=0;
     int m, t, i;
-    uint32_t eps;
     uint16_t * temp;
-    uint16_t key[8],ep[2];
+    uint16_t * key, ep[1];
     FILE * write_ptr;
-    /* struct node *n; */
-    /* n = (struct node*) malloc(sizeof(struct node)); */
-    /* n->next=NULL; */
-    /* head=NULL; */
-    write_ptr = fopen("table32bittest.bin", "wb");
+    struct node *n;
+    n = (struct node*) malloc(sizeof(struct node));
+    n->next=NULL;
+    head=NULL;
+    write_ptr = fopen("table16bitMD5.bin", "wb");
     for(m = 0; m < mMax ; m++){
-        temp = gg(m);
-        /* if(m==99) */
-        /*     printf("--> %x %i \n",temp[0], m); */
-        /* for (i = 0; i < 4; i++){ */
-        /*     sp[i] = temp[i];
-               }*/
-        for (i = 0; i < 8; i++){
-            key[i] = temp[i % 2 ];
-        }
-        eps=key[0]<<16|key[1];
-        search(eps);
+        temp = keyGen(m);
+        //key = reduction(m,temp);
+        /* if(m==96) */
+        /*     printf("--> %x %i \n",key[0], m); */
+        key=temp;
+        search(key[0]);
 
         /* if(m%1000==0) */
         /*     printf("%i %04x %04x\n",m,key[0],key[1]); */
@@ -137,28 +131,25 @@ void tableGenerator32(uint32_t * text){
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            if(m<3){
-                printf("%i %i %04x %04x \n",m,t,key[0],key[1]);
-                for(i=0;i<2;i++)
-                    printf("%04x",temp[i]);
-
-                printf("\n");}
-            for (i = 0; i < 8; i++){
-                key[i] = temp[i % 2];
+            //printf("%x\n",temp[0]);
+            for(i=0; i < 8; i++){
+                key[i]=reduction(t,temp);
             }
-            eps = key[0]<<16|key[1];
-            search(eps);
+            // printf("%x\n",key[0]);
+            //  printf("//////////////////\n");
+            search(key[0]);
+            /* printf("%i %i ",m,t); */
+            /* for(i=0;i<2;i++) */
+            /*     printf("%04x",key[i]); */
 
-
-            /* cntr = cntr+1; */
+            /* printf("\n"); */
+            cntr = cntr+1;
         }
 
-        for (i = 0; i < 2; i++){
-            ep[i] = key[i];
-        }
+            ep[0] = key[0];
 
 
-        // printf("\n ep-> 0x ");
+            printf("count is -> %i\n",count());
         // for (i = 0; i < 2; i++)
         //     printf(" %04x ", ep[i]);
         fwrite(ep,sizeof(ep),1,write_ptr);
@@ -188,7 +179,7 @@ int main(){
     };
 
 
-    tableGenerator32(text);
+    tableGenerator(text);
     /* ptr = fopen("test32.bin","rb");  // r for read, b for binary */
 
     /* fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */

@@ -17,8 +17,8 @@ uint16_t * reduce(uint32_t m){
 }
 
 
-int inTable(uint16_t key,uint16_t * ciphertext, uint32_t * text){
-    uint16_t  buffer[4096], *temp2, keys[8], ep;
+int inTable(uint16_t key, uint16_t * ciphertext, uint32_t * text){
+    uint16_t  buffer[40], *temp2, keys[8], ep;
     uint16_t endpoint;
     uint16_t cipher[4];
     int cntr = 0,i,j;
@@ -31,19 +31,20 @@ int inTable(uint16_t key,uint16_t * ciphertext, uint32_t * text){
         //endpoint = buffer[0]<<24 | buffer[1]<<16 | buffer[2]<<8 | buffer[3];
         //printf("1\n");
 
-        for(i=0;i<4095;i++){
+        for(i=0;i<40;i++){
 
             endpoint = buffer[i];
             //printf(" %x numb %i\n",endpoint,i);
             /* if(i==96) */
             /*     printf("%x %x\n",endpoint,key); */
             if(endpoint==key){
-                // printf("--------------- hit %x\n",endpoint);
+                //  printf("--------------- hit %x\n",buffer[i]);
                 temp2 = keyGen(cntr);
                 for(i=0; i < 8; i++){
                     keys[i]=temp2[i];
                 }
                 for (j = 0; j < 2 ; j++){
+                    // printf("%i\n",j);
                     keyschedule(keys);
                     temp2 = kasumi_enc(text);
                     cipher[0] = temp2[0];
@@ -82,20 +83,19 @@ int inTable(uint16_t key,uint16_t * ciphertext, uint32_t * text){
 
 
 int onlinePhase(uint16_t * ciphertext, uint32_t * text){
-    printf("her");
     int t,i,j;
+    int chainLength=10;
     uint16_t *temp, temp2[8];
-    uint16_t ep[69];
+    uint16_t ep[chainLength];
     //uint16_t *key;
     //inTable(ciphertext[0],ciphertext,text);
     //key=kk;
-    ep[0] = reduction(68, ciphertext);
+    ep[0] = reduction((chainLength-1), ciphertext);
     temp = ciphertext;
-    printf("her");
-    for (t = 67; t >= 0; t--){
-        for(j = t; j < 69; j++){
-            if(j == 68){
-                ep[68-t] =  reduction(j, temp);
+    for (t = (chainLength-2); t >= 0; t--){
+        for(j = t; j < chainLength; j++){
+            if(j == (chainLength-1)){
+                ep[chainLength-1-t] =  reduction(j, temp);
             } else{
                 for(i = 0; i < 8; i++){
                     temp2[i] = reduction(j, temp);
@@ -124,7 +124,7 @@ int onlinePhase(uint16_t * ciphertext, uint32_t * text){
     /* for(t = 0; t < 69; t++){ */
     /*     printf("ep ---> %x ", ep[t]); */
     /* } */
-    for(t=0;t<69;t++){
+    for(t=0;t<chainLength;t++){
         //printf("%x \n",ep[t]);
         i = inTable(ep[t],ciphertext,text);
         if (i>0){return 1;}
@@ -158,7 +158,7 @@ int main(){
     /*     0x591361f4, 0xdd05ce2f */
     /* }; */
     uint16_t ciphertext[4];
-    while(j < 1000){
+    while(j < 100){
         //srand(time(NULL));
         //printf("%i\n",r);
         //temp = keyGen(j);

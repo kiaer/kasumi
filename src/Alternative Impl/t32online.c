@@ -154,7 +154,7 @@ uint16_t * randomme(){
     return data;
 }
 
-int online(){
+int main(){
     int j = 0, cntr = 0,i;
     uint16_t *key, * temp;
     uint32_t text[2] = {

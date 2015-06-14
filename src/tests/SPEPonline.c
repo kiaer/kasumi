@@ -17,7 +17,7 @@ uint16_t * reduction(uint32_t m){
 
 
 uint32_t inTable(uint32_t key, uint32_t * ciphertext, uint32_t * text){
-    uint16_t buffer[10000],keys[8],*temp2;
+    uint16_t buffer[100],keys[8],*temp2;
     uint32_t startpoint, endpoint, keytemp,cipher[2];
     int cntr = 0,i,k=0,j,y;
     FILE *ptr;
@@ -27,7 +27,7 @@ uint32_t inTable(uint32_t key, uint32_t * ciphertext, uint32_t * text){
         //endpoint = buffer[0]<<24 | buffer[1]<<16 | buffer[2]<<8 | buffer[3];
         k=0;
         //printf("1\n");
-        for(i=0;i<2500;i++){
+        for(i=0;i<25;i++){
             // if (k%100 == 0 )
                 //printf("%i \n",k);
 
@@ -56,6 +56,13 @@ uint32_t inTable(uint32_t key, uint32_t * ciphertext, uint32_t * text){
                     //printf("ciphertext %08x %08x \n",ciphertext[0],ciphertext[1]);
                     //printf("cipher  %08x %08x \n",cipher[0],cipher[1]);
                     if(cipher[0]==ciphertext[0] && cipher[1]==ciphertext[1]){
+                        //printf("%s\n",text);
+                        printf("Key found %i steps into chain \n", j);
+                        printf("Key is the following: %04x \n",keytemp);
+                        fclose(ptr);
+                        return 1;
+                        break;
+                    }if(cipher[1]==ciphertext[0] && cipher[0]==ciphertext[1]){
                         //printf("%s\n",text);
                         printf("Key found %i steps into chain \n", j);
                         printf("Key is the following: %04x \n",keytemp);
@@ -134,7 +141,6 @@ int main(){
         //printf("%i\n",r);
         //temp = keyGen(r);
         temp = randomme();
-        printf("--> %04x \n",temp[0]);
         for(i=0;i<8;i++){
             *(key+i)=temp[i%2];
         }
@@ -147,7 +153,6 @@ int main(){
         printf("key  %04x %04x \n",key[0],key[1]);
         cntr=cntr+onlinePhase(ciphertext, text);
         j++;
-        printf("-------------------------------------\n");
     }
     printf("%i\n",cntr);
     printf("%.2f\n",(((float)cntr)/((float)j)));
