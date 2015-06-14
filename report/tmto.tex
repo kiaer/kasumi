@@ -80,7 +80,7 @@ Since the count of duplicates is maintained by the matrix stopping rule, the siz
 The distinguished points - tradeof was first described by Rivest in
 the book [ref]. It is a simple modification of the Hellman tradeoff
 where one does not have chains of the same size, since when a
-distinguished point is reached the chain does not continue.
+distinguished point is reached the chain does not continue. The way we distinguish any point from a dp by some property (eg. the first 16 bits are zero). This is the DP proporty, with DP-tradeoff the amount of table lookups is lowered dramatically since the only lookups happen when a point with a DP property is found.
 \subsection{Precomputational phase}
 The DP-tradeoff
 \subsubsection{Parameters}
@@ -89,7 +89,7 @@ the DP-tradeoff like the Hellman tradeoff the table must satisfy the
 given matrix stopping rule $mt^2\approx N$ again the difference between
 mt and N should not be too large or to close to zero. Again a
 matrixstopping constant is used to hold the difference $mt^2\approx
-D_{msc}N$. m
+D_{msc}N$.
 \subsection{Online phase}
 \subsection{Analysis}
 \subsubsection{Chain length bound}
