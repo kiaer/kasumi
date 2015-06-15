@@ -68,9 +68,9 @@ $\frac{|HM|}{N}>=\frac{1}{N}\sum^{t}_{j=1}\sum^{m}_{i=1}(1-\frac{it}{N})^{j} $
 When the all the tables are prcessed and assuming the reduction functions provide independent results the success probability becomes:
 \begin{equation}
 1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})
-\begin{equation}
-Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is :$|HM|\approx mt$.
-\subsubsection{cost of resolving alarms}
+\end{equation}
+Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is: $|HM|\approx mt$.
+\subsubsection{Cost of resolving alarms}
 \subsubsection{tradeofcurve}
 \subsubsection{Memory Usage}
 \subsubsection{Precomputational time}
@@ -82,15 +82,32 @@ the book [ref]. It is a simple modification of the Hellman tradeoff
 where one does not have chains of the same size, since when a
 distinguished point is reached the chain does not continue. The way we distinguish any point from a dp by some property (eg. the first 16 bits are zero). This is the DP proporty, with DP-tradeoff the amount of table lookups is lowered dramatically since the only lookups happen when a point with a DP property is found.
 \subsection{Precomputational phase}
-The DP-tradeoff
+The online phase of the DP-tradeoff is very similar to the Hellman method.
 \subsubsection{Parameters}
 There are several parameters that decide the size and the coverage of
-the DP-tradeoff like the Hellman tradeoff the table must satisfy the
+the DP-tradeoff. M is the amount of rows, t is the chain length  and l is the amount of tables.
+To prevent chains from growing uncontrollably $t_{max}$ is used. This is the max size a chain can get before it is aborted and the chain discarded.
+Like the Hellman tradeoff the table must satisfy the
 given matrix stopping rule $mt^2\approx N$ again the difference between
 mt and N should not be too large or to close to zero. Again a
 matrixstopping constant is used to hold the difference $mt^2\approx
-D_{msc}N$.
+D_{msc}N$. Reduction functions are selected.... add more. The dp property is given by a bitmask with length $dp_l$.
+Once the Parameters have been selected the algorithm can start. $F(SP)=C_1$ is computed and the reduction function is applied which gives the first chain link.$C_1$ is compared to the Dp property, if it is a positive match $C_1$ is an EP this is stored with the SP and the chain length $t_{DP}$. If $C_1$ does not match up with the dp property $F(C_1)=C_2$ is computed and the result compared to the dp property this is done untill an EP is found or the chain length reaches $t_max$
+
+
+\begin{figure}[th]
+  DP schema
+  \includegraphics[width=\textwidth]{figures/DPSchema.png}
+  \centering
+\end{figure}
+
+A DP table does not have duplicate keys, due to it's built in loop/merge detection. If a merge or a loop happens the table will select the chain that is the longest which in turn will result in more unique keys.
+\subsubsection{Merges and Loops}
+If two chains A and B have an identical chain link (intermediate point) $X_A = X_B$. If $X_A$ is reached in step n and $X_B$ is reached in k steps where $k>n$ holds then $X_B$ is stored and $X_A$ is discarded. This only holds when both chains reach an EP. Loops will never be stored in the table since it will never reach a point where the dp property holds and will therefore reach $t_{max}$ and be discarded.
+
 \subsection{Online phase}
+The online phase for the DP-tradeoff is also similar to the Hellman-tradeoff online phase. The major difference is that all EP in the computed table are distinguished points therefore instead of checking all chain links that the given ciphertext gives we only check it when a DP is reached. F is applied to C until a DP is reached or it has been applied $t_{max}-1$ times. If it reaches $t_{max}-1$ the key is not covered in the table but if it is reached we check the table for the distinguished point/EP when found we regenerate the chain from the stored SP, Just like in the Hellman tradeoff. When resolving false alarms we we either have to regenerate the entire chain untill the EP is reached or the $y^k_1$ (WHAT IS THIS). This can be prevented by storing the size of each chain in the table, this though has the drawback that the table will be larger.
+
 \subsection{Analysis}
 \subsubsection{Chain length bound}
 \subsubsection{Success Ratio}
