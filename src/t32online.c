@@ -12,7 +12,7 @@
 uint16_t * reduce(uint32_t m){
     static uint16_t data[8];
     data[0]=m>>16;
-    data[1]=m;
+F    data[1]=m;
     return data;
 }
 
