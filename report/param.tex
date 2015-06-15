@@ -1,4 +1,19 @@
 \chapter{Parameter and table choice}
+\label{ch:param}
+For the Time-memory tradeoff attack to viable, the right set of
+parameteres and the right table choice is of huge importance. In this
+attack we would ideally want to perform the online phase of the  attack on a modern
+high-end laptop/desktop machine. For this to be possible, the right
+tradeoff between time and memory is needed. For an attack on the
+cipher with 64-bit keysize, we know a large table is required. But if
+we want to make it possible to perform the attack on a consumer
+machine, we need to set an upper bound for the maximal memory
+usage. In our attack, we set an upper bound of memory usage to
+\code{8TB} of tables. We see this as a possible amount of storage if a
+consumer machine with a TMTO-attack in mind was to be build.
+
+Other things to take into consideration when analyzing the parameter
+choice, includes 
 
 \section{Hellman Table}
 
@@ -10,7 +25,7 @@
 
 \section{Rainbow Table}
 
-
+For the Rainbo
 
 \section{Comparison and choice of table}
 

@@ -18,8 +18,13 @@ uint16_t * reduce(uint32_t m){
 
 
 int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
+<<<<<<< HEAD
     uint16_t *temp, *temp2, keys[8], ep;
     uint32_t endpoint, *buffer,tp;
+=======
+    uint16_t *temp,*temp2, keys[8], ep;
+    uint32_t endpoint, buffer[335544],tp;
+>>>>>>> param and table chapter
     uint16_t cipher[4];
     int cntr = 0,i,j,y;
     FILE *ptr;
@@ -36,12 +41,8 @@ int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
             tp = buffer[y];
             endpoint = tp<<16|tp>>16;
             if(endpoint==key){
-                // if(i==94)
-
+                printf("--------------- hit %x\n",buffer[i]);
                 temp2 = keyGen(cntr);
-
-                // printf("--------------- hit %i %x \n",y,endpoint);
-
                 for(i=0; i < 8; i++){
                     keys[i]=temp2[i];
                 }
