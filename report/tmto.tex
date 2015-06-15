@@ -66,10 +66,8 @@ The success probability of the table is found by calculalting how many keys that
 Lower bound from hellman paper
 $\frac{|HM|}{N}>=\frac{1}{N}\sum^{t}_{j=1}\sum^{m}_{i=1}(1-\frac{it}{N})^{j} $
 When the all the tables are prcessed and assuming the reduction functions provide independent results the success probability becomes:
-\begin{equation}
-1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})
-\end{equation}
-Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is: $|HM|\approx mt$.
+\[1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})\]
+Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is :$|HM|\approx mt$.
 \subsubsection{Cost of resolving alarms}
 \subsubsection{tradeofcurve}
 \subsubsection{Memory Usage}

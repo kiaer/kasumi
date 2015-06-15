@@ -31,6 +31,7 @@ uint16_t reduction(int n, uint16_t * tempkey){
     key = tempkey[0]+n;
     return key;
 }
+
 uint32_t reduction32(int n, uint16_t * tempkey){
     uint32_t key;
     key = (tempkey[0]+n)<<16 | (tempkey[1]+n);

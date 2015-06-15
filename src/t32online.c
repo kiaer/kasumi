@@ -34,7 +34,6 @@ int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
         for(i=0;i<3355;i++){
 
             endpoint = buffer[i];
-            //printf(" %x numb %i\n",endpoint,n);
             /* if(i==96) */
             /*     printf("%x %x\n",endpoint,key); */
             if(endpoint==key){

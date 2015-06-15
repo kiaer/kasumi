@@ -11,7 +11,7 @@ all: default
 cipher: cleanciph $(TARGETC)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard src/*.c))
-HEADERS = $(wildcard src/*.h -I/usr/include/openssl)
+HEADERS = $(wildcard src/*.h)
 #OBJECTSCIPH = $(wildcard src/cipher/*.c)
 #HEADERSCIPH = $(wildcard src/cipher/*.h)
 

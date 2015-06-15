@@ -25,75 +25,75 @@
 /*     return data; */
 /* } */
 
-struct node{
-    int cntr;
-    uint16_t data;
-    struct node *next;
-}*head;
+/* struct node{ */
+/*     int cntr; */
+/*     uint16_t data; */
+/*     struct node *next; */
+/* }*head; */
 
 
-void append(uint16_t num )
-{
-    struct node *temp;
-    temp=(struct node *)malloc(sizeof(struct node));
-    temp->data=num;
-    temp->cntr=1;
-    if (head== NULL)
-    {
-        head=temp;
-        head->next=NULL;
-    }
-    else
-    {
-        temp->next=head;
-        head=temp;
-    }
-}
+/* void append(uint16_t num ) */
+/* { */
+/*     struct node *temp; */
+/*     temp=(struct node *)malloc(sizeof(struct node)); */
+/*     temp->data=num; */
+/*     temp->cntr=1; */
+/*     if (head== NULL) */
+/*     { */
+/*         head=temp; */
+/*         head->next=NULL; */
+/*     } */
+/*     else */
+/*     { */
+/*         temp->next=head; */
+/*         head=temp; */
+/*     } */
+/* } */
 
-void search(uint16_t num)
-{
-    struct node *n;
-    int found = 0;
-    n=head;
-    while(n!=NULL)
-    {
-        if(n->data==num){
-            n->cntr= n->cntr+1;
-            found = 1;
-            break;
-        }
-         n=n->next;
-    }
-    if(found == 0){
-        append(num);
-    }
-}
-int count()
-{
-    struct node *n;
-    int c=0;
-    n=head;
-    while(n!=NULL)
-    {
-        n=n->next;
-        c++;
-    }
-    return c;
-}
-void  display(struct node *r)
-{
-    r=head;
-    if(r==NULL)
-    {
-        return;
-    }
-    while(r!=NULL)
-    {
-        printf("%d ",r->data);
-        r=r->next;
-    }
-    printf("\n");
-}
+/* void search(uint16_t num) */
+/* { */
+/*     struct node *n; */
+/*     int found = 0; */
+/*     n=head; */
+/*     while(n!=NULL) */
+/*     { */
+/*         if(n->data==num){ */
+/*             n->cntr= n->cntr+1; */
+/*             found = 1; */
+/*             break; */
+/*         } */
+/*          n=n->next; */
+/*     } */
+/*     if(found == 0){ */
+/*         append(num); */
+/*     } */
+/* } */
+/* int count() */
+/* { */
+/*     struct node *n; */
+/*     int c=0; */
+/*     n=head; */
+/*     while(n!=NULL) */
+/*     { */
+/*         n=n->next; */
+/*         c++; */
+/*     } */
+/*     return c; */
+/* } */
+/* void  display(struct node *r) */
+/* { */
+/*     r=head; */
+/*     if(r==NULL) */
+/*     { */
+/*         return; */
+/*     } */
+/*     while(r!=NULL) */
+/*     { */
+/*         printf("%d ",r->data); */
+/*         r=r->next; */
+/*     } */
+/*     printf("\n"); */
+/* } */
 uint16_t * gg(uint32_t m){
     static uint16_t data[8];
     data[0]=m>>16;
@@ -103,43 +103,48 @@ uint16_t * gg(uint32_t m){
 
 void tableGenerator32(uint32_t * text){
     //int mMax=33554432;
-    //int mMax = 33554432, lMax = 236;
-    int mMax = 4096, lMax = 69;
+    int mMax = 33554432, lMax = 236;
+    // int mMax = 4096, lMax = 69;
     int m, t, i;
     uint16_t * temp;
+    uint32_t temp2;
     uint16_t key[8], ep[1];
     FILE * write_ptr;
-    struct node *n;
-    n = (struct node*) malloc(sizeof(struct node));
-    n->next=NULL;
-    head=NULL;
-    write_ptr = fopen("table16bit.bin", "wb");
+    /* struct node *n; */
+    /* n = (struct node*) malloc(sizeof(struct node)); */
+    /* n->next=NULL; */
+    /* head=NULL; */
+    write_ptr = fopen("table32bit.bin", "wb");
     for(m = 0; m < mMax ; m++){
         temp = keyGen(m);
-        if(m==99)
-            printf("--> %x %i \n",temp[0], m);
+        /* if(m==99) */
+        /*     printf("--> %x %i \n",temp[0], temp[1], m); */
         /* for (i = 0; i < 4; i++){ */
         /*     sp[i] = temp[i];
                }*/
         for (i = 0; i < 8; i++){
             key[i] = temp[i % 1 ];
         }
-        search(key[0]);
-
+        /* search(key[0]); */
         /* if(m%1000==0) */
         /*     printf("%i %04x %04x\n",m,key[0],key[1]); */
-
 
         /* /\* for (i = 0; i < 8; i++) *\/ */
         /* /\*     printf(" %04x ", key[i]); *\/ */
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
+            temp2 = reduction32(t, temp);
             for (i = 0; i < 8; i++){
-                key[i] = temp[i % 1];
+                if( i % 2 == 0){
+                    key[i] = temp2 << 16;
+                } else{
+                    key[i] = temp2;
+                }
+                    
             }
 
-            search(key[0]);
+            /* search(key[0]); */
             /* printf("%i %i ",m,t); */
             /* for(i=0;i<2;i++) */
             /*     printf("%04x",key[i]); */
@@ -148,7 +153,7 @@ void tableGenerator32(uint32_t * text){
             /* cntr = cntr+1; */
         }
 
-            ep[0] = key[0];
+        ep[0] = key[0];
 
 
         // printf("\n ep-> 0x ");
@@ -158,7 +163,7 @@ void tableGenerator32(uint32_t * text){
     }
 
     fclose(write_ptr);
-    printf("count is -> %i\n",count());
+    /* printf("count is -> %i\n",count()); */
     /* int i; */
     /* uint16_t * key2 = keyGen(); */
     /* printf("\n 0x"); */
