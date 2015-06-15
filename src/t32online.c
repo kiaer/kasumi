@@ -18,13 +18,8 @@ uint16_t * reduce(uint32_t m){
 
 
 int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
-<<<<<<< HEAD
     uint16_t *temp, *temp2, keys[8], ep;
     uint32_t endpoint, *buffer,tp;
-=======
-    uint16_t *temp,*temp2, keys[8], ep;
-    uint32_t endpoint, buffer[335544],tp;
->>>>>>> param and table chapter
     uint16_t cipher[4];
     int cntr = 0,i,j,y;
     FILE *ptr;
