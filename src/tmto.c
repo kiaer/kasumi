@@ -6,7 +6,7 @@
 #include <openssl/md5.h>
 
 #include "tablegenerator.h"
-#include "tablegenerator32.h"
+#include "tableGen32.h"
 #include "t32online.h"
 
 int
@@ -22,7 +22,7 @@ main (int argc, char **argv)
                              -b      Generates 64-bit Rainbow Table \n \
                              -k      Performs online phase on 64-bit Rainbow Table \n \
                              -h      Prints the very helpful usage message..";
-   
+
 
 
     while ((c = getopt (argc, argv, "tobkh")) != -1)
@@ -33,7 +33,7 @@ main (int argc, char **argv)
             break;
         case 't':
             printf("Generating 32-bit Rainbow Table...\n");
-            tableGenerator32(text); 
+            tableGenerator32(text);
             break;
         case 'o':
             printf("Online phase performed on 32-bit table... \n");

@@ -8,11 +8,10 @@
 extern uint16_t KLi1[8], KLi2[8];
 extern uint16_t KOi1[8], KOi2[8], KOi3[8];
 extern uint16_t KIi1[8], KIi2[8], KIi3[8];
-//__attribute__ ((noinline)) is used for profiling remember to remove
-static uint16_t fi(uint16_t ki, uint16_t input){
+//__attribute__ ((noinline))  //is used for profiling remember to remove
+static  uint16_t fi(uint16_t ki, uint16_t input){
 
     uint16_t left, right;
-
 
     static const uint16_t S7[128] = {
         54, 50, 62, 56, 22, 34, 94, 96, 38,  6, 63, 93,  2, 18,123, 33,
@@ -90,7 +89,7 @@ static uint32_t fl(uint32_t input, int round){
     return (((uint32_t) left) << 16) + right;
 }
 
-static uint32_t fo(uint32_t input, int round){
+static  uint32_t fo(uint32_t input, int round){
     uint16_t left, right;
     left = (uint16_t)(input >> 16);
     right = (uint16_t) (input & 0xFFFF);
@@ -106,14 +105,12 @@ static uint32_t fo(uint32_t input, int round){
     left ^= KOi3[round];
     left = fi(KIi3[round], left);
     left ^= right;
-
-
     //skal maaske shiftz
     return (((uint32_t) right) << 16) + left;
 }
 
 
-extern uint16_t * kasumi_enc(uint32_t *text){
+extern  uint16_t * kasumi_enc(uint32_t *text){
 
     uint32_t left, right, temp;
     static uint16_t enc[4];
@@ -143,7 +140,9 @@ extern uint16_t * kasumi_enc(uint32_t *text){
 
 void keyschedule(uint16_t *key){
     static uint16_t C[] = {
-        0x0123,0x4567,0x89AB,0xCDEF, 0xFEDC,0xBA98,0x7654,0x3210 };
+        0x0123, 0x4567, 0x89AB, 0xCDEF,
+        0xFEDC, 0xBA98, 0x7654, 0x3210};
+
     uint16_t Kprime[8];
     int n;
 
