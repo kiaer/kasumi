@@ -56,12 +56,6 @@ uint32_t reduction32(int n, uint16_t * tempkey){
     return key;
 }
 
-uint64_t reduction64(int n, uint16_t * tempkey){
-    uint32_t key;
-    key = (tempkey[0]+n)<<16 | (tempkey[1]+n);
-    return key;
-}
-
 uint16_t * randomme(){
     int byte_count = 4;
     static uint16_t data[8];
@@ -70,4 +64,14 @@ uint16_t * randomme(){
     fread(&data, 1, byte_count, fp);
     fclose(fp);
     return data;
+}
+
+uint64_t reduction64(int n, uint16_t * tempkey){
+    uint64_t key;
+    uint32_t key1;
+    uint32_t key2;
+    key1 = (tempkey[0]+n) << 16 | (tempkey[1]+n);
+    key2 = (tempkey[2]+n) << 16 | (tempkey[3]+n);
+    key =  (uint64_t) key1 << 32 | key2;
+    return key;
 }

@@ -72,7 +72,17 @@ When the all the tables are prcessed and assuming the reduction functions provid
 \[1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})\]
 Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is :$|HM|\approx mt$.
 \subsubsection{Cost of resolving alarms}
-\subsubsection{tradeofcurve}
+The amount of false alarms a table receive is given by $\frac{H_{msc}}{2}$\cite{14 in 176}, which leads to the cost of resolving them. The cost of resolving alarms are the following:
+\begin{equation}
+\text{(cost of resolving alarms for all tables)}>=\frac{H_{msc}}{6}lt
+\end{equation}
+proof found in \cite{18 in 176}
+\begin{equation}
+\text{(expected cost of resolving alarms)}=\frac{H_{msc}}{6}t
+\end{equation}
+proof found in \cite{15 in 176}
+\subsubsection{Tradeofcurve}
+The tradeoff curve is
 \subsubsection{Memory Usage}
 \subsubsection{Precomputational time}
 \subsubsection{Online time}
