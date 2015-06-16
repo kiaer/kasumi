@@ -25,7 +25,7 @@ int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
     FILE *ptr;
     //printf("key -> %x\n",key);
     buffer = (uint32_t *) malloc (sizeof(uint32_t) * 33554432);
-    ptr = fopen("table32bit.bin","rb");  // r for read, b for binary */
+    ptr = fopen("table32bits.bin","rb");  // r for read, b for binary */
     //miss=0;
     for(;;){
         size_t n=fread(buffer,sizeof(buffer)*33554432,1,ptr);
@@ -36,7 +36,7 @@ int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
             tp = buffer[y];
             endpoint = tp<<16|tp>>16;
             if(endpoint==key){
-                printf("--------------- hit %x\n",buffer[i]);
+                /* printf("--------------- hit %x\n",buffer[i]); */
                 temp2 = keyGen(cntr);
                 for(i=0; i < 8; i++){
                     keys[i]=temp2[i];
@@ -129,18 +129,6 @@ int onlinePhase(uint16_t * ciphertext, uint32_t * text){
     }
 
     return 0;
-}
-
-
-uint16_t * randomme(){
-
-    int byte_count = 4;
-    static uint16_t data[8];
-    FILE *fp;
-    fp = fopen("/dev/urandom", "r");
-    fread(&data, 1, byte_count, fp);
-    fclose(fp);
-    return data;
 }
 
 int online(){

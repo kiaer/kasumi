@@ -3,7 +3,6 @@
 
 int inTable(uint16_t ciphertext, uint32_t text);
 int onlinePhase(uint16_t * ciphertext, uint32_t * text);
-uint16_t * randomme();
-void online();
+int online();
 
 #endif //__T32ONLINE_H__

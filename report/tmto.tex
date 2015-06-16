@@ -4,7 +4,7 @@
 
 \newpage
 \section{Hellman Tables}
-Hellman tradeof is the first iteration of time memory trade offs, It was first explained in the paper A Cryptanalytic Time - Memory Trade-Off by Martin Hellman.
+Hellman tradeoff is the first iteration of time memory trade offs, It was first explained in the paper A Cryptanalytic Time - Memory Trade-Off by Martin Hellman.
 The idea is similar to a naive table lookup where all possible keys K have been encrypted with the plaintext P. Instead of storing all the key ciphertext pairs which is done in the naive table lookup all pairs are sorted into several chains where the only part stored is the start point and the end point. This way memory is saved but time is increased for the online phase. To find a pair one needs to find the right chain and look up the pair.
 
 
@@ -46,7 +46,7 @@ figur for chain looping
 A loop will loop around in the same chain links untill it reaches t.
 
 \subsubsection {Multiple Tables}
-In Hellman as m and t increases it will reach a point where the coverage doesnt increase due to merges and loops. This has been calculated to be somewhere near $N^{\frac{2}{3}$ for single tables. This is the reason that the upper bounds for M and T are around $N^\frac{1}{3}$
+In Hellman as m and t increases it will reach a point where the coverage doesnt increase due to merges and loops. This has been calculated to be somewhere near $N^{\frac{2}{3}}$ for single tables. This is the reason that the upper bounds for M and T are around $N^\frac{1}{3}$
 
 \subsection*{Online phase}
 Once a table is generated and we have a matching text ciphertext pair (y=F(x)) the online phase can commence.\\
