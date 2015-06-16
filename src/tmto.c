@@ -8,6 +8,7 @@
 #include "tablegenerator.h"
 #include "tableGen32.h"
 #include "t32online.h"
+#include "t64online.h"
 
 int
 main (int argc, char **argv)
@@ -41,10 +42,11 @@ main (int argc, char **argv)
             break;
         case 'b':
             printf("Generating 64-bit rainbow table...\n");
-            tableGenerator(text);
+            tableGenerator64(text);
             break;
         case 'k':
-            printf("Online phase performed on 64-bit table... \n NOT FOUND");
+            printf("Online phase performed on 64-bit table... \n");
+            online64();
             break;
         case '?':
             err = 1;

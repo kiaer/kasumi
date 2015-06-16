@@ -5,94 +5,61 @@
 #include "cipher/kasumi.h"
 #include "misc.h"
 
-/* uint16_t * keyGen(){ */
-/*     int i; */
-/*     int byte_count = 8; */
-/*     static uint16_t data[8]; */
-/*     FILE *fp; */
-/*     fp = fopen("/dev/urandom", "r"); */
-/*     fread(&data, 1, byte_count, fp); */
-/*     fclose(fp); */
-/*     for (i = 4; i < 8; i++){ */
-/*         data[i] = data[(i + 4) % 8]; */
-/*     } */
-/*     return data; */
-/* } */
+static inline void loadBar(int x, int n, int r, int w)
+{
+    if ( x % (n/r +1) != 0 ) return;
+ 
+    // Calculuate the ratio of complete-to-incomplete.
+    float ratio = x/(float)n;
+    int   c     = ratio * w;
+ 
+    // Show the percentage complete.
+    printf("%3d%% [", (int)(ratio*100) );
+ 
+    // Show the load bar.
+    for (x=0; x<c; x++)
+        printf("=");
+ 
+    for (x=c; x<w; x++)
+        printf(" ");
+ 
+    // ANSI Control codes to go back to the
+    // previous line and clear it.
+    printf("]\n\033[F\033[J");
+}
 
-void tableGenerator(uint32_t * text){
-
+void tableGenerator64(uint32_t * text){
+    //int mMax=33554432;
+    int mMax = 33554432, lMax = 236;
+    //int mMax = 40, lMax = 10,cntr=0;
     int m, t, i;
-    uint16_t *temp;
-    uint16_t key[8], ep[4];
-    FILE *write_ptr;
-    write_ptr = fopen("test.bin","wb");
-     for(m = 0; m < 5; m++){
+    uint16_t * temp;
+    uint16_t * key, ep[2];
+    uint32_t tp;
+    FILE * write_ptr;
+    write_ptr = fopen("table64bit.bin", "wb");
+    for(m = 0; m < mMax ; m++){
+        loadBar(m, mMax, 10000, 50);
         temp = keyGen(m);
-        /* for (i = 0; i < 4; i++){ */
-
-        /*     sp[i] = temp[i]; */
-        /* } */
-        for (i = 0; i < 8; i++){
-            key[i] = temp[i];
-        }
-        //printf("\n 0x ");
-        /* for (i = 0; i < 4; i++) */
-        /*     printf(" %04x ", sp[i]); */
-        for (t = 0; t < 10; t++){
+        //key = reduction(m,temp);
+        key=temp;
+        for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            for (i = 0; i < 8; i++){
-                key[i] = temp[i % 4];
+            tp = reduction32(t,temp);
+            temp[0]=tp>>16;
+            temp[1]=tp;
+            for(i=0; i < 8; i++){
+                key[i]=temp[i%2];
             }
         }
 
-        for (i = 0; i < 4; i++){
+        for(i=0;i<2;i++)
             ep[i] = key[i];
-        }
-        printf("\n 0x ");
-        for (i = 0; i < 4; i++)
-            printf(" %04x ", ep[i]);
 
         fwrite(ep,sizeof(ep),1,write_ptr);
     }
-     fclose(write_ptr);
 
-    /* int i; */
-    /* uint16_t * key2 = keyGen(); */
-    /* printf("\n 0x"); */
-    /* for (i = 0; i < 4; i++) */
-    /*     printf("%04x", key2[i]); */
+    fclose(write_ptr);
 
 }
-
-/* int main(){ */
-/*     /\* uint16_t key[4] = { *\/ */
-/*     /\*     0x9900, 0xAABB, 0xCCDD, 0xEEFF *\/ */
-/*     /\* }; *\/ */
-/*     int amountOfKeys=5; */
-/*     uint16_t buffer[amountOfKeys*4]; */
-/*     FILE *ptr; */
-
-
-/*     uint32_t text[2] = { */
-/*         0xFEDCBA09, 0x87654321 */
-/*     }; */
-
-
-/*     tableGenerator(text); */
-/*     ptr = fopen("test.bin","rb");  // r for read, b for binary */
-
-/*     fread(buffer,sizeof(buffer),1,ptr); // read 10 bytes to our buffer */
-/*     int i,j,cnt,cnt1; */
-/*     printf("\n Read \n"); */
-/*     for(j = 0; j<amountOfKeys ; j++){ */
-/*         printf(" 0x "); */
-/*         cnt=j*4; */
-/*          for(i = 0; i<4; i++){ */
-/*              cnt1=cnt+i; */
-/*              printf(" %04x ", buffer[cnt1]); */
-/*          } // prints a series of bytes} */
-/*         printf("\n"); */
-/*     } */
-/*     return 0; */
-/* } */
