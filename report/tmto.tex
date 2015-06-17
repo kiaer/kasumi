@@ -21,7 +21,7 @@ add om reduction function
 By selecting the parameters the table can be generated. This is done by selecting m random starting points, $ sp^{k}_1,sp^{k}_2,...,sp^{k}_m E N$. Each startingpoint is then used as the start of their chain and with recursion the chain links are computed by $ x^{k}_{i,j}=F_k( x^{k}_{i,j-1})$ for $0<j<=t$. When the endpoint is reached it is stored as a pair with the startpoint ${( sp^{k}_{i}, ep^{k}_{i})}^{m}_{i=1}$.
 The Hellman table/matrix is usually visualized like so:
 \\
-\begin{figure}[t]
+\begin{figure}[th]
   figure from Making better tmto paper
   \includegraphics[width=\textwidth]{figures/HellmanMatrix.png}
   \centering
@@ -82,10 +82,33 @@ proof found in \cite{18 in 176}
 \end{equation}
 proof found in \cite{15 in 176}
 \subsubsection{Tradeofcurve}
-The tradeoff curve is
+The tradeoff curve can be found by applying the matrix stopping rule to M and T.
+\begin{equation}
+TM^2\approx N^2
+\end{equation}
+$T=t^2$ and $M=m*t$ When the table is implemented it will take M memory and T time.
+
+Add mere evt om tradeof curves generelt
 \subsubsection{Memory Usage}
+Storing the table of a tmto such as the Hellman tradeoff takes a lot of space. Therefore it is one of the aspects of the time memory tradeoff to lower the memory cost to a managable size. The hellman tradeoff stores a tuple of a start point and a end point this can be described as $m\cdot mem$ where mem is the bitsize of the  tuple stored. When several tables are used it is multiplied to the previous equation which gives:
+\begin{equation}
+M=m\cdot n\cdot mem
+\end{equation}
+where n is amount of tables.
 \subsubsection{Precomputational time}
+Time spent on generating the tables are also a factor of the tradeoffcurve, the shorter the chains the less time it takes to generate a table. The time spent generating such a table can be computed. There are m different start points and each of them has t chains, this means that we will use $t\cdot m$ encryption's per table. If n tables are generated the formula for the Time the precomputation takes is:
+\begin{equation}
+  Time=m\cdot t\cdot s
+\end{equation}
+Time is the amount of encryptions that will take place in the generation of the table. Time is multiplied with the time it takes to do one encryption or devided by the amount of encryptions can be done pr second.
+
 \subsubsection{Online time}
+Online time is the time it takes to find a key in the worst case scenario. When searching for a key the worst case scenario is when it takes t applications of F, that is to search through the entire table. If the tradeoff consists of more than one table it is again multiplied by the amount of tables n.
+\begin{equation}
+  Time=t\cdot n
+\end{equation}
+The online phase is also multiplied by the time it takes one encryption or divided by the amount of encryptions per second. A major problem in the online phase of the  Hellman tradeoff is the amount of lookups needed. Even if it is possible to compute a million encryptions per second we need the capacity to access our table a million times pr second. And as our table will be stored on the harddrive it will be impossibru.
+
 
 \section{Distinguished Points Tables}
 The distinguished points - tradeof was first described by Rivest in
