@@ -4,6 +4,7 @@
 
 \newpage
 \section{Hellman Tables}
+\label{sec:hmtheory}
 Hellman tradeoff is the first iteration of time memory trade offs, It was first explained in the paper A Cryptanalytic Time - Memory Trade-Off by Martin Hellman.
 The idea is similar to a naive table lookup where all possible keys K have been encrypted with the plaintext P. Instead of storing all the key ciphertext pairs which is done in the naive table lookup all pairs are sorted into several chains where the only part stored is the start point and the end point. This way memory is saved but time is increased for the online phase. To find a pair one needs to find the right chain and look up the pair.
 
@@ -111,6 +112,7 @@ The online phase is also multiplied by the time it takes one encryption or divid
 
 
 \section{Distinguished Points Tables}
+\label{sec:dptheory}
 The distinguished points - tradeof was first described by Rivest in
 the book [ref]. It is a simple modification of the Hellman tradeoff
 where one does not have chains of the same size, since when a
