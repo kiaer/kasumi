@@ -152,10 +152,76 @@ The success ratio for the DP tradeoff
 \subsubsection{}
 \section{Rainbow Tables}
 \label{sec:raintheory}
-\subsection{Precomputation phase}
+
+The last type of dictionary attack we will look into, is the rainbow
+attack. The rainbow attack was introduced to improve on the previous
+attacks by eliminating the problem of merging chains. In the rainbow
+attack the only way a chain will merge, is if a collision happens in
+the same row of the table. As the rainbow attack uses different
+reduction functions for each row of the chain, collisions happening
+any other place will simply continue with different reduction
+functions.
+
+Because of this property rainbow tables will also be loop free. This
+will save a lot of work compared to the two other discussed attacks.
+
+\subsection{Pre-computation Phase}
+
+A Rainbow table is a table with $m$ entries of end points, where each endpoint
+$ep$ in the table is computed by a $t$ long pre-computational chain. 
+
+Each endpoint of a row is computed from a chosen or randomly chosen
+start point $sp$. From the start point $sp$ the pre-computational chain,
+which generates our endpoint, is computed.
+
+For Rainbow tables, the main difference compared to the other
+discussed TMTO-attacks is the reduction function. Rainbow attacks
+uses $t$ different reduction functions to compute a pre-computation
+chain of length $t$.
+
+See \ref{fig:rainbowchain} for the structure of an $i$-th
+pre-computational chain of a rainbow table.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figures/rainbowchain.png}
+  \caption{Rainbow Chain}
+  \label{fig:rainbowchain}
+\end{figure}
+
+A full rainbow table consists of $m$ iterations of the rainbow chains,
+with $m$ different starting points.
+
+If no other means for storage optimization is done, each chains
+starting point and ending point is stored in the rainbow table. 
+
 \subsection{Online phase}
+
+
+
+
+\subsection{Parameters}
+
+The parameters of a rainbow table consists of $m$ and $t$.
+
+\section{Optimizations}
+
+
+
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "Thesis"
 %%% End:
+
+
+
+
+
+
+
+
+
+
+
+
