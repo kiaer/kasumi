@@ -73,15 +73,15 @@ When the all the tables are prcessed and assuming the reduction functions provid
 \[1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})\]
 Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is :$|HM|\approx mt$.
 \subsubsection{Cost of resolving alarms}
-The amount of false alarms a table receive is given by $\frac{H_{msc}}{2}$\cite{14 in 176}, which leads to the cost of resolving them. The cost of resolving alarms are the following:
+The amount of false alarms a table receive is given by $\frac{H_{msc}}{2}$\cite{176} 14, which leads to the cost of resolving them. The cost of resolving alarms are the following:
 \begin{equation}
 \text{(cost of resolving alarms for all tables)}>=\frac{H_{msc}}{6}lt
 \end{equation}
-proof found in \cite{18 in 176}
+proof found in \cite{176} 18
 \begin{equation}
 \text{(expected cost of resolving alarms)}=\frac{H_{msc}}{6}t
 \end{equation}
-proof found in \cite{15 in 176}
+proof found in \cite{176} 15
 \subsubsection{Tradeofcurve}
 The tradeoff curve can be found by applying the matrix stopping rule to M and T.
 \begin{equation}
@@ -111,12 +111,14 @@ Online time is the time it takes to find a key in the worst case scenario. When 
 The online phase is also multiplied by the time it takes one encryption or divided by the amount of encryptions per second. A major problem in the online phase of the  Hellman tradeoff is the amount of lookups needed. Even if it is possible to compute a million encryptions per second we need the capacity to access our table a million times pr second. And as our table will be stored on the harddrive it will be impossibru.
 
 
-\section{Distinguished Points Tables}
+
+\section{Distinguished Points}
 \label{sec:dptheory}
+
 The distinguished points - tradeof was first described by Rivest in
-the book [ref]. It is a simple modification of the Hellman tradeoff
+the book [ref] and was further analysed in \cite{DP}. It is a simple modification of the Hellman tradeoff
 where one does not have chains of the same size, since when a
-distinguished point is reached the chain does not continue. The way we distinguish any point from a dp by some property (eg. the first 16 bits are zero). This is the DP proporty, with DP-tradeoff the amount of table lookups is lowered dramatically since the only lookups happen when a point with a DP property is found.
+distinguished point is reached the chain does not continue. The way we distinguish any point from a dp by some property (eg. the first 16 bits are zero). This is the DP proporty, with DP-tradeoff the amount of table lookups is lowered dramatically since a lookup only happens when a point that matches the DP property is found.
 \subsection{Precomputational phase}
 The online phase of the DP-tradeoff is very similar to the Hellman method.
 \subsubsection{Parameters}
@@ -128,7 +130,7 @@ given matrix stopping rule $mt^2\approx N$ again the difference between
 mt and N should not be too large or to close to zero. Again a
 matrixstopping constant is used to hold the difference $mt^2\approx
 D_{msc}N$. Reduction functions are selected.... add more. The dp property is given by a bitmask with length $dp_l$.
-Once the Parameters have been selected the algorithm can start. $F(SP)=C_1$ is computed and the reduction function is applied which gives the first chain link.$C_1$ is compared to the Dp property, if it is a positive match $C_1$ is an EP this is stored with the SP and the chain length $t_{DP}$. If $C_1$ does not match up with the dp property $F(C_1)=C_2$ is computed and the result compared to the dp property this is done untill an EP is found or the chain length reaches $t_max$
+Once the Parameters have been selected the algorithm can start. $F(SP)=C_1$ is computed and the reduction function is applied which gives the first chain link.$C_1$ is compared to the Dp property, if it is a positive match $C_1$ is an EP this is stored with the SP and the chain length $t_{DP}$. If $C_1$ does not match up with the dp property $F(C_1)=C_2$ is computed and the result compared to the dp property this is done untill an EP is found or the chain length reaches $t_{max}$
 
 
 \begin{figure}[th]
@@ -137,19 +139,52 @@ Once the Parameters have been selected the algorithm can start. $F(SP)=C_1$ is c
   \centering
 \end{figure}
 
-A DP table does not have duplicate keys, due to it's built in loop/merge detection. If a merge or a loop happens the table will select the chain that is the longest which in turn will result in more unique keys.
-\subsubsection{Merges and Loops}
-If two chains A and B have an identical chain link (intermediate point) $X_A = X_B$. If $X_A$ is reached in step n and $X_B$ is reached in k steps where $k>n$ holds then $X_B$ is stored and $X_A$ is discarded. This only holds when both chains reach an EP. Loops will never be stored in the table since it will never reach a point where the dp property holds and will therefore reach $t_{max}$ and be discarded.
-
 \subsection{Online phase}
 The online phase for the DP-tradeoff is also similar to the Hellman-tradeoff online phase. The major difference is that all EP in the computed table are distinguished points therefore instead of checking all chain links that the given ciphertext gives we only check it when a DP is reached. F is applied to C until a DP is reached or it has been applied $t_{max}-1$ times. If it reaches $t_{max}-1$ the key is not covered in the table but if it is reached we check the table for the distinguished point/EP when found we regenerate the chain from the stored SP, Just like in the Hellman tradeoff. When resolving false alarms we we either have to regenerate the entire chain untill the EP is reached or the $y^k_1$ (WHAT IS THIS). This can be prevented by storing the size of each chain in the table, this wil in turn cause the table to be larger.
 
 \subsection{Analysis}
-The size of the dp property directly influences the table, if the dp property is small(the first 4 byte are 0) then chains will be short since the probability of getting a point where the first 4 byte is 0 is bigger than if it was the first 5,7 or 10. This also holds when the dp property is too large this results in fewer matches on the dp property therefore longer chains. The property should satisfy by a random element of $N$ with probability $\frac{1}{t}$. The average length should then be t.
+
+\subsubsection{DP Property}
+The dp property influences the success rate, coverage, precomputation and online time. This means that the property cannot be selected arbitrarily and needs consideration. If the property requirenment is too easily met the length of each chain will decrease, and lead to less coverage since less unique keys will be generated. If it is too hard to meet the chains will become larger but there will be less chains since some will be discarded if a point is not found. Which leads to lower coverage and a longer precomputation time. As stated the length of the dp property matters and influences the coverage and thereby the success rate of a table and can therefore neither be too large or too short. Too long chains are stored to rarely and too short chains do not consist of enough unique chain links.
+
+The dp property also influences the amount of table accesses. When in the online phase a chain is generated until a point where the dp property is met, this means that the probability of a match is related to the property. The probability of finding a match is the following:
+\begin{equation}
+t(1-e^{-\hat{t}/t})
+\end{equation}
+
 
 \subsubsection{Success Ratio}
-The success ratio for the DP tradeoff
-\subsubsection{}
+The success ratio for the DP tradeoff is given by
+\begin{equation}
+  D_{ps}=1-e^{-D_{cr}D_{pc}}
+\end{equation}
+Where $D_{cr}$ is the coverage rate and $D_{pc}$ the pre computational coefficient. Which are found by:
+\begin{equation}
+  D_{pc}=\frac{mtl}{N}
+\end{equation}
+\begin{equation}
+D_{cr}=\frac{2}{\sqrt{1+2D_{msc}}+1}
+\end{equation}
+This is when $\hat{t}$ is sufficiently large, this means that almost all of the chains become distinguished points. For $\hat{t}$ to be sufficiently large it should be larger but the approximation $(1-\frac{1}{t})^{\hat{t}}\approx e^{-\hat{t}/t}$ should still remain valid.
+\subsubsection{Memory Usage}
+The memory usage of the distinguished points depends on the generated table. It depends on the amount of start points, m and the bitwise size of the tuple of (SP, EP). The number of tables generated n is multiplied on aswell. O
+Needs more Work
+
+\subsubsection{Precomputation Time}
+Due to the fact that the DP-tradeoff has no fixed chain length each chain takes an individual amount of time when constructed. And it is not allways that the chain is stored, in this case $t_{max}-1$ applications of F has been done for nothing.
+Needs more
+
+\subsubsection{Online Time}
+The online phase for distinguished points is similar to the Hellman Online phase. The length of the initial chain computed is the average of the length of chains in the table L. Which is multiplied to the amount of tables n.
+\begin{equation}
+  Time=L\cdot n
+\end{equation}
+The amount of table accesses is where the Distinguished points method really shines since in the worst case it will only do one access per table, and best case only one lookup once a point where the dp property holds has been found.
+The probability for p ..
+
+
+
+
 \section{Rainbow Tables}
 \label{sec:raintheory}
 
@@ -168,7 +203,7 @@ will save a lot of work compared to the two other discussed attacks.
 \subsection{Pre-computation Phase}
 
 A Rainbow table is a table with $m$ entries of end points, where each endpoint
-$ep$ in the table is computed by a $t$ long pre-computational chain. 
+$ep$ in the table is computed by a $t$ long pre-computational chain.
 
 Each endpoint of a row is computed from a chosen or randomly chosen
 start point $sp$. From the start point $sp$ the pre-computational chain,
@@ -193,7 +228,7 @@ A full rainbow table consists of $m$ iterations of the rainbow chains,
 with $m$ different starting points.
 
 If no other means for storage optimization is done, each chains
-starting point and ending point is stored in the rainbow table. 
+starting point and ending point is stored in the rainbow table.
 
 \subsection{Online phase}
 
@@ -213,15 +248,3 @@ The parameters of a rainbow table consists of $m$ and $t$.
 %%% mode: latex
 %%% TeX-master: "Thesis"
 %%% End:
-
-
-
-
-
-
-
-
-
-
-
-
