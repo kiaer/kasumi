@@ -92,7 +92,7 @@ int onlinePhase(uint16_t * ciphertext, uint32_t * text){
     int t,i,j;
     int chainLength=236;
     uint32_t tp;
-    uint16_t *temp,temp2[4], key[8];
+    uint16_t *temp, temp2[4], key[8];
     uint32_t ep[chainLength];
     ep[0] = reduction32((chainLength-1), ciphertext);
     temp = ciphertext;
