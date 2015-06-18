@@ -9,7 +9,7 @@ Hellman tradeoff is the first iteration of time memory trade offs, It was first 
 The idea is similar to a naive table lookup where all possible keys K have been encrypted with the plaintext P. Instead of storing all the key ciphertext pairs which is done in the naive table lookup all pairs are sorted into several chains where the only part stored is the start point and the end point. This way memory is saved but time is increased for the online phase. To find a pair one needs to find the right chain and look up the pair.
 
 
-\subsection*{Precomputation phase}
+\subsection*{Precomputation phase} %
 Like any other tmto the table itself is generated in the precomputational phase.Each table is fixed for a single plaintext. The plaintext is encrypted with the selected encryption function E, the key is a arbitarily selected from all possible N keys. This results in the ciphertext C which is in turn used as the next key for the next encryption of the plaintext. A reduction function is applied to C which has the purpose to reduce the bit length of C and re-randomize the output.
 
 The Helman tradof has 3 main parameters, m, t and l and they decide the size of the table that will be generated.
@@ -190,9 +190,9 @@ The probability for p ..
 
 The last type of dictionary attack we will look into, is the rainbow
 attack. The rainbow attack was introduced to improve on the previous
-attacks by eliminating the problem of merging chains. In the rainbow
+attacks by eliminating the problem of merging chains. In a rainbow
 attack the only way a chain will merge, is if a collision happens in
-the same row of the table. As the rainbow attack uses different
+the same row of two pre-computational chains. As the rainbow attack uses different
 reduction functions for each row of the chain, collisions happening
 any other place will simply continue with different reduction
 functions.
@@ -200,18 +200,29 @@ functions.
 Because of this property rainbow tables will also be loop free. This
 will save a lot of work compared to the two other discussed attacks.
 
+For the rainbow attack, we will consider tables with $m$ entries build
+from $t$-long pre-computational chains. The parameters $m$ and $t$
+will be set such that an attack on a cryptographic
+function with key size \textbf{N}, will satisfy the matrix
+stopping rule $m \cdot t \approx \textbf{N}$. A matrix stopping $R_{msc}$
+constant is introduced which will fulfill $m\cdot t = R_{msc} \cdot
+\textbf{N}$. Another big difference between the rainbow attack and the
+other discussed attacks is the small number of tables $l$, often only
+one large table. As for our calculations we will mostly be looking at
+rainbow attacks with only one table if nothing else is stated.
+
 \subsection{Pre-computation Phase}
 
-A Rainbow table is a table with $m$ entries of end points, where each endpoint
+A Rainbow table is build with $m$ entries of end points, where each endpoint
 $ep$ in the table is computed by a $t$ long pre-computational chain.
 
-Each endpoint of a row is computed from a chosen or randomly chosen
+Each endpoint of a row is computed from a chosen/randomly chosen
 start point $sp$. From the start point $sp$ the pre-computational chain,
 which generates our endpoint, is computed.
 
 For Rainbow tables, the main difference compared to the other
 discussed TMTO-attacks is the reduction function. Rainbow attacks
-uses $t$ different reduction functions to compute a pre-computation
+uses $t$ different reduction functions $R_1,R_2..R_t$ to compute a pre-computation
 chain of length $t$.
 
 See \ref{fig:rainbowchain} for the structure of an $i$-th
@@ -220,26 +231,38 @@ pre-computational chain of a rainbow table.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.4]{figures/rainbowchain.png}
-  \caption{Rainbow Chain}
+  \caption{Rainbow Chain - shows weirdly in report Fix?}
   \label{fig:rainbowchain}
 \end{figure}
 
 A full rainbow table consists of $m$ iterations of the rainbow chains,
 with $m$ different starting points.
 
-If no other means for storage optimization is done, each chains
+If no other means of storage optimization is done, each chains
 starting point and ending point is stored in the rainbow table.
+
+The pre-computation phase of a rainbow attack requires 
+$R_{msc} \cdot \textbf{N} \cdot l$ calls to the cryptographic function the attack targets. 
 
 \subsection{Online phase}
 
+The online phase of the rainbow attack differs from the other
+discussed TMTO attacks, as $t$ reduction functions are used to
+generate the table. To look up a key in the rainbow table one has to
+compute the online chain for an input $c$. The online first element of
+the online chain is computed by $R_t(c)$ and looked for in the
+table. If no match is found the next element $R_t(f(R_{t-1}(c)))$ is
+computed and checked for a match then $R_t(f(R_{t-1}(f(R_{t-2}(c)))))$
+and so on. If an element is found the reconstruction of the chain with
+the matching end point is then done from the corresponding start
+point. If the key is not found in the recounstructed chain we will see
+this as a false alarm. If the key is found the attack was a
+success. This type of table lookup will leave us with at most
+$\frac{t(t - 1)}{2}$ calculations of the cryptographic function and
+$t$ lookups in the the table.
 
+\section{Analysis}
 
-
-\subsection{Parameters}
-
-The parameters of a rainbow table consists of $m$ and $t$.
-
-\section{Optimizations}
 
 
 
