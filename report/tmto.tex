@@ -5,10 +5,14 @@ TODO Description of the idea behind TMTO attacks.
 \newpage
 \section{Hellman Tables}
 \label{sec:hmtheory}
-Hellman tradeoff is the first iteration of time memory trade offs, It was first explained in the paper [Hellman].
-The idea is similar to a naive table lookup where all possible keys K have been encrypted with the plaintext P.
-Instead of storing all the key-ciphertext pairs which is done in naive table lookup all pairs are sorted into several chains where the only part stored is the start point and the end point. This way memory is saved but time is increased for the online phase. To find a pair one needs to find the right chain and look up the pair.
-
+Hellman trade-off is the first iteration of time-memory trade-offs. It
+was first explained in the paper [Hellman - cite needed].
+The idea is similar to a naive table lookup where all possible keys $K$ have been encrypted with the plaintext $P$.
+Instead of storing all the key-ciphertext pairs, as done in the naive
+table lookup, all pairs are sorted into several chains. In these
+chains only the start point and the end point. This way memory is
+saved but time is increased for finding a key $K$. To find a pair one
+needs to find the right chain and look up the pair.
 
 \subsection{Precomputation phase} %
 Like any other tmto the table itself is generated in the pre-computational phase.Each table is fixed for a single plaintext. The plaintext is encrypted with the selected encryption function E, and a key is a arbitarily selected from all possible N keys. This results in the ciphertext $C$ which is in turn used as the next key for the next encryption of the plaintext. A reduction function is applied to $C$ which has the purpose to reduce the bit length of C and re-randomize the output.
