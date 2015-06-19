@@ -76,7 +76,6 @@ $2^{13.00}$ & $2^{26.08}$ & $2^{25.13}$ & $4.81$ & $2^{51.10}$ \\
 $2^{13.50}$ & $2^{25.83}$ & $2^{24.88}$ & $5.72$ & $2^{50.60}$ \\
 $2^{14.00}$ & $2^{25.58}$ & $2^{24.63}$ & $6.81$ & $2^{50.10}$ \\
 $2^{14.50}$ & $2^{25.33}$ & $2^{24.38}$ & $8.09$ & $2^{49.60}$ \\
- &  &  &  &  &  \\
 \end{tabular}
   \caption{Hellman Parameters}
   \label{tab:hellparam}
@@ -110,6 +109,10 @@ upper bound for memory consumption.
 
 All calculations of parameters follows the theory provided in
 \ref{sec:raintheory}.
+
+Conveniently \cite[Fig.4]{176} shows that with our chosen success rate
+$P$ the trade-off effiency is actually lowest when the table count is
+set to 1.
 
 In our calculations, we assume a sequential approach is done in the
 pre-computational phase. This allows us to remove half of the memory
@@ -159,7 +162,7 @@ and \ref{fig:time73} shows the graphical representation of the table.
     \centering
     \includegraphics[scale=0.3]{figures/RainbowTime73.png}
     \captionof{figure}{Rainbow TMTO 73\% success}
-    \labelof{fig:time73}
+    \label{fig:time73}
   \end{minipage}
 \end{figure}
 
