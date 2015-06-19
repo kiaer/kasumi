@@ -33,22 +33,27 @@ split into two halves.
 In each round of the algorithm the right half of the input is XOR'ed
 with the output of the round functions. Thereafter the right and left
 values are swapped. 
-\begin{align*}
-  L_i &= F_i(KL_i,KO_i,KI_i,L_{i - 1}) \oplus R_{i - 1} \\
-  R_i &= L_{i - 1}
-\end{align*}
+
+The operations of the algorithm will be described as follows
+
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for KASUMI alogrithm}] 
+for i:=1 to 8
+do
+     $L_i = F_i(KL_i,KO_i,KI_i,L_{i - 1}) \oplus R_{i - 1}$
+     $R_i = L_{i - 1}$
+end
+\end{lstlisting}
+
 Where $i$ determines which round function is used. A different round
 function is used for odd and even rounds of the algorithm.
 
-The operations of the algorithm will be described as follows
-\begin{lstlisting}[frame=single, language=Pascal, mathescape,
-captionpos=b, caption={Pseudo code for the algorithm KASUMI}] 
-for i:=1 to 8
-do
-     $F_{i = odd} = FO(KO_i, KI_i, FL(KL_i, L_{i - 1}))$
-     $F_{i = even} = FL(KL_i, FO(KO_i,KI_i, L_{i - 1})) $
-end
-\end{lstlisting}
+The following functions are described as the odd and even variants of $F$
+\begin{align*}
+  F_{i = odd} &= FO(KO_i, KI_i, FL(KL_i, L_{i - 1}))\\
+  F_{i = even} &= FL(KL_i, FO(KO_i,KI_i, L_{i - 1}))
+\end{align*}
+
 After the last round the output ciphertext is the concatenation of the
 outputs.
 \[cipher = L_8 || R_8\]
