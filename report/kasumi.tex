@@ -91,9 +91,7 @@ halves of 16-bit.
 The roundkey $KL_{i,j}$ from the keyschedule is used by $FL$.
 
 The operations performed on the input data are defined as
-\begin{lstlisting}[frame=single, language=Pascal, mathescape,
-captionpos=b, caption={Pseudo code for $FL$ function}]
-for j:=1 to 3
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,captionpos=b, caption={Pseudo code for $FL$ function}]
 do
      $right' = right \oplus ROL16(L \lor KLi1)$
      $left' = left \oplus ROL16(right \land KLi2)$
@@ -111,8 +109,9 @@ Two substitution boxes are introduces S7 and S9. The substitution
 boxes are declared as two lookup tables\footnote{see Appendix
   \ref{sec:subbox}}, used in $FI$.
 
-As in the previous functions $i$ is split into two, but in FI it
-consist of the leftmost 9 bits and rightmost 7 bits.
+As in the previous functions $i$ is split into two. FI will split the
+input into two unequal parts consiting of a \code{9-bit} $left$ and a
+\code{7-bit} $right$
 \[ i = left_o || right_o \]
 The operations is defines as
 \begin{lstlisting}[frame=single, language=Pascal, mathescape,

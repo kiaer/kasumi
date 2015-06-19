@@ -1,7 +1,7 @@
 \chapter{TMTO-Attack}
 
 \label{ch:tmto}
-
+TODO Description of the idea behind TMTO attacks.
 \newpage
 \section{Hellman Tables}
 \label{sec:hmtheory}
@@ -243,10 +243,10 @@ pre-computational chain of a rainbow table.
   \label{fig:rainbowchain}
 \end{figure}
 
-A full rainbow table consists of $m$ iterations of the rainbow chains,
+A full rainbow table consists of $m$ iterations of the rainbow chains
 with $m$ different starting points.
 
-If no other means of storage optimization is done, each chains
+If no other means of storage optimization is done each chains
 starting point and ending point is stored in the rainbow table.
 
 The pre-computation phase of a rainbow attack requires
@@ -258,21 +258,23 @@ $R_{msc} \cdot \textbf{N} \cdot l$ calls to the cryptographic function the attac
 The online phase of the rainbow attack differs from the other
 discussed TMTO attacks, as $t$ reduction functions are used to
 generate the table. To look up a key in the rainbow table one has to
-compute the online chain for an input $c$. The online first element of
+compute the online chain for an input $c$. The first element of
 the online chain is computed by $R_t(c)$ and looked for in the
 table. If no match is found the next element $R_t(f(R_{t-1}(c)))$ is
-computed and checked for a match then $R_t(f(R_{t-1}(f(R_{t-2}(c)))))$
-and so on. If an element is found the reconstruction of the chain with
-the matching end point is then done from the corresponding start
+computed and checks for a match. If nothing is found then $R_t(f(R_{t-1}(f(R_{t-2}(c)))))$
+and so on. If an element is found, the reconstruction of the chain with
+the matching end point is done from the corresponding start
 point. If the key is not found in the recounstructed chain we will see
 this as a false alarm. If the key is found the attack was a
 success. This type of table lookup will leave us with at most
 $\frac{t(t - 1)}{2}$ calculations of the cryptographic function and
 $t$ lookups in the the table.
 
+TODO Figure
+
 \subsection{Analysis}
 
-Same as the other?
+TODO Same as the other?
 
 
 

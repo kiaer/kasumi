@@ -10,7 +10,7 @@ unrealistic. Therefore all of our testing is done on tables generated
 with \code{32-bit} keys. We use the same idea as the scaling from \code{128-bit} to
 \code{64-bit} discussed in chapter \ref{ch:kas}.
 
-Thus a key $K_{32} = K_1 || K_2$ generated for testing in our \code{32-bit} implementation will
+Thus a key $K$ build from a \code{32-bit} $K_{32} = K_1 || K_2$  implementation will
 look as follows
 \[K = K_1 || K_2 || K_1 || K_2 || K_1 || K_2 || K_1 || K_2\]
 As we look to gain an idea of how our implementation matches up with
