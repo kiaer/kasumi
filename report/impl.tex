@@ -112,7 +112,7 @@ purpose a 32-bit version of the attack is also implemented.
 
 \subsection{Tablegenerator}
 There are two different tablegenerators one for our 32bit implementation and one for our 64 bit.
-The 32bit implementation consists of one function: tableGenerator32. This function takes an uint32\_t which is the text that the table is generated from. The implementation is quite simple, it consists of two for loops where one is nested into the other. The first for loop initializes the start points of the table these are generated from using MD5 on the iterator of the start point this is repeated $m$ times.
+The 32bit implementation consists of one function: tableGenerator32. This function takes an $uint32\_t$ which is the text that the table is generated from. The implementation is quite simple, it consists of two for loops where one is nested into the other. The first for loop initializes the start points of the table these are generated from using MD5 on the iterator of the start point this is repeated $m$ times.
 The SP is then used in the second for loop to generate the chain for the rainbow table.
 The keyscheduler is applied to the key, then the encryption of the text happens. The new ciphertext then gets the reduciton function applied to it. Now the first chain link has been created this is done $t$ times and the final point the end point is stored in a binary file.
 The endpoints are stored in a binary file, the first 8 byte of the endpoint key is stored. This happens with fopen, fwrite and fclose.
