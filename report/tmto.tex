@@ -200,10 +200,10 @@ The amount of table accesses is where the Distinguished points method really shi
 \section{Rainbow Tables}
 \label{sec:raintheory}
 
-The last type of dictionary attack we will look into, is the rainbow
+The last type of dictionary attack we will explore, is the rainbow
 attack. The rainbow attack was introduced to improve on the previous
 attacks by eliminating the problem of merging chains. In a rainbow
-attack the only way a chain will merge, is if a collision happens in
+attack the only way a chain can merge, is when a collision happens in
 the same row of two pre-computational chains. As the rainbow attack uses different
 reduction functions for each row of the chain, collisions happening
 any other place will simply continue with different reduction
@@ -225,7 +225,7 @@ rainbow attacks with only one table if nothing else is stated.
 
 \subsection{Pre-computation Phase}
 
-A Rainbow table is build with $m$ entries of end points, where each endpoint
+A Rainbow table is built with $m$ entries of end points, where each endpoint
 $ep$ in the table is computed by a $t$ long pre-computational chain.
 
 Each endpoint of a row is computed from a chosen/randomly chosen
@@ -265,11 +265,10 @@ generate the table. To look up a key in the rainbow table one has to
 compute the online chain for an input $c$. The first element of
 the online chain is computed by $R_t(c)$ and looked for in the
 table. If no match is found the next element $R_t(f(R_{t-1}(c)))$ is
-computed and checks for a match. If nothing is found then $R_t(f(R_{t-1}(f(R_{t-2}(c)))))$
-and so on. If an element is found, the reconstruction of the chain with
-the matching end point is done from the corresponding start
-point. If the key is not found in the recounstructed chain we will see
-this as a false alarm. If the key is found the attack was a
+computed and checked for a match. If nothing is found then $R_t(f(R_{t-1}(f(R_{t-2}(c)))))$
+and so on. If an endpoint is found, the chain is reconstructed from the corresponding start
+point. If the key is not found in the recounstructed chain it will count
+as a false alarm. If the key is found the attack was a
 success. This type of table lookup will leave us with at most
 $\frac{t(t - 1)}{2}$ calculations of the cryptographic function and
 $t$ lookups in the the table.

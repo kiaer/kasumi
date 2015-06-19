@@ -10,17 +10,17 @@ unrealistic. Therefore all of our testing is done on tables generated
 with \code{32-bit} keys. We use the same idea as the scaling from \code{128-bit} to
 \code{64-bit} discussed in chapter \ref{ch:kas}.
 
-Thus a key $K$ build from a \code{32-bit} $K_{32} = K_1 || K_2$  implementation will
+Thus a key $K$ built from a \code{32-bit} $K_{32} = K_1 || K_2$  implementation will
 look as follows
 \[K = K_1 || K_2 || K_1 || K_2 || K_1 || K_2 || K_1 || K_2\]
-As we look to gain an idea of how our implementation matches up with
+As to gain an idea of how our implementation matches up with
 the math and parameter choices done in chapter \ref{ch:param}, we have to generate
-information on an actual attack on a \code{32-bit} key. If our \code{32-bit} test
-results match up with our calculations, we can start to give estimates
-of how the actual attack on the \code{64-bit} keysize would look.
+information on an actual attack on a \code{32-bit} key. If the \code{32-bit} test
+results match with our calculations, we can begin to give estimates
+on hthe actual attack(\code{64-bit} keysize).
 \subsection{Pre-computational phase}
-For testing the table generation we will first set some parameters
-which is valid for \code{32-bit} testing.
+To test the table generation we will first set some parameters
+valid for \code{32-bit} testing.
 
 Using the same parameter setup as described in \ref{sec:rainbowparam}
 table \ref{tab:rainparam32} gives us valid parameter choices. For the
@@ -47,22 +47,22 @@ pre-computational time and the memory usage.
 
 \textbf{Pre-computational time}
 
-From table \ref{tab:rainparam32} it is seen that an expected amount of
+Table \ref{tab:rainparam32} states that an expected amount of
 KASUMI encryptions required for generation of the table is
 $2^{32.886}$. Looking back to \ref{sec:benchkas} we know the
 amount of time it takes our test machines to perform 10000000 encrytions. As an
 example the previously mentioned Zenbook i7 is used. The
 Zenbook will perform 10000000 KASUMI encryptions in 1,897
-seconds. From this we can get an idea of how many encryptions our test
-machine can perform in 1 second.
+seconds. From this we get an idea of how many encryptions our
+machine execute in 1 second.
 \[10000000 enc / 1.897 s = 5291005,29 \quad enc/s\]
-Now we can easily calculate the expected running time of the
-pre-computational phase 
+Now we can calculate the expected running time of the
+pre-computational phase
 \[2^{32.886} / 5291005.29 \approx 1500s = 25 min \]
 Running our implementation with UNIX-command
-\code{time}\footnote{\url{https://en.wikipedia.org/wiki/Time_(Unix)}} will
-allow us to easily check whether or not this matches up. Running the
-implementation over multiple times resulted in a running time of
+\code{time}\footnote{\url{https://en.wikipedia.org/wiki/Time_(Unix)}}
+allows us to easily check whether or not this matches up. Running the
+implementation multiple times resulted in average running time of
 approximately 27 minutes. This is $\approx8\%$ more time used than
 expected. This can be seen as expected as time is required to write
 the table to a disk. Another explanation could be our sequential
@@ -71,8 +71,8 @@ approach and the usage of the MD5 algorithm. TODO Some facts to back up maybe?
 \textbf{Memory}
 
 We also want to make sure that the actual memory usage matches up with
-the expected. From our parameter choice we can see it's expected
-that $M_{predicted}=134.22$MB. The previously generated table can easily be
+the expected. From our parameter choice we can see the expected memory
+$M_{predicted}=134.22$MB. The previously generated table can easily be
 checked to make sure this is correct. Using the UNIX-command
 \code{wc}\footnote{\url{https://en.wikipedia.org/wiki/Wc_(Unix)}} with
 the \code{-c} flag will allow us to get the byte count of the
@@ -90,13 +90,13 @@ dealing with the actual \code{64-bit} attack the boundaries we set
 will now be taken into account again. From the tests on the
 \code{32-bit} implementation we saw the size of the table match up
 perfectly. Because of this we will not discuss table size further, as
-adding additional bit to a binary file should not change the outcome. 
+adding additional bit to a binary file should not change the outcome.
 Going with the parameters chosen in \ref{sec:rainbowparam} we set
-$m=?$ and $t=?$. 
+$m=?$ and $t=?$.
 
 From the chosen parameters we know that the pre-computational phase is
-estimated to require $2^{64.88}$ encryptions of KASUMI. This amount of
-encryptions of KASUMI is impossible with the devices we tested the
+estimated to require $2^{64.88}$ encryptions of KASUMI. This amount of encryptions
+is infeasible to test on the devices that we ran the
 \code{32-bit} implementation on.
 
 TODO Need to ask Andrey about what we can compare with.. HPC clusters?
