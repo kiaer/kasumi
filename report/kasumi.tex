@@ -1,6 +1,9 @@
 \chapter{KASUMI}
 \label{ch:kas}
-The KASUMI block cipher is used in the GSM asd
+The KASUMI block cipher is used in the GSM A5/3 streamcipher. As GSM
+is the global standard for mobile communication KASUMI replaced the
+more insecure A5/1 and A5/2 as the standard form of encryption in the
+2G and 3G networks. 
 \section{Key schedule}
 The keyschedule of the KASUMI cipher calculates all of the round keys,
 from the given input key. The 128-bit key is split into eight 16-bit
@@ -12,7 +15,7 @@ the number \code{0x123456789ABCDEFFEDCBA9876543210}. This key $K'$ is split
 into eight 16-bit subkeys as well, following the same rules of the
 original key.
 \[K' = K'_1 || K'_2 || K'_3 || K'_4 || K'_5 || K'_6 || K'_7 || K'_8\]
-Thereafter eight round keys are generated as follows:
+Thereafter eight round keys are generated as follows
 \begin{align*}
   KLi1 &= ROL16(K_i,1)\\
   KLi2 &= K'_{i+2}\\
@@ -23,7 +26,6 @@ Thereafter eight round keys are generated as follows:
   KIi2 &= K'_{i+3}\\
   KIi3 &= K'_{i+7}\\
 \end{align*}
-
 \section{Algorithm}
 The KASUMI algorithm takes an 64-bit word as an input. This word is
 split into two halves.
@@ -38,10 +40,15 @@ values are swapped.
 Where $i$ determines which round function is used. A different round
 function is used for odd and even rounds of the algorithm.
 
-An odd round consists of the following:
-\[F_{i = odd} = FO(KO_i, KI_i, FL(KL_i, L_{i - 1})) \]
-Whereas an even round is performed as follows: 
-\[F_{i = even} = FL(KL_i, FO(KO_i,KI_i, L_{i - 1})) \]
+The operations of the algorithm will be described as follows
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for the algorithm KASUMI}] 
+for i:=1 to 8
+do
+     $F_{i = odd} = FO(KO_i, KI_i, FL(KL_i, L_{i - 1}))$
+     $F_{i = even} = FL(KL_i, FO(KO_i,KI_i, L_{i - 1})) $
+end
+\end{lstlisting}
 After the last round the output ciphertext is the concatenation of the
 outputs.
 \[cipher = L_8 || R_8\]
@@ -50,39 +57,66 @@ outputs.
 The FO function takes an 32-bit $i$. This input is split into two
 16-bit halves, consisting of the 16 leftmost bits and rightmost bits.
 \[i = left_0 || right_o\]
-The 
-BESKRIV ROUNDKEY
-\begin{align*}
-  right_i &= FI(L_{i-1} \oplus KOi_i, KIi_i) \oplus R_{i - 1}\\
-  left_i &= right_{i - 1}
-\end{align*}
-
+The roundkeys $KO_{i,j}$ and $KI_{i,j}$ generated in the keyschedule
+are used in each round of the the function $FO$.
+The rounds of $FO$ is as follows
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for $FO$ function}] 
+for j:=1 to 3
+do
+     $right_i = FI(L_{i-1} \oplus KO_{i,j}, KI_{i,j}) \oplus R_{i - 1}$
+     $left_i = right_{i - 1}$
+end
+\end{lstlisting}
+The output $left_3$ and $right_3$ after the $3$rd iteration will be
+the output of the function $FO$.
 \[o = left_3' || right_3'\]
 \subsection{FL Function}
 As in FO, the FL function takes an input of 32-bit $i$ and split it into
 halves of 16-bit.
 \[i = left || right\]
+The roundkey $KL_{i,j}$ from the keyschedule is used by $FL$.
 
-BESKRIV ROUNDKEY
-
-\begin{align*}
-  right' &= right \oplus ROL16(L \lor KLi1)\\
-  left' &= left \oplus ROL16(right \land KLi2)
-\end{align*}
-
+The operations performed on the input data are defined as
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for $FL$ function}] 
+for j:=1 to 3
+do
+     $right' = right \oplus ROL16(L \lor KLi1)$
+     $left' = left \oplus ROL16(right \land KLi2)$
+end
+\end{lstlisting}
+The output of the function $FL$ is as follows
 \[o = left' || right'\]
 \subsection{FI Function}
-The FI function takes a 16-bit input $i$ and a 16-bit input $Ki$,
-where $Ki$ corresponds to a given roundkey from the keyschedule. The
-roundkeys alternate for each round and is a key from either $KIi1$, $KIi2$
-or $KIi3$.
+The FI function takes a 16-bit input $i$ and a 16-bit input $KI_{i,j}$,
+where $KI_{i,j}$ corresponds to a given roundkey from the keyschedule. The
+roundkeys alternate for each round and is a key from either $KI_{i,1}$, $KI_{i,j}$
+or $KI_{i,j}$.
+
+Two substitution boxes are introduces S7 and S9. The substitution
+boxes are declared as two lookup tables\footnote{see Appendix
+  \ref{sec:subbox}}, used in $FI$.
 
 As in the previous functions $i$ is split into two, but in FI it
 consist of the leftmost 9 bits and rightmost 7 bits.
 \[ i = left_o || right_o \]
-
-
-\[o = left_3 || right_3\]
+The operations is defines as
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for $FI$ function}] 
+do
+     $left_1  = right_0$
+     $right_1 = S9(left_o) \oplus right_0$
+     $left_2  = right_1 \oplus KI_{i,1}$
+     $right_2 = S7(left_1) \oplus right_1 \oplus KI_{i,1}$
+     $left_3  = right_2$
+     $right_3 = S9(left_2) \oplus right_2$
+     $left_4  = S7(left_3) \oplus right_3$
+     $right_4 = right_3$
+end
+\end{lstlisting}
+The function will return the following 16-bit value as output
+\[o = left_4 || right_4\]
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "Thesis"
