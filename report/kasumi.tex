@@ -4,6 +4,14 @@ The KASUMI block cipher is used in the GSM A5/3 streamcipher. As GSM
 is the global standard for mobile communication KASUMI replaced the
 more insecure A5/1 and A5/2 as the standard form of encryption in the
 2G and 3G networks. 
+
+The keysize of the KASUMI cipher is 128-bit, but when used as
+encryption in the 2G network a compatibility version KASUMI-64 is
+used. The key used in KASUMI-64 still effectively uses 128-bit key,
+but allows the 2G network to provide a 64-bit key which is duplicated
+and concatenated to fulfill the 128-bit key properety. An attack on
+this version of the KASUMI will therefore effectively be an attack on
+a cipher with a keyspace of $2^{64}$.
 \section{Key schedule}
 The keyschedule of the KASUMI cipher calculates all of the round keys,
 from the given input key. The 128-bit key is split into eight 16-bit

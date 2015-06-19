@@ -2,6 +2,68 @@
 \label{ch:anal}
 
 \section{TMTO Attack}
+As the keysize of an attack on the KASUMI cipher used in the 2G
+network is \code{64-bit}, we have to perform our tests on a scaled down
+key. With the hardware at our disposal the computation of a table
+required to perform the attack on a \code{64-bit} key would simply be
+unrealistic. Therefore all of our testing is done on tables generated
+with \code{32-bit} keys. We use the same idea as the scaling from \code{128-bit} to
+\code{64-bit} discussed in chapter \ref{ch:kas}.
+
+Thus a key $K_{32} = K_1 || K_2$ generated for testing in our \code{32-bit} implementation will
+look as follows
+\[K = K_1 || K_2 || K_1 || K_2 || K_1 || K_2 || K_1 || K_2\]
+As we look to gain an idea of how our implementation matches up with
+the math and parameter choices done in chapter \ref{ch:param}, we have to generate
+information on an actual attack on a \code{32-bit} key. If our \code{32-bit} test
+results match up with our calculations, we can start to give estimates
+of how the actual attack on the \code{64-bit} keysize would look.
+\subsection{Pre-computational phase}
+For testing the table generation we will first set some parameters
+which is valid for \code{32-bit} testing.
+
+Using the same parameter setup as described in \ref{sec:rainbowparam}
+table \ref{tab:rainparam32} gives us valid parameter choices. For the
+testing of \code{32-bit} no boundaries were set.
+\begin{table}[H]
+  \centering
+  \text{\texttt{Success{ }={ }0.730000,{ }Rmsc{ }={ }1.849002,{ }l{ }={ }1,{ }Offline{ }phase{ }={ }2{\char`\^}32.886747}}
+  \begin{tabular}{llll}
+    m & t & M(MB) & T \\ \hline
+    $2^{25.00}$ & $2^{7.89}$ & $134.22$ & $2^{13.67}$ \\
+    $2^{25.50}$ & $2^{7.39}$ & $189.81$ & $2^{12.71}$ \\
+    $2^{26.00}$ & $2^{6.89}$ & $268.44$ & $2^{11.76}$ \\
+    $2^{26.50}$ & $2^{6.39}$ & $379.63$ & $2^{10.83}$ \\
+    $2^{27.00}$ & $2^{5.89}$ & $536.87$ & $2^{9.92}$ \\
+  \end{tabular}
+  \caption{Rainbow Parameters - 32-bit keysize}
+  \label{tab:rainparam32}
+\end{table}
+Since we are only testing on \code{32-bit} there is no real concern of
+memory usage or online time. For this reason we went with a parameter
+choice of $m=2^{25} \approx 33445532$ and $t= 2^{7.89} \approx
+236$. The table generator will be tested on the actual
+pre-computational time and the memory usage.
+
+\textbf{Pre-computational time}
+
+From table \ref{tab:rainparam32} it is seen that an expected amount of
+KASUMI encryptions required for generation of the table is
+$2^{32.886}$. Looking back to \ref{sec:benchkas} we know the
+amount of encryptions our test machines can perform in a second. As an
+example the previously mentioned Zenbook i7 is used
+\[10000000 enc / 1.897 s = 5291005,29 \quad enc/s\]
+Now we can easily calculate the expected running time of the
+pre-computational phase 
+
+
+\textbf{Memory}
+
+
+\quad\code{\$ wc -c table32bit.bin }
+
+\quad\code{134217728}
+\subsection{Online phase}
 
 \section{Cost analysis}
 %%% Local Variables:

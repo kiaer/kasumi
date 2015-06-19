@@ -9,6 +9,7 @@ The implemenation of the KASUMI follows the theory described in the
 chapter \nameref{ch:kas}.
 
 \subsection{Benchmarks and Performance}
+\label{sec:benchkas}
 The benchmarks of the KASUMI cipher implemented is performed on two
 laptops. The Laptops will each compute the encryption on 64-bit of
 data 10.000.000 times. An average time of ten runs of this test is
@@ -91,12 +92,12 @@ encrypted around 17 cycles of the CPU is used on generating the
 keyschedule. That leaves around 50 cylces remaining for the actual
 encryption of a text.
 
-Since most of the actual computations TODO assembly vs C? Find kilder?
+TODO assembly vs C on bitwise operations?
 
 Further optimization could be gained by using a different compiler. As
 both test machines contain Intels i7 CPUs, noticeable performance
 increases could be gained by using a Intel compiler. Tests with the
-Intel compiler has not been performed. Kilder?
+Intel compiler has not been performed. bullshit?
 
 
 \section{TMTO-Attack}
@@ -132,36 +133,14 @@ uint64_t reduction64(int n, uint16_t * tempkey){
     key2 = (tempkey[2]+n) << 16 | (tempkey[3]+n);
     key =  (uint64_t) key1 << 32 | key2;
     return key;
-}
+  }
 \end{lstlisting}
 
 The reduction function takes an integer, and the current key. The integer is at what position in the chain has been reached. The key is given as an $uint16\_t$ array, each element in the array has n added to it and it is shifted into a $uint64\_t$ which is returned as the reduced function.
 
 \subsection{Online Phase}
-The online phase is implemented the same way as described in \cite{176}. Given the ciphertext and the corresponding text we calculate the key used for the encryption. The initial step is to give the online phase the text and the ciphertext. From the ciphertext certain points are computed which will be checked with the rainbow table:
-\begin{lstlisting}
- ep[0] = reduction32((chainLength-1), ciphertext);
-    temp = ciphertext;
-    for (t = (chainLength-2); t >= 0; t--){
-        for(i=0;i<4;i++)
-            temp2[i] = ciphertext[i];
-        temp=temp2;
-        for(j = t; j < chainLength; j++){
-            if(j == (chainLength-1)){
-                ep[chainLength-1-t] = reduction32(j, temp);
-            } else{
-                tp = reduction32(j,temp);
-                temp[0] = tp >> 16;
-                temp[1] = tp;
-                for(i = 0; i < 8; i++){
-                    key[i] = temp[i%2];
-                }
-                keyschedule(key);
-                temp = kasumi_enc(text);
-            }
-        }
-    }
-\end{lstlisting}
+The online phase is implemented the same way as described in section \ref{sec:onlinerb}. Given the ciphertext and the corresponding text we calculate the key used for the encryption. The initial step is to give the online phase the text and the ciphertext. From the ciphertext certain points are computed which will be checked with the rainbow table:
+
 
 
 %%% Local Variables:
