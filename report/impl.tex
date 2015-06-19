@@ -5,7 +5,7 @@
 
 See appendix \ref{sec:inst} for testing of the KASUMI cipher implementation.
 
-The implemenation of the KASUMI follows the theory described in the
+The implementation of the KASUMI follows the theory described in the
 chapter \ref{ch:kas}.
 
 \subsection{Benchmarks and Performance}
@@ -79,10 +79,10 @@ tests and analyzing with gprof:
 Note that for getting an somewhat accurate representation of the time usage of
 each function, the functions of the cipher cannot be inlined. Thus the
 attribute \textit{noinline} must be included for each function. This
-takes away some of the optimzations done by the Ofast compile
-flag. Not supringsingly it shows that \textit{fi} and
+takes away some of the optimizations done by the Ofast compile
+flag. Not surprisingly it shows that \textit{fi} and
 \textit{keyschedule} takes up the most computational
-power. Since \textit{fi} requires lookups in a predefined table for every computation, this
+power. Since \textit{fi} requires look ups in a predefined table for every computation, this
 could be seen as expected. As for the keyschedule, it's recalculated
 in each encryption and therefore will require a new computations of
 every roundkey with each new encryption done.
@@ -90,7 +90,7 @@ every roundkey with each new encryption done.
 If we consider the results of \ref{lst:grpof} and look at both
 \ref{tab:zen} and \ref{tab:yoga}, this shows us that for each byte
 encrypted around 17 cycles of the CPU is used on generating the
-keyschedule. That leaves around 50 cylces remaining for the actual
+keyschedule. That leaves around 50 cycles remaining for the actual
 encryption of a text.
 
 TODO assembly vs C on bitwise operations?
@@ -116,10 +116,10 @@ purpose a 32-bit version of the attack is also implemented.
 % The table generator mainly consists of two loops looping over our
 % chosen parameters. This will allow us to generate an $m$ large table
 % of $t$
-There are two different tablegenerators one for our 32bit implementation and one for our 64 bit.
+There are two different table generators one for our 32bit implementation and one for our 64 bit.
 The 32bit implementation consists of one function: tableGenerator32. This function takes an $uint32\_t$ which is the text that the table is generated from. The implementation is quite simple, it consists of two for loops where one is nested into the other. The first for loop initializes the start points of the table these are generated from using MD5 on the iterator of the start point this is repeated $m$ times.
 The SP is then used in the second for loop to generate the chain for the rainbow table.
-The keyscheduler is applied to the key, then the encryption of the text happens. The new ciphertext then gets the reduciton function applied to it. Now the first chain link has been created this is done $t$ times and the final point the end point is stored in a binary file.
+The keyscheduler is applied to the key, then the encryption of the text happens. The new ciphertext then gets the reduction function applied to it. Now the first chain link has been created this is done $t$ times and the final point the end point is stored in a binary file.
 The endpoints are stored in a binary file, the first 8 byte of the endpoint key is stored. This happens with fopen, fwrite and fclose.
 \lstset{language=C}
 \begin{lstlisting}

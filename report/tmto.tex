@@ -8,24 +8,45 @@ TODO Description of the idea behind TMTO attacks.
 Hellman trade-off is the first iteration of time-memory trade-offs. It
 was first explained in the paper [Hellman - cite needed].
 The idea is similar to a naive table lookup where all possible keys $K$ have been encrypted with the plaintext $P$.
-Instead of storing all the key-ciphertext pairs, as done in the naive
+Instead of storing all the key/ciphertext pairs, as done in the naive
 table lookup, all pairs are sorted into several chains. In these
 chains only the start point and the end point. This way memory is
-saved but time is increased for finding a key $K$. To find a pair one
-needs to find the right chain and look up the pair.
+saved but time is increased for finding a key $K$. 
 
 \subsection{Precomputation phase} %
-Like any other tmto the table itself is generated in the pre-computational phase.Each table is fixed for a single plaintext. The plaintext is encrypted with the selected encryption function E, and a key is a arbitarily selected from all possible N keys. This results in the ciphertext $C$ which is in turn used as the next key for the next encryption of the plaintext. A reduction function is applied to $C$ which has the purpose to reduce the bit length of C and re-randomize the output.
+Like any other TMTO-attack the table itself is generated in the
+pre-computational phase.Each table is fixed for a single
+plaintext. The plaintext is encrypted with the selected encryption
+function $E$ and a key is a arbitrarily selected from all possible \textbf{N}
+keys. This results in a ciphertext $C$ which is in turn used as the
+next key for the next encryption of the plaintext. A reduction
+function is applied to $C$ which has the purpose to reduce the bit
+length of $C$ and re-randomize the output.
 
-The Hellman tradeoff has 3 main parameters, $m$, $t$ and $l$ and they decide the size of the table that will be generated.
-m is the amount of rows, t is the columns, and l is the amount of times they are repeated.
-Certain requirements that needs to hold, $m\cdot t\cdot t$ must not neither be much larger than $N$ nor much smaller. We use a Matrix stopping constant $H_{msc}$ to hold the difference between $N$ and $m\cdot t\cdot t$. It can therefore not be very large nor very close to zero.
+
+The Hellman trade-off has 3 main parameters $m$, $t$ and $l$. These will
+decide the size of the table that will be generated.
+
+$m$ is the amount of rows, $t$ is the columns, and $l$ is the amount
+of tables generated.
+Certain requirements that needs to hold, $m\cdot t\cdot t$ must not
+neither be much larger than \textbf{N} nor much smaller. We use a
+Matrix stopping constant $H_{msc}$ to hold the difference between
+\textbf{N} and $m\cdot t\cdot t$. It can therefore not be very large
+nor very close to zero.
+
 
 add om reduction function
 
-By selecting the parameters the table can be generated. This is done by selecting m random starting points, $ sp^{k}_1,sp^{k}_2,...,sp^{k}_m$. Each startingpoint is then used as the start of their chain and with recursion the chain links are computed by $ x^{k}_{i,j}=F_k( x^{k}_{i,j-1})$ for $0<j<=t$. When the endpoint is reached it is stored as a pair with the startpoint ${( sp^{k}_{i}, ep^{k}_{i})}^{m}_{i=1}$.
-The Hellman table/matrix is usually visualized like so \ref{hellmax}.
-\\
+By selecting the parameters the table can be generated. This is done
+by selecting m random starting points,
+$sp^{k}_1,sp^{k}_2,...,sp^{k}_m$. Each starting point is then used as
+the start of their chain and with recursion the chain links are
+computed by $ x^{k}_{i,j}=F_k( x^{k}_{i,j-1})$ for $0<j<=t$. When the
+end point is reached it is stored as a pair with the start point 
+$\{(sp^{k}_{i}, ep^{k}_{i})\}^{m}_{i=1}\}$.
+
+The Hellman table/matrix is usually visualized as seen in figure \ref{fig:hellmax}.
 \begin{figure}[th]
   \caption{from Making better tmto paper}
   \includegraphics[width=\textwidth]{figures/HellmanMatrix.png}
@@ -33,54 +54,53 @@ The Hellman table/matrix is usually visualized like so \ref{hellmax}.
   \label{fig:hellmax}
 \end{figure}
 
-Here the starting points are sp they are equal to x which is the first element of the chain. It is then encrypted with the current encryption scheme and the reduction function is applied. This is done $t$ times and then $e_t$ is the endpoint.
+Here the starting points are $sp$ they are equal to $x$ which is the first element of the chain. It is then encrypted with the current encryption scheme and the reduction function is applied. This is done $t$ times and then $e_t$ is the endpoint.
 
 \begin{figure}[th]
-  \caption{Needs to be changed to Hellman schema}
-  \includegraphics[width=\textwidth]{figures/DPSchema.png}
   \centering
+  \includegraphics[width=\textwidth]{figures/DPSchema.png}
+  \caption{Needs to be changed to Hellman schema}
   \label{fig:hellSchema}
 \end{figure}
 
-Each row/chain from \ref{hellmax} is built the way shown in \ref{fig:hellSchema}. When a table is generated it should contain $m$ touples of (SP,EP) and every chain should contain $t+1$ keys which results in $m\cdot(t+1)$ keys. This should mean that our tables coverage should be m x t, this is not always the case due to merges.
+Each row/chain from \ref{hellmax} is built the way shown in \ref{fig:hellSchema}. When a table is generated it should contain $m$ tuples of (SP,EP) and every chain should contain $t+1$ keys which results in $m\cdot(t+1)$ keys. This should mean that our tables coverage should be m x t, this is not always the case due to merges.
 
 \subsubsection{Merges}
-Merges occur when in some point of the generation of two chains, they have the same intermediate point/chain link which causes a collision and  forces the chains merge. This is usually caused by the reduction function, if the reduction function reduces the bitsize of the Ciphertext. Say we have ciphertext1 12345678 and ciphertext2 12345679 each of them are 32 bits but as our encryption only takes 28 bits then applying the reduction function to this would cause a merge since the reduction function would remove the last 4 bit. If this was the case the chains would now have merged and all the following intermediate points(chains links) will be the same. This affects the overall coverage of the table, if the merge happens 10 steps into the chain the coverage will have $10 - t$ less keys as the rest of the two chains are duplicates.
+Merges occur when in some point of the generation of two chains, they have the same intermediate point/chain link which causes a collision and  forces the chains merge. This is usually caused by the reduction function, if the reduction function reduces the bit-size of the ciphertext. Say we have ciphertext1 12345678 and ciphertext2 12345679 each of them are 32 bits but as our encryption only takes 28 bits then applying the reduction function to this would cause a merge since the reduction function would remove the last 4 bit. If this was the case the chains would now have merged and all the following intermediate points(chains links) will be the same. This affects the overall coverage of the table, if the merge happens 10 steps into the chain the coverage will have $10 - t$ less keys as the rest of the two chains are duplicates.
 \\
 illustration of merges
 \subsubsection{Loops}
-Loops occur when a intermediete point(chain link) points back to a previously reached chain link. This will also result in ad decline of the table coverage.
+Loops occur when a intermediate point(chain link) points back to a previously reached chain link. This will also result in ad decline of the table coverage.
 
-figur for chain looping
+TODO figure for chain looping
 
-A loop will loop around in the same chain links untill it reaches t.
+A loop will loop around in the same chain links until it reaches t.
 
 \subsubsection{Multiple Tables}
 In Hellman as m and t increases it will reach a point where the coverage will not increase due to merges and loops. This has been calculated to be somewhere near $N^{\frac{2}{3}}$ for single tables \cite{176}. A clever way to increase the success rate and coverage rate for the Hellman trade-off is by adding multiple tables.
 
 \subsection{Online phase}
 Once a table is generated and we have a matching text ciphertext pair $(y=F(x))$ the online phase can commence.\\
-The given ciphertext is used as the key for the encryption and we compute a single chain. This is done for $1<k<l$ the same way as shown in \cite{HellSchema} each link computed is matched with the computed Hellman table. If it reaches to the last chain link and a match is not found the algorithm will report faliure.\\
+The given ciphertext is used as the key for the encryption and we compute a single chain. This is done for $1<k<l$ the same way as shown in \ref{fig:hellSchema} each link computed is matched with the computed Hellman table. If it reaches to the last chain link and a match is not found the algorithm will report failure.\\
 
 Whenever a match is found the corresponding SP is returned. The chain is now partially regenerated to obtain $X_{tmp}=x^k_{i,t-j}=F^{t-j}_k(sp^k_i)$. Which should be the key the text was encrypted with:
 \begin{equation}
     F^j_k(x_{tmp})=F^j_k(F^(t-j)_k(sp^k_i))=ep^k_i=y^k_j=F^{j-1}_k(y_1)=F^j_k(x)
 \end{equation}
 \subsubsection{False Alarms}
-False alarms happen when in the onlinephase a match is found, but the chain did not contain a valid key. This can happen when a merge has happend earlier when two different chains point to the same end point. The upper bound for false alarms in a table is:
-\begin{equation}
-\frac{H_{msc}}{2}
-\end{equation}
-\\
+False alarms happen when in the online phase a match is found, but the
+chain did not contain a valid key. This can happen when a merge has
+happened earlier when two different chains point to the same end
+point. The upper bound for false alarms in a table is $\frac{H_{msc}}{2}$
 
 \subsection{Analysis}
 This section will address the success probability, cost of resolving alarms, trade-off curve, memory usage, pre-computational time and online time.
 
 \subsubsection*{Success probability}
-The success probability of the table is found by calculalting how many keys that are covered in our table. Increasing the size of the table will increase the probability that the key is in it. The amount of keys that are covered depends on the amount of startpoints and the size of each chain. The success ratio of a single table can be calculated the following way:\\
+The success probability of the table is found by calculating how many keys that are covered in our table. Increasing the size of the table will increase the probability that the key is in it. The amount of keys that are covered depends on the amount of start points and the size of each chain. The success ratio of a single table can be calculated the following way:\\
 Lower bound from hellman paper\cite{176}
 $\frac{|HM|}{N}>=\frac{1}{N}\sum^{t}_{j=1}\sum^{m}_{i=1}(1-\frac{it}{N})^{j} $
-When the all the tables are prcessed and assuming the reduction functions provide independent results the success probability becomes:
+When the all the tables are processed and assuming the reduction functions provide independent results the success probability becomes:
 \[1-(1-\frac{|HM|}{N})^l\approx 1- exp(-\frac{l|HM|}{N})\]
 Since the count of duplicates is maintained by the matrix stopping rule, the size of the table is :$|HM|\approx mt$.
 \subsubsection{Cost of resolving alarms}
@@ -98,27 +118,29 @@ The trade-off curve can be found by applying the matrix stopping rule to M and T
 \begin{equation}
 TM^2\approx N^2
 \end{equation}
-$T=t^2$ and $M=m\cdot t$
+$T=t \cdot l$ and $M=m\cdot l$
 Once the table has been generated it will use M memory and the online phase will take T time.
 
-Add mere evt om tradeof curves generelt
+TODO More on trade-off curves
+
 \subsubsection{Memory Usage}
-Storing the table of a TMTO attack such as the Hellman trade-off takes a lot of space. Therefore it is one of the aspects of the time memory tradeoff to lower the memory cost to a managable size. The hellman tradeoff stores a tuple of a start point and a end point this can be described as $m\cdot mem$ where mem is the bitsize of the  tuple stored. When several tables are used it is multiplied to the previous equation which gives:
+Storing the table of a TMTO attack such as the Hellman trade-off takes a lot of space. Therefore it is one of the aspects of the time memory trade-off to lower the memory cost to a manageable size. The Hellman trade-off stores a tuple of a start point and a end point this can be described as $m\cdot mem$ where mem is the bit size of the  tuple stored. When several tables are used it is multiplied to the previous equation which gives:
 \begin{equation}
-M=m\cdot n\cdot mem
+M=m\cdot l \cdot mem
 \end{equation}
-where n is amount of tables.
+where $l$ is amount of tables.
 \subsubsection{Precomputational time}
-Time spent on generating the tables are also a factor of the tradeoffcurve, the shorter the chains the less time it takes to generate a table. There are m different start points and each of them has t chains, this means that we will use $t\cdot m$ encryption's per table. If n tables are generated the formula for the Time the pre-computation takes is:
+Time spent on generating the tables are also a factor of the trade-off
+curve, the shorter the chains the less time it takes to generate a table. There are m different start points and each of them has t chains, this means that we will use $t\cdot m$ encryptions per table. If $l$ tables are generated the formula for the Time the pre-computation takes is:
 \begin{equation}
-  Time=m\cdot t\cdot n
+  Time=m\cdot t\cdot l
 \end{equation}
 Time is the amount of encryptions that will take place in the generation of the table. Therefore the real world time is Time divided by the amount of encryptions can be done pr second.
 
 \subsubsection{Online time}
-Online time is the time it takes to find a key in the worst case scenario. When searching for a key the worst case scenario is when it takes t applications of F, that is to search through the entire table. If the tradeoff consists of more than one table it is again multiplied by the amount of tables n.
+Online time is the time it takes to find a key in the worst case scenario. When searching for a key the worst case scenario is when it takes t applications of F, that is to search through the entire table. If the tradeoff consists of more than one table it is again multiplied by the amount of tables $l$.
 \begin{equation}
-  Time=t\cdot n
+  Time=t\cdot l
 \end{equation}
 The online phase is also multiplied by the time it takes one encryption or divided by the amount of encryptions per second. A major problem in the online phase of the  Hellman tradeoff is the amount of lookups needed. Even if it is possible to compute a million encryptions per second we need the capacity to access our table a million times pr second. And as our table will be stored on the harddrive it will be impossibru.
 
@@ -161,11 +183,11 @@ t(1-e^{-\hat{t}/t})
 \end{equation}
 
 \subsubsection{Success Ratio}
-The success ratio for the DP tradeoff is given by
+The success ratio for the DP trade-off is given by
 \begin{equation}
   D_{ps}=1-e^{-D_{cr}D_{pc}}
 \end{equation}
-Where $D_{cr}$ is the coverage-rate and $D_{pc}$ the pre-computational coefficient. Which are found by:
+Where $D_{cr}$ is the coverage rate and $D_{pc}$ the pre-computational coefficient. Which are found by:
 \begin{equation}
   D_{pc}=\frac{mtl}{N}
 \end{equation}
@@ -175,10 +197,10 @@ Where $D_{cr}$ is the coverage-rate and $D_{pc}$ the pre-computational coefficie
 When $\hat{t}$ is sufficiently large. This is when almost all chains become distinguished points. For $\hat{t}$ to be sufficiently large it should be larger than $t$ but the approximation $(1-\frac{1}{t})^{\hat{t}}\approx e^{-\hat{t}/t}$ should still remain valid.
 \subsubsection{Memory Usage}
 This will only cover for when $\hat{t}$ is sufficiently large.
-The memory usage of the distinguished points depends on the generated table. It depends on the amount of start points, m and the bitwise size of the tuple of (SP, EP) mem and the amounts of tables generated n.
+The memory usage of the distinguished points depends on the generated table. It depends on the amount of start points, m and the bitwise size of the tuple of (SP, EP) mem and the amounts of tables generated $l$.
 
 \begin{equation}
-  M=m\cdot n\cdot mem
+  M=m\cdot l \cdot mem
 \end{equation}
 
 \subsubsection{Precomputation Time}
@@ -191,9 +213,12 @@ Due to the fact that the DP-tradeoff has no fixed chain length each chain takes 
 
 \subsubsection{Online Time}
 This will only cover for when $\hat{t}$ is sufficiently large.
-The online phase for distinguished points is similar to the Hellman Online phase. The length of the initial chain computed is the average of the length of chains in the table L. Which is multiplied to the amount of tables n.
+The online phase for distinguished points is similar to the Hellman
+online phase. The length of the initial online chain computed is the
+average of the length of chains in the tables L. The online time can
+then be described as
 \begin{equation}
-  Time=L\cdot n
+  Time=L\cdot l
 \end{equation}
 The amount of table accesses is where the Distinguished points method really shines since in the worst case it will only do one access per table, and best case only one lookup once a point where the dp property holds has been found.
 
