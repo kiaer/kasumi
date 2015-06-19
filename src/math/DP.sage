@@ -37,11 +37,11 @@ def T(dmsc,dps,dcr,t,th):
 def TL(t,l):
     return t*l
 
-def mtl(dmsc):
-    m=4
+def mtl(k,dmsc):
+    m=k
     for h in range(0,len(mx)):
         my[h]=(m,eq1(m,dmsc)[0])
-        m=m+1
+        m=m+0.5
     return my
 
 def DTC(dmsc,dcr,dps,t,th):
@@ -69,7 +69,8 @@ def L(dcr,dmsc,dps,x):
     return (1/(dcr*dmsc))*(-ln(1-dps))*(2**(x))
 
 #Htc=(((1/Hmsc)+(1/6))*(1/(Hcr**3)))*Hps*(ln(1-Hps))**2
-def CalcStuffs(dps,dmsc,th):
+def CalcStuffs(dps,dmsc,k):
+    mx=mtl(k,dmsc)
     ##############
     #Coverage Rate
     #############
@@ -77,7 +78,9 @@ def CalcStuffs(dps,dmsc,th):
     #############
     #Time memory tradeof Curve coeiffiecient
     #############
-    dtc=(2+(1/dmsc)*(1/(2/(sqrt(1+dmsc*2)+1))**3))*(dps*((ln(1-dps))**2))
+    dtc=((2+1/dmsc)*(((sqrt(1+dmsc*2)+1)/2)**3))*(dps*((ln(1-dps))**2))
+    print(((2+1/dmsc)*(((sqrt(1+dmsc*2)+1)/2)**3)))
+    print((dps*((ln(1-dps))**2)))
     #############
     #Precomputation cost
     ############
@@ -102,21 +105,19 @@ def CalcStuffs(dps,dmsc,th):
         t = (mx[k][1])
         l = L(dcr,dmsc,dps,t)
         Ms=n(M(2**m,l))
-        TT=n(T(dmsc,dps,dcr,2**t,th))
         Ts=n(2**t*l)
         result[k]=(Ms*(1.25*10**(-13)),Ts)
-        matrix.append(("$2^{%.f}$"  %log(2**m,2),
+        matrix.append(("$2^{%.2f}$"  %log(2**m,2),
                        "$2^{%.2f}$" %log(2**t,2),
                        "$2^{%.2f}$" %log(l,2),
                        "$%.2f$ TB"  %(Ms*(1.25*10**(-13))),
                        "$2^{%.2f}$" %log(Ts,2)))
 
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n Tcoif: %.2f \n"%(                    log(2**m,2),
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n"%(                                   log(2**m,2),
                     log(2**t,2),
                     log(l,2),                                                                                                              log(Ts,2),
-                    log(Ms,2),
-                    DTC(dmsc,dcr,dps,2**t,
-                    th)))
+                    log(Ms,2)
+                    ))
     print("\n\n")
     matrix.append(("","","","","",""))
     g=list_plot_semilogy(result,base=2,plotjoined=True,title="DP %.2f for %.2f"%(dmsc,dps),marker='o')
@@ -126,12 +127,17 @@ def CalcStuffs(dps,dmsc,th):
     g.save('graphs/%.2fMT.png'%(dps))
     return g
 
-mx=mtl(0.562047)
+
 comps=plot([],title='Comparison DP')
-comp=CalcStuffs(0.60,0.562047,10)+CalcStuffs(0.73,0.562047,10)+CalcStuffs(0.90,0.562047,10)+comps
+comp=CalcStuffs(0.60,0.562047,11)+CalcStuffs(0.73,0.562047,10)+CalcStuffs(0.90,0.562047,8)+comps
 comp.axes_labels(['M in TB','T'])
 comp.show()
 comp.save("graphs/compare DP with large th.png")
+comps1=plot([],title='Comparison Dmsc')
+comp1=CalcStuffs(0.73,0.20,9)+CalcStuffs(0.73,0.35,9)+CalcStuffs(0.73,0.562047,9)+CalcStuffs(0.73,0.75,9)+CalcStuffs(0.73,1,9)+CalcStuffs(0.73,1.25,9)+comps
+comp1.axes_labels(['M in TB','T'])
+comp1.show()
+comp1.save("graphs/compare Dmsc.png")
 f=open("DP_table.tex", 'w')
 f.write(latex(table(rows=matrix)))
 
