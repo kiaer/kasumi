@@ -10,14 +10,14 @@ we want to make it possible to perform the attack on a (heavily
 upgraded) consumer
 machine, we need to set an upper bound for the maximal memory
 usage. In our attack, we set an upper bound of memory usage to around
-\code{8TB} of tables. We see this as a possible amount of storage if a
-consumer machine with a TMTO-attack in mind was to be build. 
+\code{8TB} of tables[cite available hd sizes]. We see this as a possible amount of storage if a
+consumer machine with a TMTO-attack in mind was to be build.
 
 Knowing this and taking the theory behind the
 TMTO-attack\footnote{Chapter \ref{ch:tmto}} into consideration, we
 have to argue that this upper bound is required to be hit. For every
 trade-off we take towards lower memory usage, the online phase of the
-attacks will take a hit. 
+attacks will take a hit.
 
 Another thing to take into consideration when analyzing the parameter
 choice and time consumption of the different phases is the table lookup
@@ -25,9 +25,9 @@ time. Since generated TMTO tables for a \code{64-bit} key size will
 always be larger than a given built machines amount of RAM, look-ups are
 done directly on a HDD or SSD. Estimates of how much time is required
 for each lookup in a table is hard to do, but will be further analyzed
-in SOMEWHERE? 
+in SOMEWHERE?
 
-As for success probability of the 
+As for success probability of the
 the different attacks, we went with $P = 73\%$ as an acceptable
 success rate.
 We witnessed that for a probability of above $73\%$ the increase,
@@ -39,19 +39,76 @@ In the following sections we will go through our computations of
 parameters for the different TMTO-attacks with these limits set.
 
 \section{Hellman Table}
-
 All calculations of parameters follows the theory provided in \ref{sec:hmtheory}.
+Concidering the theory and above mentioned formulas, a approximation of the best parameters for a $73\%$ success rate table can be made.
+As stated earlier the memory requirements below $8tb\approx2^{45.863}bit$. First of we can find parameters that fit within those restraints.
+As the success probability already is set we can from this find the respective parameters and compare them.
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=1.2\textwidth]{figures/HellmanTradeOff.png}
+    \captionof{figure}{Figure from \cite{176}}
+    \label{fig:hellTC}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=1.2\textwidth]{figures/compareHmsc.png}
+    \captionof{figure}{$H_{msc}$ from 0.75 to 2.75}
+    \label{fig:hellHmsc}
+  \end{minipage}
+\end{figure}
+The lower a tradeoff coefficient is the better the trade off between memory and time is. Figure \ref{fig:hellTC} is a graph of the tradeoff coefficient for a set success ratio and $H_{msc}$. $H_{msc}$ should be between 1 and 2.25 as seen on the graph\cite{176}. This is further shown in \ref{fig:hellHmsc}, where as $H_{msc}$ grows the smaller the table gets but this effect works with less effect with higher $H_{msc}$. The downside and the reason that the $H_{msc}$ should not be as big as possible is that it influences the precomputation cost and the efficiency of the tradeoff. The optimal value must be where the efficeincy is at its best therefore $H_{msc}$ is $2.25$.
+Now to select $m$ $t$ and $l$ from \ref{tab:hellparam}.
+\begin{table}[H]
+  \centering
+  \text{\texttt{Success{ }={ }0.73,{ }Hmsc{ }={ }2.25,{ }Hcr{ }={ }0.74,{ }Htc{ }={ }1.88{ }Hpc{ }={ }1.77} }
+\begin{tabular}{lllll}
+m & t & l & M in TB & T \\\hline
+$2^{10.00}$ & $2^{27.58}$ & $2^{26.63}$ & $1.70$ & $2^{54.10}$ \\
+$2^{10.50}$ & $2^{27.33}$ & $2^{26.38}$ & $2.02$ & $2^{53.60}$ \\
+$2^{11.00}$ & $2^{27.08}$ & $2^{26.13}$ & $2.41$ & $2^{53.10}$ \\
+$2^{11.50}$ & $2^{26.83}$ & $2^{25.88}$ & $2.86$ & $2^{52.60}$ \\
+$2^{12.00}$ & $2^{26.58}$ & $2^{25.63}$ & $3.40$ & $2^{52.10}$ \\
+$2^{12.50}$ & $2^{26.33}$ & $2^{25.38}$ & $4.05$ & $2^{51.60}$ \\
+$2^{13.00}$ & $2^{26.08}$ & $2^{25.13}$ & $4.81$ & $2^{51.10}$ \\
+$2^{13.50}$ & $2^{25.83}$ & $2^{24.88}$ & $5.72$ & $2^{50.60}$ \\
+$2^{14.00}$ & $2^{25.58}$ & $2^{24.63}$ & $6.81$ & $2^{50.10}$ \\
+$2^{14.50}$ & $2^{25.33}$ & $2^{24.38}$ & $8.09$ & $2^{49.60}$ \\
+ &  &  &  &  &  \\
+\end{tabular}
+  \caption{Hellman Parameters}
+  \label{tab:hellparam}
+\end{table}
+
 
 \section{Distinguished Points Table}
-
+For this section we assume that $\hat{t}$ is sufficiently large.
 All calculations of parameters follows the theory provided in \ref{sec:dptheory}.
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=1.2\textwidth]{figures/HellmanTradeOff.png}
+    \captionof{figure}{Figure from \cite{176}}
+    \label{fig:dpTC}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=1.2\textwidth]{figures/compareHmsc.png}
+    \captionof{figure}{$H_{msc}$ from 0.75 to 2.75}
+    \label{fig:dpHmsc}
+  \end{minipage}
+\end{figure}
 
 \section{Rainbow Table}
 For the Rainbow Table TMTO attack, we again set \code{8TB} as the
-upper bound for memory consumption. 
+upper bound for memory consumption.
 
 All calculations of parameters follows the theory provided in
-\ref{sec:raintheory}. 
+\ref{sec:raintheory}.
 
 In our calculations, we assume a sequential approach is done in the
 pre-computational phase. This allows us to remove half of the memory
@@ -101,13 +158,13 @@ and \ref{fig:time73} shows the graphical representation of the table.
     \centering
     \includegraphics[scale=0.3]{figures/RainbowTime73.png}
     \captionof{figure}{Rainbow TMTO 73\% success}
-    \label{fig:time73}
+    \labelof{fig:time73}
   \end{minipage}
 \end{figure}
 
 Looking at table \ref{tab:rainparam} and figures \ref{fig:param73}
 and \ref{fig:time73}\footnote{See Appendix \ref{sec:rainbowgraphs} for
-  full size graphs} while knowing that 
+  full size graphs} while knowing that
 
 \newpage
 \section{Comparison and choice of table}

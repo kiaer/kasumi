@@ -15,7 +15,7 @@ def calc_rmsc(ps):
 
 def solve_mt(m, rm):
     x = var('x')
-    a = solve(x * m == rm * N, x, solution_dict=True)
+    a = solve(x * m == hm * N, x, solution_dict=True)
 #    print (float(log(a[0][x])/log(2)))
     return 2**(float(log(a[0][x])/log(2)))
 

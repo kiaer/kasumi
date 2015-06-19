@@ -18,6 +18,7 @@ m=10
 
 def eq1(y,h):
     x=var('x')
+    assume(x,'real')
     sol = solve(2**(y)*((2**(x))**2)==h*N,x,solution_dict=True);sol
     return [ abs(n(s[x])) for s in sol]
 
@@ -33,6 +34,8 @@ def T(dmsc,dps,dcr,t,th):
     p8=n(1/(e**((2*t_hat)/t)))
     return n(p1*((p2+p3*(2-p4+((5+p5-p6)/p7)+p8))*t**2))
 
+def TL(t,l):
+    return t*l
 
 def mtl(dmsc):
     m=4
@@ -57,8 +60,10 @@ def DTC2(dmsc,dcr,dps,t,th):
     e2=(1-e**(t_hat/t))*dcr*(dmsc)
     return null
 
+
+
 def M(x,y):
-    return x*y
+    return x*y*I
 
 def L(dcr,dmsc,dps,x):
     return (1/(dcr*dmsc))*(-ln(1-dps))*(2**(x))
@@ -83,19 +88,35 @@ def CalcStuffs(dps,dmsc,th):
 
 
 
-    matrix.append(("dps: %.2f"%(dps),"dmsc: %.2f"%(dmsc),"dcr: %.2f"%dcr,"dtc: %.2f"%dtc,"dpc: %.2f"%dpc,"dtmp %.2f"%dtmp,))
-    matrix.append(("m","t","l","M","T","M in tb"))
-   # print(mx)
-    for k in range(0,len(mx)):
+    matrix.append(("dps: %.2f"  %dps,
+                   "dmsc: %.2f" %dmsc,
+                   "dcr: %.2f"  %dcr,
+                   "dtc: %.2f"  %dtc,
+                   "dpc: %.2f"  %dpc,
+                   "dtmp %.2f"  %dtmp,))
 
-        Ms=n(M(2**(mx[k][0]),L(dcr,dmsc,dps,mx[k][1]))*64)
-        TT=n(T(dmsc,dps,dcr,2**(mx[k][1]),th))
-        Ts=n(2**(mx[k][1])*L(dcr,dmsc,dps,mx[k][1]))
-       # print(2**(mx[k][1]))
-        #print(L(dcr,dmsc,dps,mx[k][1]))
+    matrix.append(("m","t","l","M in tb","T"))
+
+    for k in range(0,len(mx)):
+        m = (mx[k][0])
+        t = (mx[k][1])
+        l = L(dcr,dmsc,dps,t)
+        Ms=n(M(2**m,l))
+        TT=n(T(dmsc,dps,dcr,2**t,th))
+        Ts=n(2**t*l)
         result[k]=(Ms*(1.25*10**(-13)),Ts)
-        matrix.append(("$2^{%.f}$"%(log(2**(mx[k][0]),2)),"$2^{%.2f}$"%(log(2**(mx[k][1]),2)),"$2^{%.2f}$"%(log(L(dcr,dmsc,dps,mx[k][1]),2)),"$2^{%.2f}$"%log(Ms,2),"$2^{%.2f}$"%log(Ts,2),"$%.2f$ TB"%(Ms*(1.25*10**(-13)))))
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n Tcoif: %.2f \n"%(log(2**(mx[k][0]),2), log(2**(mx[k][1]),2),log(L(dcr,dmsc,dps,mx[k][1]),2),log(Ts,2),log(Ms,2),DTC(dmsc,dcr,dps,2**(mx[k][1]),th)))
+        matrix.append(("$2^{%.f}$"  %log(2**m,2),
+                       "$2^{%.2f}$" %log(2**t,2),
+                       "$2^{%.2f}$" %log(l,2),
+                       "$%.2f$ TB"  %(Ms*(1.25*10**(-13))),
+                       "$2^{%.2f}$" %log(Ts,2)))
+
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n Tcoif: %.2f \n"%(                    log(2**m,2),
+                    log(2**t,2),
+                    log(l,2),                                                                                                              log(Ts,2),
+                    log(Ms,2),
+                    DTC(dmsc,dcr,dps,2**t,
+                    th)))
     print("\n\n")
     matrix.append(("","","","","",""))
     g=list_plot_semilogy(result,base=2,plotjoined=True,title="DP %.2f for %.2f"%(dmsc,dps),marker='o')

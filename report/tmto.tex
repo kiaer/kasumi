@@ -163,18 +163,23 @@ Where $D_{cr}$ is the coverage rate and $D_{pc}$ the pre computational coefficie
   D_{pc}=\frac{mtl}{N}
 \end{equation}
 \begin{equation}
-D_{cr}=\frac{2}{\sqrt{1+2D_{msc}}+1}
+  D_{cr}=\frac{2}{\sqrt{1+2D_{msc}}+1}
 \end{equation}
 This is when $\hat{t}$ is sufficiently large, this means that almost all of the chains become distinguished points. For $\hat{t}$ to be sufficiently large it should be larger but the approximation $(1-\frac{1}{t})^{\hat{t}}\approx e^{-\hat{t}/t}$ should still remain valid.
 \subsubsection{Memory Usage}
-The memory usage of the distinguished points depends on the generated table. It depends on the amount of start points, m and the bitwise size of the tuple of (SP, EP). The number of tables generated n is multiplied on aswell. O
-Needs more Work
+This will only cover for when $\hat{t}$ is sufficiently large.
+The memory usage of the distinguished points depends on the generated table. It depends on the amount of start points, m and the bitwise size of the tuple of (SP, EP) mem. The number of tables generated n is multiplied on as well.
+
+\begin{equation}
+  M=m\cdot n\cdot mem
+\end{equation}
 
 \subsubsection{Precomputation Time}
+This will only cover for when $\hat{t}$ is sufficiently large.
 Due to the fact that the DP-tradeoff has no fixed chain length each chain takes an individual amount of time when constructed. And it is not allways that the chain is stored, in this case $t_{max}-1$ applications of F has been done for nothing.
-Needs more
 
 \subsubsection{Online Time}
+This will only cover for when $\hat{t}$ is sufficiently large.
 The online phase for distinguished points is similar to the Hellman Online phase. The length of the initial chain computed is the average of the length of chains in the table L. Which is multiplied to the amount of tables n.
 \begin{equation}
   Time=L\cdot n
