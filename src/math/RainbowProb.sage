@@ -7,7 +7,7 @@ N = 2**32
 t = 2**2
 m = 2**10
 l = 1
-rps = [0.58, 0.73, 0.90]
+rps = [0.58, 0.73, 0.99]
 rmsc = 0.0
 
 def calc_rmsc(ps):
@@ -15,7 +15,7 @@ def calc_rmsc(ps):
 
 def solve_mt(m, rm):
     x = var('x')
-    a = solve(x * m == hm * N, x, solution_dict=True)
+    a = solve(x * m == rm * N, x, solution_dict=True)
 #    print (float(log(a[0][x])/log(2)))
     return 2**(float(log(a[0][x])/log(2)))
 
@@ -52,10 +52,10 @@ for i in xrange(0,3):
     lstmem2 = []
     print "Proberbility required set to: %f with tables set: %i" % (rps[i], l)
     rmsc = calc_rmsc(rps[i])
-    for x in xrange(0, 10):
+    for x in xrange(0, 15):
         print ""
         #64 bit - 35.5
-        #32 bit - 
+        #32 bit -
         m = 2**(25 + (0.5 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
@@ -68,7 +68,7 @@ for i in xrange(0,3):
         print "t: 2^%f" % (float(log(t)/log(2)))
         print "m: 2^%f" % (float(log(m)/log(2)))
         print "Rmsc calculated: %f" % rmsc
-        print "Memory used: " + str(memory()) + "TB"
+        print "Memory used: " + str(memory()) + "MB"
         temp = "$2^{%.2f}$" % log(time_for_online(rmsc), 2)
         lsttime.append(time_for_online(rmsc))
         lsttime2.append(temp)

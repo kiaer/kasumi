@@ -7,8 +7,10 @@
 
 #include "tablegenerator.h"
 #include "tableGen32.h"
+#include "tableGen40.h"
 #include "t32online.h"
 #include "t64online.h"
+
 
 int
 main (int argc, char **argv)
@@ -39,6 +41,10 @@ main (int argc, char **argv)
         case 'o':
             printf("Online phase performed on 32-bit table... \n");
             online();
+            break;
+        case 'j':
+            printf("Online phase performed on 40-bit table... \n");
+            tableGenerator40(text);
             break;
         case 'b':
             printf("Generating 64-bit rainbow table...\n");

@@ -7,7 +7,7 @@
 #include "cipher/kasumi.h"
 #include "misc.h"
 
-static inline void loadBar(long x, long n, int r, int w)
+static inline void loadBar(int x, int n, int r, int w)
 {
     if ( x % (n/r +1) != 0 ) return;
 
@@ -30,32 +30,35 @@ static inline void loadBar(long x, long n, int r, int w)
     printf("]\n\033[F\033[J");
 }
 
-
-void tableGenerator32(uint32_t * text){
-    long mMax = 3037000500, lMax = 5;
-    long  m;
-    long t,i;
+void tableGenerator40(uint32_t * text){
+    float mMax = 2147483648, lMax = 942; //2^31 2^9.88
+    int m, t, i;
     uint16_t * temp;
-    uint16_t * key, ep[2];
-    uint32_t tp;
+    uint16_t * key;
+    uint8_t ep[5],temp2;
+    uint64_t tp;
     FILE * write_ptr;
-    write_ptr = fopen("table32bit12GB.bin", "wb");
+    write_ptr = fopen("table40bit.bin", "wb");
     for(m = 0; m < mMax ; m++){
         loadBar(m, mMax, 10000, 50);
         key = keyGen(m);
         for (t = 0; t < lMax; t++){
             keyschedule(key);
             temp = kasumi_enc(text);
-            tp = reduction32(t,temp);
-            temp[0]=tp>>16;
-            temp[1]=tp;
+            tp = reduction64(t,temp);
+            temp[0]=tp>>24;
+            temp[1]=tp>>8;
+            temp2=tp;
+            temp[3]=temp2<<16|temp2;
             for(i=0; i < 8; i++){
-                key[i]=temp[i%2];
+                key[i]=temp[i%3];
             }
         }
-        for(i=0;i<2;i++)
-            ep[i] = key[i];
-
+        ep[0] = key[0]<<8;
+        ep[1] = key[0];
+        ep[2] = key[1]<<8;
+        ep[3] = key[1];
+        ep[4] = key[2];
         fwrite(ep,sizeof(ep),1,write_ptr);
     }
 

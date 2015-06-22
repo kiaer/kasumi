@@ -5,9 +5,14 @@
 #include <time.h>
 #include <openssl/md5.h>
 #include <stdlib.h>
-
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "cipher/kasumi.h"
 #include "misc.h"
+
 
 uint16_t * reduce(uint32_t m){
     static uint16_t data[8];
@@ -16,97 +21,108 @@ uint16_t * reduce(uint32_t m){
     return data;
 }
 
+const int step = 32;
 
 int inTable(uint32_t key, uint16_t * ciphertext, uint32_t * text){
-    uint16_t *temp, *temp2, keys[8], ep;
-    uint32_t endpoint, *buffer,tp;
+    // uint16_t *temp, *temp2, keys[8], ep;
+    uint32_t endpoint,tp;
+    //uint32_t *buffer;
+    //uint32_t buffer[32768];
+    uint32_t buffer[262144];
+    //uint32_t buffer[264087];
     uint16_t cipher[4];
-    int cntr = 0,i,j,y;
+    long cntr = 0,i,j,y;
     FILE *ptr;
+    size_t n;
     //printf("key -> %x\n",key);
-    buffer = (uint32_t *) malloc (sizeof(uint32_t) * 33554432);
+    //buffer = (uint32_t *) malloc (sizeof(uint32_t) * 33554432);
     ptr = fopen("table32bits.bin","rb");  // r for read, b for binary */
     //miss=0;
-    for(;;){
-        size_t n=fread(buffer,sizeof(buffer)*33554432,1,ptr);
-        //endpoint = buffer[0]<<24 | buffer[1]<<16 | buffer[2]<<8 | buffer[3];
-        //printf("1\n");
+    //32768
 
-        for(y=0;y<33554432;y++){
+    for(;;){
+        //n=fread(buffer, sizeof(buffer)*33554432, 1, ptr);
+        n=fread(buffer, sizeof(buffer), 1, ptr);
+
+        //for(y=0;y<33554432;y++){
+        //for(y=0;y<264087;y++){
+        for(y=0;y<262144;y++){
             tp = buffer[y];
             endpoint = tp<<16|tp>>16;
-            if(endpoint==key){
-                /* printf("--------------- hit %x\n",buffer[i]); */
-                temp2 = keyGen(cntr);
-                for(i=0; i < 8; i++){
-                    keys[i]=temp2[i];
-                }
-                for (j = 0; j < 236 ; j++){
-                    //printf("%i\n",j);
-                    keyschedule(keys);
-                    temp2 = kasumi_enc(text);
-                    cipher[0] = temp2[0];
-                    cipher[1] = temp2[1];
-                    cipher[2] = temp2[2];
-                    cipher[3] = temp2[3];
-                    ep = keys[0];
-                    //printf("%i\n",j);
-                    // printf("ciphertext %04x %04x %04x %04x\n",ciphertext[0],ciphertext[1],ciphertext[2],ciphertext[3]);
-                    // printf("cipher --> %04x %04x %04x %04x\n",*cipher,cipher[1],cipher[2],cipher[3]);
-                    if(cipher[0]==ciphertext[0]&&cipher[1]==ciphertext[1]&&
-                       cipher[2]==ciphertext[2]&&cipher[3]==ciphertext[3]){
-                        printf("Key found %i steps into chain \n", j);
-                        printf("Key is the following: %04x \nciphertext: %04x %04x %04x %04x\n",ep,cipher[0],cipher[1],cipher[2],cipher[3]);
-                        // printf("miss /> %i\n",miss);
-                        free(buffer);
-                        fclose(ptr);
-                        return 1;
-                    }
-                    //printf("hey\n");
-                    temp=temp2;
-                    tp = reduction32(j,temp);
-                    temp[0] = tp >> 16;
-                    temp[1] = tp;
-                    //printf("tp %x %x %x\n",tp ,temp[0],temp[1]);
-                    for(i=0; i < 8; i++){
-                        keys[i]=temp[i%2];
-                    }
-                }
-            }
+
+            /* if(endpoint==key){ */
+            /*     /\* printf("--------------- hit %x\n",buffer[i]); *\/ */
+            /*     temp2 = keyGen(cntr); */
+            /*     for(i=0; i < 8; i++){ */
+            /*         keys[i]=temp2[i]; */
+            /*     } */
+            /*     for (j = 0; j < 5 ; j++){ */
+            /*         //printf("%i\n",j); */
+            /*         keyschedule(keys); */
+            /*         temp2 = kasumi_enc(text); */
+            /*         cipher[0] = temp2[0]; */
+            /*         cipher[1] = temp2[1]; */
+            /*         cipher[2] = temp2[2]; */
+            /*         cipher[3] = temp2[3]; */
+            /*         ep = keys[0]; */
+            /*         if(cipher[0]==ciphertext[0]&&cipher[1]==ciphertext[1]&& */
+            /*            cipher[2]==ciphertext[2]&&cipher[3]==ciphertext[3]){ */
+            /*             printf("Key found %ld steps into chain \n", j); */
+            /*             printf("Key is the following: %04x \nciphertext: %04x %04x %04x %04x\n",ep,cipher[0],cipher[1],cipher[2],cipher[3]); */
+
+            /*             //free(buffer); */
+            /*             fclose(ptr); */
+            /*             return 1; */
+            /*         } */
+            /*         temp=temp2; */
+            /*         tp = reduction32(j,temp); */
+            /*         temp[0] = tp >> 16; */
+            /*         temp[1] = tp; */
+            /*         for(i=0; i < 8; i++){ */
+            /*             keys[i]=temp[i%2]; */
+            /*         } */
+            /*     } */
+            /* } */
         cntr = cntr+1;
         }
         if(n==0){
-            //printf("/////////////////>>>>>>>>>> %x %i\n",endpoint, cntr);
-            //if(miss>0)
-                //printf("miss > %i\n",miss);
             fclose(ptr);
-            free(buffer);
-            return -1;}
-    }
+            //free(buffer);
+            return -1;
+        }
+
+        }
 
 }
 
 
 
 int onlinePhase(uint16_t * ciphertext, uint32_t * text){
+
     int t,i,j;
-    int chainLength=236;
+    int chainLength=5;
     uint32_t tp;
     uint16_t *temp, temp2[4], key[8];
-    uint32_t ep[chainLength];
-    ep[0] = reduction32((chainLength-1), ciphertext);
+    uint32_t ep;
+    ep = reduction32((chainLength-1), ciphertext);
+    i = inTable(ep,ciphertext,text);
+    if (i>0){return 1;}
     temp = ciphertext;
-    //printf("keytsxets <> %x\n",ciphertext[0]);
+
     for (t = (chainLength-2); t >= 0; t--){
         for(i=0;i<4;i++)
             temp2[i] = ciphertext[i];
         temp=temp2;
-        //if(t==0)
-            //printf("cipher %x %x\n",ciphertext[0],temp[0]);
         for(j = t; j < chainLength; j++){
 
             if(j == (chainLength-1)){
-                ep[chainLength-1-t] = reduction32(j, temp);
+                ep = reduction32(j, temp);
+                clock_t start = clock(), diff;
+                i = inTable(ep,ciphertext,text);
+                diff = clock() - start;
+                int msec = diff * 1000 / CLOCKS_PER_SEC;
+                printf("Time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
+                if (i>0){return 1;}
             } else{
                 tp = reduction32(j,temp);
                 temp[0] = tp >> 16;
@@ -116,17 +132,12 @@ int onlinePhase(uint16_t * ciphertext, uint32_t * text){
                 }
                 keyschedule(key);
                 temp = kasumi_enc(text);
-                //if(t==0)
-                    //printf("%x %x\n",temp[0],temp[1]);
+
             }
         }
     }
 
-    for(t=0;t<chainLength;t++){
-        // printf("ep: %x %i\n", ep[t],t);
-        i = inTable(ep[t],ciphertext,text);
-        if (i>0){return 1;}
-    }
+
 
     return 0;
 }

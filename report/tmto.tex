@@ -11,7 +11,7 @@ The idea is similar to a naive table lookup where all possible keys $K$ have bee
 Instead of storing all the key/ciphertext pairs, as done in the naive
 table lookup, all pairs are sorted into several chains. In these
 chains only the start point and the end point. This way memory is
-saved but time is increased for finding a key $K$. 
+saved but time is increased for finding a key $K$.
 
 \subsection{Precomputation phase} %
 Like any other TMTO-attack the table itself is generated in the
@@ -43,7 +43,7 @@ by selecting m random starting points,
 $sp^{k}_1,sp^{k}_2,...,sp^{k}_m$. Each starting point is then used as
 the start of their chain and with recursion the chain links are
 computed by $ x^{k}_{i,j}=F_k( x^{k}_{i,j-1})$ for $0<j<=t$. When the
-end point is reached it is stored as a pair with the start point 
+end point is reached it is stored as a pair with the start point
 $\{(sp^{k}_{i}, ep^{k}_{i})\}^{m}_{i=1}\}$.
 
 The Hellman table/matrix is usually visualized as seen in figure \ref{fig:hellmax}.
@@ -88,10 +88,12 @@ Whenever a match is found the corresponding SP is returned. The chain is now par
     F^j_k(x_{tmp})=F^j_k(F^(t-j)_k(sp^k_i))=ep^k_i=y^k_j=F^{j-1}_k(y_1)=F^j_k(x)
 \end{equation}
 \subsubsection{False Alarms}
+
 False alarms happen when in the online phase a match is found, but the
-chain did not contain a valid key. This can happen when a merge has
-happened earlier when two different chains point to the same end
-point. The upper bound for false alarms in a table is $\frac{H_{msc}}{2}$
+chain did not contain a valid key. This can happen when a chain merges
+then two different chains point to the same end point.
+The upper bound for false alarms in a table is $\frac{H_{msc}}{2}$
+
 
 \subsection{Analysis}
 This section will address the success probability, cost of resolving alarms, trade-off curve, memory usage, pre-computational time and online time.
