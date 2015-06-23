@@ -4,7 +4,35 @@
 Is not close to done.. Some of the things we want to discuss.
 
 \section{DP/Rainbow}
+
+
+
 \section{Storage improvements}
+
+As the tables in the attack grows larger, we have to make improvements
+to reading/writing the files. In our case the tables of the full size
+attack reaches a size of around \code{8TB}. From our tests we can
+clearly see that the biggest bottleneck of the attack is the lookup
+time. Knowing this we have looked into possibilities for improving the
+lookup times required.
+
+\subsection{Binary Search}
+The binary search algorithm begins by comparing the target value to value of the middle element of the sorted array. If the target value is equal to the middle element's value, the position is returned. If the target value is smaller, the search continues on the lower half of the array, or if the target value is larger, the search continues on the upper half of the array. This process continues until the element is found and its position is returned, or there are no more elements left to search for in the array and a "not found" indicator is returned.
+
+
+Since the binary search algorithm essentially finds an element in a
+sorted array, we could use this algorithm for lookup in our
+online phase. We will indeed have to change some major points of our
+implementation. The biggest change will be a change to the sequential
+approach. First off, since the binary search algorithm requires a
+sorted list, we need to sort the table by end points. This also means
+we need to store both start points and end points.
+
+This has two implications on the pre-computational phase. Firstly the table
+needs sorting and on larger tables this can be time consuming. 
+
+\subsection{Hash map}
+
 \section{GPU Parallel}
 
 %%% Local Variables:
