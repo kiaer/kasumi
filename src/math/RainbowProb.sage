@@ -85,11 +85,12 @@ for i in xrange(0,3):
         print "Time used for online phase: 2^" + str(float(log(time_for_online(rmsc))/log(2)))
         print "Time used for online phase: 2^" + str(float(log(big_T(t,1,rmsc))/log(2)))
         print "\n"
-    f = open('rainbowtab.tex', 'a')
+    # f = open('rainbowtab.tex', 'a')
+
     col = [lstm2, lstt2, lstmem2, lsttime2]
     #Prob, RMSC, l, Offline compp
-    infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline(rmsc))/log(2)))
-    f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
+    # infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline(rmsc))/log(2)))
+    # f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
 
  #    plottitle = "Rainbow coefficents for %i %% succesrate" % ((rps[i] * 100))
 #     plottitle2 = "Rainbow T and M for %i %% succesrate" % ((rps[i] * 100))
