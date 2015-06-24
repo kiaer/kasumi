@@ -44,7 +44,7 @@ All calculations of parameters follows the theory provided in
 
 Concidering the theory and above mentioned formulas, a approximation of the best parameters for a $73\%$ success rate table can be made.
 As stated earlier the memory requirements will meet the upper bound of
-\code{8TB}. 
+\code{8TB}.
 As the success probability already is set we can find the respective parameters and compare them.
 
 TODO We need to show where we get this stuff from.. reference
@@ -78,7 +78,7 @@ efficiency is lowest. An $H_{msc}$ set to $2.25$ makes for the most
 efficient trade-off.
 
 Table \ref{tab:hellparam} shows a generated table of Hellman
-parameters for $H_{msc} =2.25$. 
+parameters for $H_{msc} =2.25$.
 \begin{table}[H]
   \centering
   \text{\texttt{Success{ }={ }0.73,{ }Hmsc{ }={ }2.25,{ }Hcr{ }={ }0.74,{ }Htc{ }={ }1.88{ }Hpc{ }={ }1.77} }
@@ -115,7 +115,7 @@ TODO We need to show where we get this stuff from.. reference
 formulas...
 
 As shown in \ref{fig:dpHmsc} the smaller the matrix stopping constant
-gets the bigger the table gets, The time memory coefficient is most 
+gets the bigger the table gets, The time memory coefficient is most
 efficient at 0.56 \cite{176}. Which also states that a $D_{msc}$ above
 0.56 should be avoided. Therefore the matrix stopping constant has been
 set to 0.56, using the formulas for optimal parameters from \cite{176}
@@ -194,6 +194,7 @@ and \ref{fig:time73} shows the graphical representation of the table.
     $2^{38.50}$ & $2^{26.39}$ & $3.11$ & $2^{50.58}$ \\
     $2^{39.00}$ & $2^{25.89}$ & $4.40$ & $2^{49.58}$ \\
     $2^{39.50}$ & $2^{25.39}$ & $6.22$ & $2^{48.58}$ \\
+    $2^{39.80}$ & $2^{25.08}$ & $7.65$ & $2^{47.98}$ \\
     $2^{40.00}$ & $2^{24.89}$ & $8.80$ & $2^{47.58}$ \\
   \end{tabular}
   \caption{Rainbow Parameters}

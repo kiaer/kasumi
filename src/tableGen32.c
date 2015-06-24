@@ -32,14 +32,14 @@ static inline void loadBar(long x, long n, int r, int w)
 
 
 void tableGenerator32(uint32_t * text){
-    long mMax = 3037000500, lMax = 5;
+    long mMax = 2147483648, lMax = 3;
     long  m;
     long t,i;
     uint16_t * temp;
     uint16_t * key, ep[2];
     uint32_t tp;
     FILE * write_ptr;
-    write_ptr = fopen("table32bit12GB.bin", "wb");
+    write_ptr = fopen("table32bit8GB.bin", "wb");
     for(m = 0; m < mMax ; m++){
         loadBar(m, mMax, 10000, 50);
         key = keyGen(m);

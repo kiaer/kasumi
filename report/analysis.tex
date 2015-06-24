@@ -102,8 +102,58 @@ is infeasible to test on the devices that we ran the
 TODO Need to ask Andrey about what we can compare with.. HPC clusters?
 
 \subsection{Online phase}
+As stated earlier are the tests preformed on a scaled down version of the keyspace.
+The tests are run on the 32 bit implementation and then scaled up.
+Firstly the Time it takes is compared to our computations, as Time is found by $Time=\frac{t\cdot(t-1)}{2}$.
+Table\ref{tab:OnlineT} shows each of our test tables worst case run times and the calculated encryption time for each of them.
+Each  table has an online encryption time spanning from a few miliseconds to a few microseconds, wheras the total time is  much larger.
+Furthermore if we don't add in the fact that the computer is smart and caches memory it takes even longer, which is shown in the T lookup field(this the time one lookup takes when it isn't in memory multiplied with t which is the amount of lookups).
+\begin{table}[H]
+\centering
+\caption{Online Time Comparison}
+\label{tab:OnlineT}
+\begin{tabular}{|c|ccccc}
+\hline
+Table          & \multicolumn{1}{c|}{t rounded up} & \multicolumn{1}{c|}{Total time} & \multicolumn{1}{c|}{T lookup} & \multicolumn{1}{c|}{T enc} & \multicolumn{1}{c|}{encryptions} \\ \hline
+134MB / 73\%   & 236                           & 7.5995 s                        & 7.972375 s                    & 5.24E-03 s                 & 27,730.00                        \\ \cline{1-1}
+4300MB / 73\%  & 8                             & 27.339 s                        & 36.724 s                      & 5.29E-06 s                 & 28.00                            \\ \cline{1-1}
+8500MB / 73\%  & 4                             & 73.35 s                         & 67.196 s                      & 1.13E-06 s                 & 6.00                             \\ \cline{1-1}
+12000MB / 73\% & 3                             & 70.97 s                         & 69.811 s                      & 5.67E-07 s                 & 3.00                             \\ \cline{1-1}
+17000MB / 73\%  & 2                             & 66.96 s                         & 65.11 s                       & 1.89E-07 s                 & 1.00                             \\ \cline{1-1}
+\end{tabular}
+\end{table}
+This means that the biggest bottleneck in the implementation is the lookup time. To further investigate this we calculate the lookup time for each table, and compare them to each other note that the test computer has a max read speed of 540 mb/s. One thing we noticed is when the entire table can fit in memory the access time of it increases dramatically, for the 4.3GB table the first table lookup took 4.4 seconds and the lookups afterwards took between 0.6-1 seconds. This is probably due to the table getting cached.
+\begin{table}[h]
+\centering
+\caption{Access time}
+\label{tab:memory}
+\begin{tabular}{|c|clccc}
+\hline
+\multicolumn{1}{|l|}{Buffer-size$\downarrow$ Table-size$\rightarrow$}& \multicolumn{1}{c|}{134MB} & \multicolumn{1}{l|}{4300MB} & \multicolumn{1}{c|}{8500MB} & \multicolumn{1}{c|}{12000MB} & \multicolumn{1}{l|}{17000MB} \\ \hline
+33554432                                     & 0.0427s                    & 4.4395s                     & 16.829s                     & 23.230s                      & 32.562s                      \\ \cline{1-1}
+524288                                       & 0.023s                     & 4.4395s                     & 16.645s                     & 23.279s                      & 32.72s                       \\ \cline{1-1}
+65536                                        & 0.021s                     & 4.4585s                     & 16.941s                     & 23.002s                      & 32.483s                      \\ \cline{1-1}
+32                                           & 0.053s                     & 5.0245s                     & 16.780s                     & 23.57s                       & 32.44s                       \\ \cline{1-1}
+\multicolumn{1}{|l|}{Scaled to 8 tb table}   & 0.6 Hours                  & 2.37 Hours                  & 4.45 Hours                   & 4.31 Hours                   & 4.25 Hours                   \\ \cline{1-1}
+\end{tabular}
+\end{table}
+As \ref{fig:memory} shows the buffer size does not seem to matter much the results fluxuates half a second at most.
+The table also shows what the lookup time would be if the table was 8 tb. Where target table size is tts, table size is ts, s is the time one lookup takes in seconds and 3600 is to get it in hours $\frac{\frac{tts}{ts/s}}{3600}$
+\begin{figure}[th]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/AccessTime.png}
+  \caption{Access time for different table sizes and buffer sizes\\
+    Green buffersize= 33554432 bit\\
+    Red buffersize = 524288 bit\\
+    Orange buffersize = 65536 bit\\
+    Blue buffersize = 32 bit\\
+    }
+  \label{fig:tableAccess}
+\end{figure}
 
-NEED MORE TEST RESULTS
+Also something to note when scaling the access time up to a table that is 8tb the lookup time is around 4.2-4.45 hours.
+One thing to note though is when the table is small enough to fit the memory it gives faster results, which can be ignored since the entire 8 tb table does not fit memory. Now where the access time is estimated we can give a approximation of the online phase for the \code{64-bit} keyspace. As previously stated the access time would lie around 4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$ this means that the lookup time comes to $t\cdot lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx \frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7 years$ so the online phase would approximately take $18008.7 years$. Which leads to the conclusion that our implementation would not work in its current state.
+
 
 \section{Cost analysis}
 

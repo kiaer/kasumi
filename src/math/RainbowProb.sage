@@ -3,11 +3,11 @@ from sage.all import *
 from sage.symbolic.integration.integral import definite_integral
 
 
-N = 2**32
+N = 2**64
 t = 2**2
 m = 2**10
 l = 1
-rps = [0.58, 0.73, 0.99]
+rps = [0.87, 0.89, 0.73]
 rmsc = 0.0
 
 def calc_rmsc(ps):
@@ -20,7 +20,7 @@ def solve_mt(m, rm):
     return 2**(float(log(a[0][x])/log(2)))
 
 def memory():
-    return m * l * (1.25 * 10**-7) * 32
+    return m * l * (1.25 * 10**-13) * 64
 
 def time_for_offline(rm):
     return N * rm * l
@@ -31,6 +31,12 @@ def time_for_online(rm):
     a = t**2 * l * definite_integral(x * (1 + rm *(1 - x)) * (1 - rm / (2 + rm))**(2*l), x, 0, 1) + t * l * (2 + rm - 2 * (2 / (2 + rm))**(2 * l) / (2 * l + 1) * rm)
     #print log(a, 2)
     return a
+
+def big_T(t,l,rm):
+    return (t**2)*l*((((2*l-1)+(2*l+1)*rm)*((2+rm)**2)-4*((2*l-1)+l*(2*l+3)*rm)*((2/(2+rm))**(2*l)))/((2*l+1)*(2*l+2)*(2*l+3)*(rm**2)))
+
+def lookups(m,t,rm):
+    return (t*((2+rm-2*((2/(2+rm))**2))/(3*rm)))
 
 #def rtc:
 
@@ -52,11 +58,11 @@ for i in xrange(0,3):
     lstmem2 = []
     print "Proberbility required set to: %f with tables set: %i" % (rps[i], l)
     rmsc = calc_rmsc(rps[i])
-    for x in xrange(0, 15):
+    for x in xrange(0, 5):
         print ""
         #64 bit - 35.5
         #32 bit -
-        m = 2**(25 + (0.5 * x))
+        m = 2**(39 + (0.2 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
         temp = "$2^{%.2f}$" % log(m, 2)
@@ -68,7 +74,7 @@ for i in xrange(0,3):
         print "t: 2^%f" % (float(log(t)/log(2)))
         print "m: 2^%f" % (float(log(m)/log(2)))
         print "Rmsc calculated: %f" % rmsc
-        print "Memory used: " + str(memory()) + "MB"
+        print "Memory used: " + str(memory()) + "TB"
         temp = "$2^{%.2f}$" % log(time_for_online(rmsc), 2)
         lsttime.append(time_for_online(rmsc))
         lsttime2.append(temp)
@@ -77,6 +83,8 @@ for i in xrange(0,3):
         lstmem2.append(temp)
         print "Time used for offline phase: 2^" + str(float(log(time_for_offline(rmsc))/log(2)))
         print "Time used for online phase: 2^" + str(float(log(time_for_online(rmsc))/log(2)))
+        print "Time used for online phase: 2^" + str(float(log(big_T(t,1,rmsc))/log(2)))
+        print "\n"
     f = open('rainbowtab.tex', 'a')
     col = [lstm2, lstt2, lstmem2, lsttime2]
     #Prob, RMSC, l, Offline compp
