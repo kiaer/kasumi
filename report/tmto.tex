@@ -58,8 +58,8 @@ Here the starting points are $sp$ they are equal to $x$ which is the first eleme
 
 \begin{figure}[th]
   \centering
-  \includegraphics[width=\textwidth]{figures/DPSchema.png}
-  \caption{Needs to be changed to Hellman schema}
+  \includegraphics[width=\textwidth]{figures/HellSchema.png}
+  \caption{Hellman schema}
   \label{fig:hellSchema}
 \end{figure}
 
@@ -68,11 +68,21 @@ Each row/chain from \ref{hellmax} is built the way shown in \ref{fig:hellSchema}
 \subsubsection{Merges}
 Merges occur when in some point of the generation of two chains, they have the same intermediate point/chain link which causes a collision and  forces the chains merge. This is usually caused by the reduction function, if the reduction function reduces the bit-size of the ciphertext. Say we have ciphertext1 12345678 and ciphertext2 12345679 each of them are 32 bits but as our encryption only takes 28 bits then applying the reduction function to this would cause a merge since the reduction function would remove the last 4 bit. If this was the case the chains would now have merged and all the following intermediate points(chains links) will be the same. This affects the overall coverage of the table, if the merge happens 10 steps into the chain the coverage will have $10 - t$ less keys as the rest of the two chains are duplicates.
 \\
-illustration of merges
+\begin{figure}[th]
+  \centering
+  \includegraphics[width=\textwidth]{figures/Merge.png}
+  \caption{Hellman schema}
+  \label{fig:hellSchema}
+\end{figure}
 \subsubsection{Loops}
 Loops occur when a intermediate point(chain link) points back to a previously reached chain link. This will also result in ad decline of the table coverage.
 
-TODO figure for chain looping
+\begin{figure}[th]
+  \centering
+  \includegraphics[width=\textwidth]{figures/Loop.png}
+  \caption{Hellman schema}
+  \label{fig:hellSchema}
+\end{figure}
 
 A loop will loop around in the same chain links until it reaches t.
 

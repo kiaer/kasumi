@@ -152,14 +152,35 @@ The table also shows what the lookup time would be if the table was 8 tb. Where 
 \end{figure}
 
 Also something to note when scaling the access time up to a table that is 8tb the lookup time is around 4.2-4.45 hours.
-One thing to note though is when the table is small enough to fit the memory it gives faster results, which can be ignored since the entire 8 tb table does not fit memory. Now where the access time is estimated we can give a approximation of the online phase for the \code{64-bit} keyspace. As previously stated the access time would lie around 4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$ this means that the lookup time comes to $t\cdot lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx \frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7 years$ so the online phase would approximately take $18008.7 years$. Which leads to the conclusion that our implementation would not work in its current state.
+One thing to note though is when the table is small enough to fit the memory it gives faster results, which can be ignored since the entire 8 tb table does not fit memory. Now where the access time is estimated we can give a approximation of the online phase for the \code{64-bit} keyspace. As previously stated the access time would lie around 4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$ this means that the lookup time comes to $t\cdot lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx \frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7 years$ so the online phase would approximately take $18008.7 years$. Which leads to the conclusion that our implementation would not work in its current state. To get a more realistic attack we will in section \ref{sec:Discussion} explain some memory optimizations and the RainbowDP table that reduces the amount from t to 1. To get the encryption time down to approximately one day one would need 1280 cores.
 
 
 \section{Cost analysis}
+In this section we will assume that the memory optimizations has been implemented and the table is of Rainbow/DP\ref{sec:Discussion}. This gives a table access of 1, when a DP is reached.
+To pull this off for $m=2^{39.80}$ and $t=2^{25.08}$ the pre-computation will require \code{7.56TB}, and \code{$2^{64.88}$} encryptions. The online phase will require \code{$2^{49.16}$} encryptions, our cost analysis will aim at getting the online phases encryption time down to one day. This will require $\frac{2^{49.16}}{60*60*24}\approx 2^{32.76}$ encryptions per second. We have found a couple of candidates that fits the bill:
 
-Do we want to discuss a machine to compute table?
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[h]
+\caption{Hardware comparison}
+\label{my-label}
+\begin{tabular}{|ccccccc}
+\hline
+\rowcolor[HTML]{EFEFEF}
+CPU                                    &                             &                               &                           &                                 &                            & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}} \\ \hline
+\multicolumn{1}{|c|}{Model}            & \multicolumn{1}{c|}{Cores}   & \multicolumn{1}{c|}{Amount} & \multicolumn{1}{c|}{Ghz}  & \multicolumn{1}{c|}{Enc per sec} & \multicolumn{1}{c|}{Price USD} & \multicolumn{1}{c|}{Total USD}                    \\ \hline
+\multicolumn{1}{|l|}{AMD FX-8320}      & 8                            & 143                         & 3,5                       & 7278941245                      & 139                    & 20020                                     \\
+\multicolumn{1}{|l|}{AMD FX-8350}      & 8                            & 125                         & 4                         & 7271669575                      & 170                   & 21250                                    \\ \hline
+\rowcolor[HTML]{EFEFEF}
+Hard Drive                                                          &                               &                           &                                 &                           & & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}} \\ \hline
+\multicolumn{1}{|c|}{Model}            & \multicolumn{1}{c|}{Size GB} & \multicolumn{1}{c|}{Amount} & \multicolumn{1}{c|}{Read $mb/s$} & \multicolumn{1}{c|}{Write $mb/s$}      & \multicolumn{1}{c|}{Price USD} & \multicolumn{1}{c|}{Total USD}                    \\ \hline
+\multicolumn{1}{|c|}{Crucial}          & 960                          & 8                           & 500                       & 400                             & 300                        & 2400                                          \\
+\multicolumn{1}{|c|}{Mushkin} & 1000                         & 8                            & 560                       & 460                             & 339                        & 2712                                          \\ \cline{1-1}
+\end{tabular}
+\end{table}
+So with around $20020+2712=22732 $USD $ \approx 151313 $DK for the harddrive and the CPU's.
 
-NEED ONLINE TEST RESULTS TO CREATE AN ACTUAL MACHINE.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "Thesis"
