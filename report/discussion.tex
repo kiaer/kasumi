@@ -1,11 +1,39 @@
 \chapter{Discussion}
 \label{ch:disc}
 
-Is not close to done.. Some of the things we want to discuss.
+As most improvements available to us lies in the online phase, this
+is mostly what will be discussed. Our biggest bottleneck when running
+the online phase lies in the table lookups required to perform the
+attack. As this is the case, we will have a look on improvements to
+lookups and how to reduce them.
+
+We will also look into using GPUs as a cheaper alternative to CPUs
+core-for-core. Over the last decade the GPU has improved immensely and
+is now a very viable alternative when looking at parallelization. In
+the GPU part we will assume the CUDA will be able to make improvements
+both the pre-computational phase and online phase.
+
+Lastly we will try and discuss a possible hardware implementation of the attack
+and benefits of such.
 
 \section{DP/Rainbow}
 
+\cite{nohl} proposed an alternative to the original Rainbow attack
+method. Instead of using the original approach, they combined the DP
+attack and rainbow attack thus resulting in a more efficient
+TMTO-attack doing fewer operations with the bottleneck of the
+harddrive. 
 
+The idea proposes chain computations with one reduction function
+until a distinguished point is reached, then changing the reduction
+function for the next chain computation. This allows for a improvement
+in lookups as the generated table will only require a lookup when a
+distinguished point is reached in the online phase. 
+
+At the same time the benefits of a rainbow attack is still maintained,
+as no loops or merged chains and the low amount of tables is still
+present. This is due to the combined approach still using different
+multiple different reduction functions.
 
 \section{Storage improvements}
 
@@ -17,8 +45,6 @@ time. Knowing this we have looked into possibilities for improving the
 lookup times required.
 
 \subsection{Binary Search}
-The binary search algorithm begins by comparing the target value to value of the middle element of the sorted array. If the target value is equal to the middle element's value, the position is returned. If the target value is smaller, the search continues on the lower half of the array, or if the target value is larger, the search continues on the upper half of the array. This process continues until the element is found and its position is returned, or there are no more elements left to search for in the array and a "not found" indicator is returned.
-
 
 Since the binary search algorithm essentially finds an element in a
 sorted array, we could use this algorithm for lookup in our
@@ -29,11 +55,122 @@ sorted list, we need to sort the table by end points. This also means
 we need to store both start points and end points.
 
 This has two implications on the pre-computational phase. Firstly the table
-needs sorting and on larger tables this can be time consuming. 
+needs sorting and on larger tables this can be time consuming. This
+can however be seen as a one-time operation that will greatly increase
+the efficiency in the online phase. Secondly when going from the
+sequential approach, where we can save memory, we have to 
+increase the memory by a factor 2. This means that we either have to
+generate new parameters if \code{8TB} of data is still the limit or
+rethink our cost analysis for \code{16TB} of data.
 
+A increase of factor 2 memory consumption can be seen as a small
+increase compared to the increase in performance when doing a
+lookup. The binary search algorithm has a worst case running time of
+$O(log_2(N)$, which when our parameters taken into consideration will
+have the following maximal amount of comparisons
+\[m  = 2^{40} \Rightarrow Comparisons = log_2(2^{40}) = 40\]
 \subsection{Hash map}
+% The index table method can be seen as a special case of a more general and widely known data structure
+% called hash tables. To store m starting point and ending point pairs,
+% one first fixes a hash function that maps elements of N to log m-bit
+% strings. This function need not be a cryptographic hash function,
+% although the same term is used. Instead of sorting the data, each starting point
+% and ending point pair is recorded at the position in the storage
+% addressed by the hash value of the ending point. Collisions of
+% addresses are inevitable, but there are various ways to deal with this
+% problem. Table lookups to hash tables are performed by first hashing
+% the ending point to be searched for in the table and fetching the data
+% located at the address pointed to by the hash value. Since the address
+% holds log m bits of information, even if almost log m bits from each
+% ending point are removed before storage, we can reliably determine
+% whether or not a match has occurred. One advantage of the hash table
+% method, other than reducing storage and not requiring any sorting, is
+% that it provides constant time table lookups. In comparison, a lookup
+% to a sorted table requires time that is logarithmic in the table
+% size. If the hash function is set to return the first ${(log m) - \epsilon }$
+% bits of its input and buckets to hold approximately 2 $\epsilon$ table entries
+% are placed at the position pointed to by each hash value, then the
+% hash table technique reduces to the index table technique.
 
-\section{GPU Parallel}
+This is discussed in \cite[Appendix D]{176}.
+
+TODO Skal vi explaine? Orker det næsten ikke...
+
+\section{GPU Parallel/CUDA}
+
+Modern day GPUs allow for parallelization with great effect. Core for
+core the general purpose processor might be more powerful than a GPU.
+But where a modern day CPU generally consists of 4-8 cores, modern
+GPUs consists of 1000s of cores optimized for parallel
+computations. The pre-computational phase of a TMTO-attack requires a
+huge amount of similar computations, and this is where GPU
+parallelization really shines. All operations in a table generation
+are relatively simple, but requires huge amounts of repetitive work. 
+
+We chose to have a deeper look into NVIDIAs
+CUDA\footnote{\url{http://www.nvidia.com/object/cuda_home_new.html}}
+as CUDA programming can be done using modified C. 
+
+Looking at the high-end consumer graphics cards available at the
+moment, we can take a look at the NVIDIA Titan X
+card\footnote{\url{http://www.geforce.com/hardware/desktop-gpus/geforce-gtx-titan-x/specifications}}. This
+card specifications includes 3072 CUDA cores running at a base clock
+speed of \code{1000MHz}. This comes at a price of around
+$1299.99\$$. We can compare this to the, at the moment, top model of Intel
+proccesors Intel
+i7-5950HQ\footnote{\url{http://ark.intel.com/products/87720/Intel-Core-i7-5950HQ-Processor-6M-Cache-up-to-3_80-GHz}}
+which comes with 4 cores running at the base frequency of
+\code{2.9GHz} with a price around $630\$$.
+
+If we assume all cores perform at a maximal frequency at all times the
+Titan X should be able to perform $3072 \cdot 10^9$ cycles each
+second. For the Intel counter part, assuming the same, the CPU will
+only be able to perform $11,6 \cdot 10^9$ cycles each second. The GPU
+can therefore increase the cycles performed of around 250 times when
+these assumptions is made. This is all done with a price increase of
+only around the double. Looking at the performance with these
+assumptions will undoubtedly not be realistic in a real-world
+scenario. As examples
+\begin{itemize}
+\item Write/read from a disc is not taken into
+consideration and could be a huge bottleneck. 
+\item In a real-world case we can't assume that all cores are used
+  with their maximal frequency at all times. Especially not when
+  looking at CUDA cores.
+\end{itemize}
+As the cost of these high-end graphics cards is low compared to
+the computational power gained, this is definitely a way worth considering.
+
+\section{Hardware implementation}
+
+The hardware implementation will mostly be directed at the
+pre-computational phase. We still see it as a goal to run the online
+phase on different setups and even cross platform. This is for the
+most part speculations and comparison to previous work implemented as
+hardware instead of software. We have not tried to test any part of
+our implementation as hardware.
+
+The first improvement that can be done looking at a hardware
+implementation, is implementing a hardware solution for
+KASUMI. Looking at \cite{TODO CITE HARDWARE PAPER} TODO, and the
+performance levels they reached, it can be seen that a huge increase
+in performance can be gained by running the KASUMI algorithm on
+dedicated hardware. A much lower cycle count is needed for encryptions
+and can be done with a much lower clock frequency. Since most of the
+computations done in KASUMI is bit manipulation, this can also be done
+with the mostly standard logic gates. 
+
+Now thinking about the pre-computation of the table required to
+perform the attack, we could also see a hardware implementation being
+a possibility. Since the table generation is a very specific task with
+a lot of repetitive work, hardware implementation could be ideal. With
+an already much faster hardware implementation of KASUMI to take
+advantage of, table generation could benefit from hardwares faster
+execution of repetitive tasks. A hardware solution could also reduce
+the cost of generating the tables. A rig consisting of chips designed for one specific
+purpose will often be cheaper to buy than the costs of similar power
+from a general purpose processor.
+
 
 %%% Local Variables:
 %%% mode: latex

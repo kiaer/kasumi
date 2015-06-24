@@ -44,9 +44,7 @@ memory usage or online time. For this reason we went with a parameter
 choice of $m=2^{25} \approx 33445532$ and $t= 2^{7.89} \approx
 236$. The table generator will be tested on the actual
 pre-computational time and the memory usage.
-
-\textbf{Pre-computational time}
-
+\subsubsection*{Pre-computational time}
 Table \ref{tab:rainparam32} states that an expected amount of
 KASUMI encryptions required for generation of the table is
 $2^{32.886}$. Looking back to \ref{sec:benchkas} we know the
@@ -67,9 +65,7 @@ approximately 27 minutes. This is $\approx8\%$ more time used than
 expected. This can be seen as expected as time is required to write
 the table to a disk. Another explanation could be our sequential
 approach and the usage of the MD5 algorithm. TODO Some facts to back up maybe?
-
-\textbf{Memory}
-
+\subsubsection*{Memory}
 We also want to make sure that the actual memory usage matches up with
 the expected. From our parameter choice we can see the expected memory
 $M_{predicted}=134.22$MB. The previously generated table can easily be
@@ -93,13 +89,37 @@ perfectly. Because of this we will not discuss table size further, as
 adding additional bit to a binary file should not change the outcome.
 Going with the parameters chosen in \ref{sec:rainbowparam} we set
 $m=?$ and $t=?$.
-
+\subsubsection*{Scaling to 64-bit keysize}
 From the chosen parameters we know that the pre-computational phase is
 estimated to require $2^{64.88}$ encryptions of KASUMI. This amount of encryptions
-is infeasible to test on the devices that we ran the
-\code{32-bit} implementation on.
+is infeasible to run on the devices that we ran the
+\code{32-bit} implementation on. Thus for generating a table of that
+size a server/cluster with a huge amount of processing power is
+required. As an example we will try to give some rough estimates on
+how much computational power is needed and how many cores this would
+translate to.
 
-TODO Need to ask Andrey about what we can compare with.. HPC clusters?
+We will try to give an estimate, from our tests, to a table generated
+in roughly 24 months. This was chosen as any faster would essentially
+require more processing power than could be expected from even some the
+fastest super computers
+today\footnote{\url{http://www.top500.org/lists/2014/11/}}. First off
+we know from \ref{tab:zen} that for 1 encryption of
+\code{64-bit} of data, we need to use $68,76 * 8 \approx 550$ CPU
+cycles. 
+
+From the pre-computational time noted earlier we can now estimate how
+many cycles will be needed to compute all encryptions required.
+\[ cycles_{tot} = 550 * 2^{64.88} \approx 2^{74}\]
+From this we can estimate the required cycles per second a build needs
+to do. 
+\[ cycles_{sec} = \frac{2^{74}}{550} \approx 2^{48}\]
+This translates to a frequency of around  \code{295887Ghz}. Looking at
+highend server cores for clusters, they might have a maximal frequency
+of around\code{4,4ghz} per core. If we expect every core can perform
+equally and perform at this frequency we would need $\approx 67000$
+cores to generate the table in two years.
+
 
 \subsection{Online phase}
 As stated earlier are the tests preformed on a scaled down version of the keyspace.
