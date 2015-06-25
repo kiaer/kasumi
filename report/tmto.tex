@@ -1,8 +1,28 @@
 \chapter{TMTO-Attack}
 \label{ch:tmto}
 
-
-\newpage
+To get an overview of why time-memory trade-offs were introduced, we
+can first look at the two extremes exhaustive search (brute-force
+attack) and a pre-computed table consisting the encryption with every
+possible key. We consider a cryptographic function with the keysize
+\textbf{N}. If a cryptographic function were to be attacked with these
+methods, we can see it as follows
+\begin{itemize}
+\item The exhaustive search will, in worst case, try all $2^{N}$
+  possible key combinations to try and crack the encryption. This
+  requires the highest computational cost but the memory required to
+  perform the attack is negligible.
+\item The pre-computed table consisting of encryptions with $2^{N}$
+  different keys. Only a single lookup is required when the attack is
+  performed, but huge amounts of memory is required for storing the
+  table. The pre-computation of the table is done only one time. 
+\end{itemize}
+The time-memory trade-off was introduced to improve upon these
+methods and essentially combine them. In a time-memory trade-off
+attack we will be able to trade memory usage at the cost of time
+performing the attack and vice-versa. In this chapter we will go over
+the theory of three common TMTO-attacks, namely Hellman Tables, DP
+Tables and Rainbow Tables.
 \section{Hellman Tables}
 \label{sec:hmtheory}
 Hellman trade-off is the first iteration of time-memory trade-offs. It
@@ -309,12 +329,23 @@ as a false alarm. If the key is found the attack was a
 success. This type of table lookup will leave us with at most
 $\frac{t(t - 1)}{2}$ calculations of the cryptographic function and
 $t$ lookups in the the table.
-
-TODO Figure
-
 \subsection{Analysis}
 
-TODO Same as the other?
+\subsubsection{Success rate}
+
+The success rate of a rainbow attack depends the amount of table used
+and the rainbow matrix stopping constant. From \cite[Proposition
+29]{176} the following describes the succes probability of a rainbow attack
+\[R_{ps} = 1 - \left( \frac{2}{2+R_{msc}} \right)^{2l}\]
+
+\subsubsection{Memory usage}
+
+If a rainbow attack is implemented storing both start and end point,
+we can expect the total storage to be 
+\[M = 2 * m * bitsize\]
+Optimizations can be done to the memory and result in saving
+space. 
+
 
 
 
