@@ -1,19 +1,39 @@
 \chapter{Introduction}
 
-\section{KASUMI Cipher and 3G}
+\section{KASUMI Cipher and 2G/3G}
 
 In this project, we analyse the real-world security of KASUMI as used
 in 2G and 3G networks in form of A5/3 towards time-memory trade-off
 attacks. KASUMI is a block cipher algorithm used in mobile embedded
-systems to provide security between the phone and the base station. 
+systems to provide security between the phone and the base station. As
+GSM is the international standard for mobile communication, KASUMI
+is subject to a lot of cryptanalysis.
 
 \section{TMTO Attack}
 
+We will discuss some of the most popular time-memory trade-offs, give
+the background theory behind them and try and analyze the best
+TMTO-attack to use with KASUMI in mind.
+
+The chosen TMTO-attack will be analyzed and optimal parameters for an
+actual attack will be discussed.
 
 
 \section{The problem}
 
+The project will require an optimized implementation of the KASUMI
+block cipher as described in papers. With the KASUMI cipher
+implemented, the TMTO attack can be implemented
 
+As the KASUMI cipher uses a keys with the size of \code{64-bit}, we
+will have trouble testing an attack with hardware at our disposal. As
+a solution we will implement an experimental attack using a key with
+size \code{32-bit}. The experimental attack will allow us to generate
+test results and provide us with the possibility of estimating how the
+attack on a full keysize would operate.
+
+Knowing some of the previous attacks performed on KASUMI, we can in
+the conclusion conclude whether or not this attack can be seen as practical.
 
 \section{Structure of the Thesis}
 
@@ -26,7 +46,7 @@ implementation of both KASUMI and the TMTO route we took(chapter
 \ref{ch:impl}). Next we will analyze the results of the attack
 (chapter \ref{ch:anal}). Afterwards we will move on to a discussion
 about what further improvements could be made (chapter
-\ref{ch:disc}). Lastly we will give a conclusion of the project
+\ref{ch:disc}). Finally we will give a conclusion of the project
 (chapter \ref{ch:concl}).
 
 %%% Local Variables:
