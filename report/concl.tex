@@ -1,6 +1,32 @@
 \chapter{Conclusion}
 \label{ch:concl}
-big todoooooo
+A summary of the main part of the text
+A deduction made on the basis of the main body
+Your personal opinion on what has been discussed
+A statement about the limitations of the work
+A comment about the future based on what has been discussed
+The implications of the work for future research
+
+In this project we tried to analyze a practical attack on the KASUMI
+block cipher by implementing a time-memory trade-off attack. We
+conducted experiments to determine whether or not this attack can be
+seen as practical. 
+
+The biggest obstacle in performing this attack will undoubtedly be
+computation of the tables needed for the attack. Generating such table
+will require more than $2^{64}$ computations of KASUMI if a decent
+success probability is expected.
+
+Our implementation of the attack is also very unoptimized when
+considering large tables consisting of multiple terabytes of
+data. Read times and lookups in tables will prove to be a huge
+hindrance if the attack is to be performed on the full keyspace of
+\code{64-bit}.
+
+If the attack is to be considered doable the combined approach of 
+rainbow and DP attacks should definitely a part of the
+implementation. 
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "Thesis"
