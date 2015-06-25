@@ -1,11 +1,11 @@
 \chapter{Conclusion}
 \label{ch:concl}
-A summary of the main part of the text
-A deduction made on the basis of the main body
-Your personal opinion on what has been discussed
-A statement about the limitations of the work
-A comment about the future based on what has been discussed
-The implications of the work for future research
+% A summary of the main part of the text
+% A deduction made on the basis of the main body
+% Your personal opinion on what has been discussed
+% A statement about the limitations of the work
+% A comment about the future based on what has been discussed
+% The implications of the work for future research
 
 In this project we tried to analyze a practical attack on the KASUMI
 block cipher by implementing a time-memory trade-off attack. We
@@ -23,11 +23,23 @@ data. Read times and lookups in tables will prove to be a huge
 hindrance if the attack is to be performed on the full keyspace of
 \code{64-bit}.
 
-If the attack is to be considered doable the combined approach of 
-rainbow and DP attacks should definitely a part of the
-implementation. 
+But even then, when compared to previous attacks, the online time
+required for the attack matches up and even exceeds most of the
+previous attacks performed on KASUMI. This is done attacking the 2G
+compatible version of KASUMI, but nonetheless it attacks the full key
+and every round key.
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "Thesis"
-%%% End:
+If the attack is to be considered doable the combined approach of 
+rainbow and DP attacks should definitely be a part of the
+implementation. Additional storage improvements might also be needed
+to reach optimal lookup times.
+
+An approach where GPUs is used for parallelization is also something
+that should be explored in more depth, as these contains computing
+power exceeding the CPUs at a much cheaper price.
+
+If these points gets looked into, we can look at an actual attack on
+KASUMI that can be performed in days using a relatively cheap
+setup, assuming a rainbow table is computed.
+
+
