@@ -47,8 +47,6 @@ As stated earlier the memory requirements will meet the upper bound of
 \code{8TB}.
 As the success probability already is set we can find the respective parameters and compare them.
 
-TODO We need to show where we get this stuff from.. reference
-formulas...
 \begin{figure}[H]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -84,42 +82,35 @@ parameters for $H_{msc} =2.25$.
   \text{\texttt{Success{ }={ }0.73,{ }Hmsc{ }={ }2.25,{ }Hcr{ }={ }0.74,{ }Htc{ }={ }1.88{ }Hpc{ }={ }1.77} }
 \begin{tabular}{lllll}
 m & t & l & M in TB & T \\\hline
-$2^{10.00}$ & $2^{27.58}$ & $2^{26.63}$ & $1.70$ & $2^{54.10}$ \\
-$2^{10.50}$ & $2^{27.33}$ & $2^{26.38}$ & $2.02$ & $2^{53.60}$ \\
-$2^{11.00}$ & $2^{27.08}$ & $2^{26.13}$ & $2.41$ & $2^{53.10}$ \\
-$2^{11.50}$ & $2^{26.83}$ & $2^{25.88}$ & $2.86$ & $2^{52.60}$ \\
-$2^{12.00}$ & $2^{26.58}$ & $2^{25.63}$ & $3.40$ & $2^{52.10}$ \\
-$2^{12.50}$ & $2^{26.33}$ & $2^{25.38}$ & $4.05$ & $2^{51.60}$ \\
-$2^{13.00}$ & $2^{26.08}$ & $2^{25.13}$ & $4.81$ & $2^{51.10}$ \\
-$2^{13.50}$ & $2^{25.83}$ & $2^{24.88}$ & $5.72$ & $2^{50.60}$ \\
-$2^{14.00}$ & $2^{25.58}$ & $2^{24.63}$ & $6.81$ & $2^{50.10}$ \\
-$2^{14.50}$ & $2^{25.33}$ & $2^{24.38}$ & $8.09$ & $2^{49.60}$ \\
+$2^{12.00}$ & $2^{26.58}$ & $2^{26.24}$ & $5.18$ & $2^{52.44}$ \\
+$2^{12.20}$ & $2^{26.48}$ & $2^{26.14}$ & $5.55$ & $2^{52.24}$ \\
+$2^{12.40}$ & $2^{26.38}$ & $2^{26.04}$ & $5.95$ & $2^{52.04}$ \\
+$2^{12.60}$ & $2^{26.28}$ & $2^{25.94}$ & $6.38$ & $2^{51.84}$ \\
+$2^{12.80}$ & $2^{26.18}$ & $2^{25.84}$ & $6.84$ & $2^{51.64}$ \\
+$2^{13.00}$ & $2^{26.08}$ & $2^{25.74}$ & $7.33$ & $2^{51.44}$ \\
+$2^{13.20}$ & $2^{25.98}$ & $2^{25.64}$ & $7.85$ & $2^{51.24}$ \\
+$2^{13.40}$ & $2^{25.88}$ & $2^{25.54}$ & $8.42$ & $2^{51.04}$ \\
+$2^{13.60}$ & $2^{25.78}$ & $2^{25.44}$ & $9.02$ & $2^{50.84}$ \\
+$2^{13.80}$ & $2^{25.68}$ & $2^{25.34}$ & $9.67$ & $2^{50.64}$ \\
 \end{tabular}
   \caption{Hellman Parameters}
   \label{tab:hellparam}
 \end{table}
-
-TODO CHOOSE VALUES
-
+We can now select the parameters we want our Attack to use, As Hmsc has been optimized we selected : $m=2^{13.2}$, $t=2^{25.98}$ and $l=2^{25.64}$.
+This gives us a table of size \code{7.85 TB}.
 \section{Distinguished Points Table}
-TODO Needs more work
-
 For this section we assume that $\hat{t}$ is sufficiently large.
 
-All calculations of parameters follows the theory provided in
+All calculations of parameters follow the theory provided in
 \ref{sec:dptheory}.
 
-Again we use the set upper bound for the memory and our set $P$.
-
-TODO We need to show where we get this stuff from.. reference
-formulas...
-
+Again we use the set upper bound for the memory and the success ratio.
 As shown in \ref{fig:dpHmsc} the smaller the matrix stopping constant
-gets the bigger the table gets, The time memory coefficient is most
-efficient at 0.56 \cite{176}. Which also states that a $D_{msc}$ above
+gets the larger the table gets. The time memory coefficient is most
+efficient at 0.56 \cite{176} the paper also states that a $D_{msc}$ above
 0.56 should be avoided. Therefore the matrix stopping constant has been
 set to 0.56, using the formulas for optimal parameters from \cite{176}
-\ref{tab:DPparam} is generated.
+\ref{tab:DPparam} is generated.(note chain length is the approximated average chain length)
 \begin{figure}[H]
   \centering
   need to put lables on the elements from left to right 0.2, 0.3, 0.56, 0.75, 1.00, 1.25
@@ -132,24 +123,22 @@ set to 0.56, using the formulas for optimal parameters from \cite{176}
   \text{\texttt{Success{ }={ }0.73,{ }Dmsc{ }={ }0.56,{ }Dcr{ }={ }0.81,{ }Dtc{ }={ }8.77{ }Dpc{ }={ }1.60} }
 \begin{tabular}{lllll}
 m & t & l & M in TB & T \\\hline
-$2^{10.00}$ & $2^{26.58}$ & $2^{28.10}$ & $2.36$ & $2^{54.69}$ \\
-$2^{10.50}$ & $2^{26.33}$ & $2^{27.85}$ & $2.81$ & $2^{54.19}$ \\
-$2^{11.00}$ & $2^{26.08}$ & $2^{27.60}$ & $3.34$ & $2^{53.69}$ \\
-$2^{11.50}$ & $2^{25.83}$ & $2^{27.35}$ & $3.97$ & $2^{53.19}$ \\
 $2^{12.00}$ & $2^{25.58}$ & $2^{27.10}$ & $4.72$ & $2^{52.69}$ \\
-$2^{12.50}$ & $2^{25.33}$ & $2^{26.85}$ & $5.61$ & $2^{52.19}$ \\
+$2^{12.20}$ & $2^{25.48}$ & $2^{27.00}$ & $5.06$ & $2^{52.49}$ \\
+$2^{12.40}$ & $2^{25.38}$ & $2^{26.90}$ & $5.42$ & $2^{52.29}$ \\
+$2^{12.60}$ & $2^{25.28}$ & $2^{26.80}$ & $5.81$ & $2^{52.09}$ \\
+$2^{12.80}$ & $2^{25.18}$ & $2^{26.70}$ & $6.23$ & $2^{51.89}$ \\
 $2^{13.00}$ & $2^{25.08}$ & $2^{26.60}$ & $6.67$ & $2^{51.69}$ \\
-$2^{13.50}$ & $2^{24.83}$ & $2^{26.35}$ & $7.94$ & $2^{51.19}$ \\
-$2^{14.00}$ & $2^{24.58}$ & $2^{26.10}$ & $9.44$ & $2^{50.69}$ \\
-$2^{14.50}$ & $2^{24.33}$ & $2^{25.85}$ & $11.22$ & $2^{50.19}$ \\
+$2^{13.20}$ & $2^{24.98}$ & $2^{26.50}$ & $7.15$ & $2^{51.49}$ \\
+$2^{13.40}$ & $2^{24.88}$ & $2^{26.40}$ & $7.67$ & $2^{51.29}$ \\
+$2^{13.60}$ & $2^{24.78}$ & $2^{26.30}$ & $8.22$ & $2^{51.09}$ \\
+$2^{13.80}$ & $2^{24.68}$ & $2^{26.20}$ & $8.81$ & $2^{50.89}$ \\
 \end{tabular}
   \caption{DP Parameters}
   \label{tab:DPparam}
 \end{table}
-
-TODO Discuss table, graph..
-
-TODO PARAMTER CHOICE?
+This leaves us to select our parameters in this case we have optimized the Dmsc, we could discuss lowering it to lower the precomputational cost but we go with the parameters: $m=2^{13.40}$  $t=2^{24.88}$  $l=2^{26.40}$.
+This gives us a table that is \code{7.67 TB}.
 
 \section{Rainbow Table}
 \label{sec:rainbowparam}
@@ -215,13 +204,35 @@ and \ref{fig:time73} shows the graphical representation of the table.
     \label{fig:time73}
   \end{minipage}
 \end{figure}
-
-TODO The descriptionssss!!! Looking at table \ref{tab:rainparam} and figures \ref{fig:param73}
+Looking at table \ref{tab:rainparam} and figures \ref{fig:param73}
 and \ref{fig:time73}\footnote{See Appendix \ref{sec:rainbowgraphs} for
-  full size graphs} while knowing that
+  full size graphs} we select the parameters for our attack. As the trade-off at 73% is most efficient with one table $l=1$ as for m and t we decided to use $m=2^{39.8}$ and $t=2^{25.08}$.
 
 \newpage
 \section{Comparison and choice of table}
+Three different attacks have been described and explored, the above tables provide a range of possible parameters which hold true for our constraints.
+
+Table \ref{tab:compare} shows our selected parameters for each attack the size of it the precomputational cost and the online cost. As can be seen in the table Hellman and DP trade-off are quite similar in their parameters, the biggest differnece as also stated in \ref{sec:DP} is the amount of lookups that are required.
+Where Hellman requires $m*l$ DP only has one lookup per table.
+Now to choose between Rainbow Attack and DP, as the rainbow attack uses bigger tables and less of them it is harder to compare m, t and l but we can compare the pre-computational cost and the online cost.
+The precomputational cost is approximately the same for all the attacks but the
+online cost for DP and Hellman is almost 5 times larger than the Rainbow Attack.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|cccccc}
+\hline
+\rowcolor[HTML]{EFEFEF}
+Attack  & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}m} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}t} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}l} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}M in TB} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Precomp} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Online} \\ \hline
+Hellman & $2^{13.2}$                                     & $2^{25.98}$                                    & $2^{25.64}$                                    & 7.85                                                 & $2^{64.82}$                                          & $2^{51.24}$                                         \\ \cline{1-1}
+\rowcolor[HTML]{EFEFEF}
+DP      & $2^{13.4}$                                     & $2^{24.88}$                                    & $2^{26.4}$                                     & 7.67                                                 & $2^{64.68}$                                          & $2^{51.29}$                                         \\
+Rainbow & $2^{39.8}$                                     & $2^{25.08}$                                    & 1                                              & 7.65                                                 & $2^{64.88}$                                          & $2^{48.98}$                                         \\ \cline{1-1}
+\end{tabular}
+\caption{Comparison of parameter choices}
+\label{tab:compare}
+\end{table}
+The compariso
 
 %%% Local Variables:
 %%% mode: latex

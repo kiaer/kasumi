@@ -20,7 +20,7 @@ def mtl(k,hmsc):
     a=k
     for h in range(0,len(mx)):
         my[h]=(a,eq1(a,hmsc)[0])
-        a=a+0.5
+        a=a+0.2
     return my
 
 def T(hmsc,hps,Hcr,y):
@@ -32,7 +32,7 @@ def ML(m,l):
 #Htc=(((1/Hmsc)+(1/6))*(1/(Hcr**3)))*Hps*(ln(1-Hps))**2
 def CalcStuffs(k,hps,hmsc):
     mx=mtl(k,hmsc)
-    ##############
+
     #Coverage Rate for single table
     #############
     Hcr = (sqrt(2)/sqrt(hmsc))*((e**(sqrt(2*hmsc))-1)/(e**(sqrt(2*hmsc))+1))
@@ -73,13 +73,14 @@ def CalcStuffs(k,hps,hmsc):
 
 
 
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n"
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n    Memory: %.2f TB\n"
         %(
             m,                            #m
             t,                            #t
             log(l,2),                     #l
             log(T(hmsc,hps,Hcr,t),2),     #T
-            log(ML(2**m,l),2)             #M
+            log(ML(2**m,l),2),             #M
+            (ML(2**m,l)*(1.25*10**(-13))) # M in TB
         ))
 
     print("\n\n")
@@ -111,14 +112,15 @@ comp.show()
 comp.save("graphs/compare 1.png")
 
 comps1=plot([],title='Comparison 2.25')
-comp1=CalcStuffs(10,0.5768,2.25)+CalcStuffs(9,0.73,2.25)+CalcStuffs(7,0.90,2.25)+comps1
+comp1=CalcStuffs(10,0.5768,2.25)+CalcStuffs(12,0.73,2.25)+CalcStuffs(7,0.90,2.25)+comps1
 comp1.axes_labels(['M in TB','T'])
 comp1.show()
 comp1.save("graphs/compare 2.25.png")
-comps2=plot([],title='Comparison of Hmsc')
-comp2=CalcStuffs(9,0.73,0.75)+CalcStuffs(9,0.73,1.25)+CalcStuffs(9,0.73,1.75)+CalcStuffs(9,0.73,2.25)+CalcStuffs(9,0.73,2.75)+comps2
-comp2.axes_labels(['M in TB','T'])
-comp2.show()
-comp2.save("graphs/compare hmsc.png")
+#comps2=plot([],title='Comparison of Hmsc')
+#comp2=CalcStuffs(9,0.73,0.75)+CalcStuffs(9,0.73,1.25)+CalcStuffs(9,0.73,1.75)+CalcStuffs(9,0.73,2.25)+CalcStuffs(9,0.73,2.75)+comps2
+#comp2.axes_labels(['M in TB','T'])
+#comp2.show()
+#comp2.save("graphs/compare hmsc.png")
 f=open("HM_table.tex", 'w')
 f.write(latex(table(rows=matrix)))
+CalcStuffs(12,0.73,2.25)

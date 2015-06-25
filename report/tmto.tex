@@ -1,5 +1,6 @@
 \chapter{TMTO-Attack}
 \label{ch:tmto}
+<<<<<<< HEAD
 
 To get an overview of why time-memory trade-offs were introduced, we
 can first look at the two extremes exhaustive search (brute-force
@@ -23,6 +24,8 @@ attack we will be able to trade memory usage at the cost of time
 performing the attack and vice-versa. In this chapter we will go over
 the theory of three common TMTO-attacks, namely Hellman Tables, DP
 Tables and Rainbow Tables.
+=======
+>>>>>>> gg
 \section{Hellman Tables}
 \label{sec:hmtheory}
 Hellman trade-off is the first iteration of time-memory trade-offs. It
@@ -186,7 +189,7 @@ the paper [ref] and was further analysed in \cite{DP}. It is a simple modificati
 where one does not have chains of the same size. Instead when a
 distinguished point is reached the chain does not continue. The way we distinguish a point is by some property(hence property) (eg. the first 16 bits are zero \code{dp=00001234, dp!=12345678}).Utilizing this, the amount of table lookups in the DP-trade-off is lowered dramatically, since a lookup only happens when a point that matches the property is found.
 \subsection{Pre-computational phase}
-The online phase of the DP-trade-off is very similar to the Hellman method.
+The online phase of the DP-trade-off is very similar to the Hellman method when $\hat{t}$ is sufficiently large
 \subsubsection{Parameters}
 There are several parameters that decide the size and the coverage of
 the DP-tradeoff. M is the amount of rows, t is the chain length  and l is the amount of tables.

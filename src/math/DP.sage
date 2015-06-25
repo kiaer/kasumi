@@ -41,7 +41,7 @@ def mtl(k,dmsc):
     m=k
     for h in range(0,len(mx)):
         my[h]=(m,eq1(m,dmsc)[0])
-        m=m+0.5
+        m=m+0.2
     return my
 
 def DTC(dmsc,dcr,dps,t,th):
@@ -113,10 +113,9 @@ def CalcStuffs(dps,dmsc,k):
                        "$%.2f$ TB"  %(Ms*(1.25*10**(-13))),
                        "$2^{%.2f}$" %log(Ts,2)))
 
-        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n"%(                                   log(2**m,2),
+        print("     For m: 2^%.2f, t: 2^%.2f and l:2^%.2f \n     Time: 2^%.2f \n     Memory: 2^%.2f\n $%.2f$ TB\n"%(                                   log(2**m,2),
                     log(2**t,2),
-                    log(l,2),                                                                                                              log(Ts,2),
-                    log(Ms,2)
+                    log(l,2),                                                                                                              log(Ts,2),                                                                                                             log(Ms,2),                                                                                                             (Ms*(1.25*10**(-13)))
                     ))
     print("\n\n")
     matrix.append(("","","","","",""))
@@ -138,6 +137,7 @@ comp1=CalcStuffs(0.73,0.20,9)+CalcStuffs(0.73,0.35,9)+CalcStuffs(0.73,0.562047,9
 comp1.axes_labels(['M in TB','T'])
 comp1.show()
 comp1.save("graphs/compare Dmsc.png")
+CalcStuffs(0.73,0.562047,12)
 f=open("DP_table.tex", 'w')
 f.write(latex(table(rows=matrix)))
 

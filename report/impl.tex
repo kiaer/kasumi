@@ -112,7 +112,7 @@ The TMTO-attack is implemented as a 64-bit attack, and for testing
 purpose a 32-bit version of the attack is also implemented.
 
 \subsection{Table generator}
-% 
+%
 % The table generator mainly consists of two loops looping over our
 % chosen parameters. This will allow us to generate an $m$ large table
 % of $t$
@@ -134,16 +134,16 @@ end
 The generation of the table is essentially nested \code{for} loops iterating
 respectively $m$ and $t$ times. This allows us the generate a table of
 size $m$, where each end point is computed by a $t$ long chain. The
-reduction function is different in every link of $t$. 
+reduction function is different in every link of $t$.
 
 The table generator we implemented makes use of sequential key
 generation. This allows us to save half the memory compared to using
 random start points. We chose to make use of the MD5 hashing algorithm
-in the key generation to get a more random distribution. 
+in the key generation to get a more random distribution.
 
 The reduction function takes an integer and the current output of the encryption. The
 integer is the current position in the chain. The output is given as an
-$uint16\_t$ array. $n$ is added to each element of the array and is composed 
+$uint16\_t$ array. $n$ is added to each element of the array and is composed
 into a $uint64\_t$ which is returned. Listing \ref{lst:reduction}
 shows our current implementation of the reduction function.
 
@@ -151,7 +151,7 @@ shows our current implementation of the reduction function.
 captionpos=b, caption={Example reduction function}, label={lst:reduction}]
 uint64_t reduction64(int n, uint16_t * tempkey){
     uint64_t key;
-    key =  (tempkey[0]+n) << 48 | (tempkey[1]+n) << 32 
+    key =  (tempkey[0]+n) << 48 | (tempkey[1]+n) << 32
           | (tempkey[2]+n) << 16 | (tempkey[3]+n);
     return key;
   }
@@ -168,8 +168,6 @@ captionpos=b, caption={Writing to a binary}, label={lst:write}]
   fwrite(ep,sizeof(ep),1,write_ptr);
   fclose(write_ptr);
 \end{lstlisting}
-
-
 
 \subsection{Online Phase}
 The online phase is implemented the same way as described in section
@@ -207,7 +205,7 @@ function inTable(newcipher, originalcipher)
        if originalcipher in chain
        do
           return key
-       end 
+       end
     end
     return key not found
 \end{lstlisting}

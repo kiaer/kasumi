@@ -106,13 +106,13 @@ fastest super computers
 today\footnote{\url{http://www.top500.org/lists/2014/11/}}. First off
 we know from \ref{tab:zen} that for 1 encryption of
 \code{64-bit} of data, we need to use $68,76 * 8 \approx 550$ CPU
-cycles. 
+cycles.
 
 From the pre-computational time noted earlier we can now estimate how
 many cycles will be needed to compute all encryptions required.
 \[ cycles_{tot} = 550 * 2^{64.88} \approx 2^{74}\]
 From this we can estimate the required cycles per second a build needs
-to do. 
+to do.
 \[ cycles_{sec} = \frac{2^{74}}{550} \approx 2^{48}\]
 This translates to a frequency of around  \code{295887Ghz}. Looking at
 highend server cores for clusters, they might have a maximal frequency
@@ -144,7 +144,7 @@ Table          & \multicolumn{1}{c|}{t rounded up} & \multicolumn{1}{c|}{Total t
 \end{tabular}
 \end{table}
 This means that the biggest bottleneck in the implementation is the lookup time. To further investigate this we calculate the lookup time for each table, and compare them to each other note that the test computer has a max read speed of 540 mb/s. One thing we noticed is when the entire table can fit in memory the access time of it increases dramatically, for the 4.3GB table the first table lookup took 4.4 seconds and the lookups afterwards took between 0.6-1 seconds. This is probably due to the table getting cached.
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Access time}
 \label{tab:memory}
@@ -162,7 +162,7 @@ As \ref{fig:memory} shows the buffer size does not seem to matter much the resul
 The table also shows what the lookup time would be if the table was 8 tb. Where target table size is tts, table size is ts, s is the time one lookup takes in seconds and 3600 is to get it in hours $\frac{\frac{tts}{ts/s}}{3600}$
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/AccessTime.png}
+  \includegraphics[width=0.65\textwidth]{figures/AccessTime.png}
   \caption{Access time for different table sizes and buffer sizes\\
     Green buffersize= 33554432 bit\\
     Red buffersize = 524288 bit\\
@@ -238,16 +238,22 @@ To pull this off for $m=2^{39.80}$ and $t=2^{25.08}$ the pre-computation will re
 \rowcolor[HTML]{EFEFEF}
 CPU                                    &                             &                               &                           &                                 &                            & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}} \\ \hline
 \multicolumn{1}{|c|}{Model}            & \multicolumn{1}{c|}{Cores}   & \multicolumn{1}{c|}{Amount} & \multicolumn{1}{c|}{Ghz}  & \multicolumn{1}{c|}{Enc per sec} & \multicolumn{1}{c|}{Price USD} & \multicolumn{1}{c|}{Total USD}                    \\ \hline
-\multicolumn{1}{|l|}{AMD FX-8320}      & 8                            & 143                         & 3,5                       & 7278941245                      & 139                    & 20020                                     \\
-\multicolumn{1}{|l|}{AMD FX-8350}      & 8                            & 125                         & 4                         & 7271669575                      & 170                   & 21250                                    \\ \hline
+\multicolumn{1}{|l|}{AMD FX-8320 \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16819113379}} }      & 4                            &270                         & 3,7                       & 7278941245                      & 75                    & 20250                                     \\
+\multicolumn{1}{|l|}{AMD FX-8320 \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16819113285}} }      & 8                            & 143                         & 3,5                       & 7278941245                      & 139                    & 20020                                     \\
+\multicolumn{1}{|l|}{AMD FX-8350 \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16819113284}} }      & 8                            & 125                         & 4                         & 7271669575                      & 170                   & 21250                                    \\ \hline
 \rowcolor[HTML]{EFEFEF}
 Hard Drive                                                          &                               &                           &                                 &                           & & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}} \\ \hline
 \multicolumn{1}{|c|}{Model}            & \multicolumn{1}{c|}{Size GB} & \multicolumn{1}{c|}{Amount} & \multicolumn{1}{c|}{Read $mb/s$} & \multicolumn{1}{c|}{Write $mb/s$}      & \multicolumn{1}{c|}{Price USD} & \multicolumn{1}{c|}{Total USD}                    \\ \hline
-\multicolumn{1}{|c|}{Crucial}          & 960                          & 8                           & 500                       & 400                             & 300                        & 2400                                          \\
-\multicolumn{1}{|c|}{Mushkin} & 1000                         & 8                            & 560                       & 460                             & 339                        & 2712                                          \\ \cline{1-1}
+\multicolumn{1}{|c|}{Crucial \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16820148696}} }          & 960                          & 8                           & 500                       & 400                             & 300                        & 2400                                          \\
+\multicolumn{1}{|c|}{Mushkin \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16820226596}}  } & 1000                         & 8                            & 560                       & 460                             & 339                        & 2712                                          \\
+\multicolumn{1}{|c|}{Foremay 4TB \footnote{\url{http://www.kitguru.net/components/ssd-drives/anton-shilov/foremay-announces-4tb-8tb-ssds-with-serial-ata-6gbs-interface/}}  } & 4000                         & 2                            & 500                       & 500                            & 7000                        & 14000                                          \\
+\multicolumn{1}{|c|}{Foremay 8TB \footnote{\url{http://www.newegg.com/Product/Product.aspx?Item=N82E16820226596}}  } & 8000                         & 1                            & 500                       & 500                             & ????                        &????                                          \\ \cline{1-1}
+
 \end{tabular}
 \end{table}
-So with around $20020+2712=22732 $USD $ \approx 151313 $DK for the harddrive and the CPU's.
+To build this system we would need approximately $20,020\$+2,712\$=22,732\$ \approx 151313 $dkk for the storage and cpus.
+Including racks, motherboards and everything inbetween it might easily reach $200,000-250,000$ dkk.
+
 
 %%% Local Variables:
 %%% mode: latex
