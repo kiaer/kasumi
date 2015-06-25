@@ -112,40 +112,105 @@ The TMTO-attack is implemented as a 64-bit attack, and for testing
 purpose a 32-bit version of the attack is also implemented.
 
 \subsection{Table generator}
-
+% 
 % The table generator mainly consists of two loops looping over our
 % chosen parameters. This will allow us to generate an $m$ large table
 % of $t$
-There are two different table generators one for our 32bit implementation and one for our 64 bit.
-The 32bit implementation consists of one function: tableGenerator32. This function takes an $uint32\_t$ which is the text that the table is generated from. The implementation is quite simple, it consists of two for loops where one is nested into the other. The first for loop initializes the start points of the table these are generated from using MD5 on the iterator of the start point this is repeated $m$ times.
-The SP is then used in the second for loop to generate the chain for the rainbow table.
-The keyscheduler is applied to the key, then the encryption of the text happens. The new ciphertext then gets the reduction function applied to it. Now the first chain link has been created this is done $t$ times and the final point the end point is stored in a binary file.
-The endpoints are stored in a binary file, the first 8 byte of the endpoint key is stored. This happens with fopen, fwrite and fclose.
-\lstset{language=C}
-\begin{lstlisting}
-  FILE * write_ptr;
-  write_ptr = fopen("table32bits.bin", "wb");
-  fwrite(ep,sizeof(ep),1,write_ptr);
-  fclose(write_ptr);
+The listing \ref{lst:pseudooff} shows basic pseudo code for the table generation.
+
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for table generation}, label={lst:pseudooff}]
+for i:=0 to m - 1
+do
+     key = keygen(i)
+     for j:=0 to t - 1
+     do
+         cipher = kasumi_enc(key)
+         key = reduction64(cipher, j)
+     end
+     store(key)
+end
 \end{lstlisting}
-The implementation of the 64 bit table has not been tested and it is mostly a question of scaling the 32 bit implementation. The reduction function will also be changed since the 32bit table generator uses a 32bit reduction function.
-\begin{lstlisting}
+The generation of the table is essentially nested \code{for} loops iterating
+respectively $m$ and $t$ times. This allows us the generate a table of
+size $m$, where each end point is computed by a $t$ long chain. The
+reduction function is different in every link of $t$. 
+
+The table generator we implemented makes use of sequential key
+generation. This allows us to save half the memory compared to using
+random start points. We chose to make use of the MD5 hashing algorithm
+in the key generation to get a more random distribution. 
+
+The reduction function takes an integer and the current output of the encryption. The
+integer is the current position in the chain. The output is given as an
+$uint16\_t$ array. $n$ is added to each element of the array and is composed 
+into a $uint64\_t$ which is returned. Listing \ref{lst:reduction}
+shows our current implementation of the reduction function.
+
+\begin{lstlisting}[frame=single, language=C, mathescape,
+captionpos=b, caption={Example reduction function}, label={lst:reduction}]
 uint64_t reduction64(int n, uint16_t * tempkey){
     uint64_t key;
-    uint32_t key1;
-    uint32_t key2;
-    key1 = (tempkey[0]+n) << 16 | (tempkey[1]+n);
-    key2 = (tempkey[2]+n) << 16 | (tempkey[3]+n);
-    key =  (uint64_t) key1 << 32 | key2;
+    key =  (tempkey[0]+n) << 48 | (tempkey[1]+n) << 32 
+          | (tempkey[2]+n) << 16 | (tempkey[3]+n);
     return key;
   }
 \end{lstlisting}
 
-The reduction function takes an integer, and the current key. The integer is at what position in the chain has been reached. The key is given as an $uint16\_t$ array, each element in the array has n added to it and it is shifted into a $uint64\_t$ which is returned as the reduced function.
+The endpoints are stored in a binary file where the first 8 byte of
+the endpoint key is stored. The endpoints is stored using standard C
+I/O as \code{fread} and \code{fwrite}. See listing \ref{lst:write}.
+\newpage
+\begin{lstlisting}[frame=single, language=C, mathescape,
+captionpos=b, caption={Writing to a binary}, label={lst:write}]
+  FILE * write_ptr;
+  write_ptr = fopen("table64bit.bin", "wb");
+  fwrite(ep,sizeof(ep),1,write_ptr);
+  fclose(write_ptr);
+\end{lstlisting}
+
+
 
 \subsection{Online Phase}
-The online phase is implemented the same way as described in section \ref{sec:onlinerb}. Given the ciphertext and the corresponding text we calculate the key used for the encryption. The initial step is to give the online phase the text and the ciphertext. From the ciphertext certain points are computed which will be checked with the rainbow table:
+The online phase is implemented the same way as described in section
+\ref{sec:onlinerb}. Listing \ref{lst:pseudoonline} shows a general
+pseudo code example of how we implemented the online phase. First a
+online chain is computed and checked with \code{inTable}. This is done
+$t$ times. If a key is found in \code{inTable}, the key is returned as
+the key used to encrypt the corresponding ciphertext. The online phase
+makes use of the same reduction function mentioned earlier.
+\newpage
+\begin{lstlisting}[frame=single, language=Pascal, mathescape,
+captionpos=b, caption={Pseudo code for online phase}, label={lst:pseudoonline}]
+function onlinePhase(text)
+   for i:=t to 0
+      do
+         for j:=i to t
+         do
+             if j = t
+             do
+                cipher = reduction64(text, j)
+                inTable(cipher, text)
+             end
+             else
+             do
+                cipher = reduction64(cipher, j)
+                cipher = kasumi_enc(cipher)
+             end
+         end
+      end
 
+function inTable(newcipher, originalcipher)
+    if newcipher in table
+    do
+       generate chain from sp
+       if originalcipher in chain
+       do
+          return key
+       end 
+    end
+    return key not found
+\end{lstlisting}
 
 
 %%% Local Variables:
