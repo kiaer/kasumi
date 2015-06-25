@@ -3,7 +3,7 @@ from sage.all import *
 from sage.symbolic.integration.integral import definite_integral
 
 
-N = 2**64
+N = 2**32
 t = 2**2
 m = 2**10
 l = 1
@@ -20,7 +20,7 @@ def solve_mt(m, rm):
     return 2**(float(log(a[0][x])/log(2)))
 
 def memory():
-    return m * l * (1.25 * 10**-13) * 64
+    return m * l * (1.25 * 10**-7) * 32
 
 def time_for_offline(rm):
     return N * rm * l
@@ -62,7 +62,7 @@ for i in xrange(0,3):
         print ""
         #64 bit - 35.5
         #32 bit -
-        m = 2**(39 + (0.2 * x))
+        m = 2**(25 + (0.2 * x))
         t = solve_mt(m, rmsc)
         lstm.append(m)
         temp = "$2^{%.2f}$" % log(m, 2)
@@ -74,23 +74,23 @@ for i in xrange(0,3):
         print "t: 2^%f" % (float(log(t)/log(2)))
         print "m: 2^%f" % (float(log(m)/log(2)))
         print "Rmsc calculated: %f" % rmsc
-        print "Memory used: " + str(memory()) + "TB"
-        temp = "$2^{%.2f}$" % log(time_for_online(rmsc), 2)
-        lsttime.append(time_for_online(rmsc))
+        print "Memory used: " + str(memory()) + "MB"
+        temp = "$2^{%.2f}$" % log(big_T(t,1,rmsc), 2)
+        lsttime.append(big_T(t,1,rmsc))
         lsttime2.append(temp)
         temp = "$%.2f$" % memory()
         lstmem.append(memory())
         lstmem2.append(temp)
         print "Time used for offline phase: 2^" + str(float(log(time_for_offline(rmsc))/log(2)))
-        print "Time used for online phase: 2^" + str(float(log(time_for_online(rmsc))/log(2)))
+        #print "Time used for online phase: 2^" + str(float(log(time_for_online(rmsc))/log(2)))
         print "Time used for online phase: 2^" + str(float(log(big_T(t,1,rmsc))/log(2)))
         print "\n"
-    # f = open('rainbowtab.tex', 'a')
+    f = open('rainbowtab.tex', 'a')
 
     col = [lstm2, lstt2, lstmem2, lsttime2]
     #Prob, RMSC, l, Offline compp
-    # infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline(rmsc))/log(2)))
-    # f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
+    infostr = "Success = %f, Rmsc = %f, l = %i, Offline phase = 2^%f" % (rps[i], rmsc, l, float(log(time_for_offline(rmsc))/log(2)))
+    f.write("\n \\ " + str(latex(infostr)) + "\n" + str(latex(table(columns=col, header_row=['m', 't', 'M(TB)', 'T']))))
 
  #    plottitle = "Rainbow coefficents for %i %% succesrate" % ((rps[i] * 100))
 #     plottitle2 = "Rainbow T and M for %i %% succesrate" % ((rps[i] * 100))
