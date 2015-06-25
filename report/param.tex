@@ -10,14 +10,14 @@ we want to make it possible to perform the attack on a (heavily
 upgraded) consumer
 machine, we need to set an upper bound for the maximal memory
 usage. In our attack we set an upper bound of memory usage to around
-\code{8TB} of tables[TODO cite to HDD sizes]. We see this as a possible amount of storage if a
+\code{8TB} of tables. We see this as a possible amount of storage if a
 consumer machine with a TMTO-attack in mind was to be build.
 
 Knowing this and taking the theory behind the
 TMTO-attack\footnote{Chapter \ref{ch:tmto}} into consideration, we
-have to argue that this upper bound is required to be hit. For every
-trade-off we take towards lower memory usage, the online phase of the
-attacks will take a hit.
+have to argue that it is required to reach the upper bound. For every
+trade-off we take towards lower memory usage, the more the online phase of the
+attacks will suffer.
 
 Another thing to take into consideration when analyzing the parameter
 choice and time consumption of the different phases is the table lookup
@@ -25,7 +25,11 @@ time. Since generated TMTO tables for a \code{64-bit} key size will
 always be larger than a given built machines amount of RAM, look-ups are
 done directly on a HDD or SSD. Estimates of how much time is required
 for each lookup in a table is hard to do, but will be further analyzed
+<<<<<<< HEAD
 later in the thesis.
+=======
+in \ref{ch:Analysis}
+>>>>>>> gg
 
 As for success probability of the
 the different attacks, we went with $P = 73\%$ as an acceptable
@@ -96,7 +100,7 @@ $2^{13.80}$ & $2^{25.68}$ & $2^{25.34}$ & $9.67$ & $2^{50.64}$ \\
   \caption{Hellman Parameters}
   \label{tab:hellparam}
 \end{table}
-We can now select the parameters we want our Attack to use, As Hmsc has been optimized we selected : $m=2^{13.2}$, $t=2^{25.98}$ and $l=2^{25.64}$.
+We can now select the parameters we want our Attack to use, As $H_{msc}$ has been optimized we selected : $m=2^{13.2}$, $t=2^{25.98}$ and $l=2^{25.64}$.
 This gives us a table of size \code{7.85 TB}.
 \section{Distinguished Points Table}
 For this section we assume that $\hat{t}$ is sufficiently large.
@@ -113,7 +117,6 @@ set to 0.56, using the formulas for optimal parameters from \cite{176}
 \ref{tab:DPparam} is generated.(note chain length is the approximated average chain length)
 \begin{figure}[H]
   \centering
-  need to put lables on the elements from left to right 0.2, 0.3, 0.56, 0.75, 1.00, 1.25
     \includegraphics[width=0.5\textwidth]{figures/compareDmsc.png}
     \captionof{figure}{$D_{msc}$ from 0.2 to 1}
     \label{fig:dpHmsc}
@@ -137,7 +140,7 @@ $2^{13.80}$ & $2^{24.68}$ & $2^{26.20}$ & $8.81$ & $2^{50.89}$ \\
   \caption{DP Parameters}
   \label{tab:DPparam}
 \end{table}
-This leaves us to select our parameters in this case we have optimized the Dmsc, we could discuss lowering it to lower the precomputational cost but we go with the parameters: $m=2^{13.40}$  $t=2^{24.88}$  $l=2^{26.40}$.
+This leaves us to select our parameters in this case we have optimized the $D_{msc}$, we could discuss lowering it to lower the precomputational cost but we go with the parameters: $m=2^{13.40}$  $t=2^{24.88}$  $l=2^{26.40}$.
 This gives us a table that is \code{7.67 TB}.
 \section{Rainbow Table}
 \label{sec:rainbowparam}

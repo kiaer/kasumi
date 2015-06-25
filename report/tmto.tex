@@ -149,8 +149,7 @@ TM^2\approx N^2
 \end{equation}
 $T=t \cdot l$ and $M=m\cdot l$
 Once the table has been generated it will use M memory and the online phase will take T time.
-
-TODO More on trade-off curves
+The trade-off curve is the how efficient the trade-off between memory and time is.
 
 \subsubsection{Memory Usage}
 Storing the table of a TMTO attack such as the Hellman trade-off takes a lot of space. Therefore it is one of the aspects of the time memory trade-off to lower the memory cost to a manageable size. The Hellman trade-off stores a tuple of a start point and a end point this can be described as $m\cdot mem$ where mem is the bit size of the  tuple stored. When several tables are used it is multiplied to the previous equation which gives:
@@ -279,8 +278,8 @@ A Rainbow table is built with $m$ entries of end points, where each endpoint
 $ep$ in the table is computed by a $t$ long pre-computational chain.
 
 Each endpoint of a row is computed from a chosen/randomly chosen
-start point $sp$. From the start point $sp$ the pre-computational chain,
-which generates our endpoint, is computed.
+start point $sp$. From the start point $sp$ we construct pre-computational chain,
+and the last point of the chain our endpoint.
 
 For Rainbow tables, the main difference compared to the other
 discussed TMTO-attacks is the reduction function. Rainbow attacks
@@ -289,7 +288,6 @@ chain of length $t$.
 
 See \ref{fig:rainbowchain} for the structure of an $i$-th
 pre-computational chain of a rainbow table.
-
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.4]{figures/rainbowchain.png}
@@ -335,7 +333,10 @@ and the rainbow matrix stopping constant. From \cite[Proposition
 
 If a rainbow attack is implemented storing both start and end point,
 we can expect the total storage to be
- \[M = 2 * m * bitsize\]
+\begin{equation}
+ M = 2 \cdot m \cdot bitsize
+\end{equation}
+
 Optimizations can be done to the memory and result in saving
 space.
 
