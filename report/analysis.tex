@@ -44,7 +44,7 @@ memory usage or online time. For this reason we went with a parameter
 choice of $m=2^{25} \approx 33445532$ and $t= 2^{7.89} \approx
 236$. The table generator will be tested on the actual
 pre-computational time and the memory usage.
-\subsubsection*{Pre-computational time}
+\subsubsection{Pre-computational time}
 Table \ref{tab:rainparam32} states that an expected amount of
 KASUMI encryptions required for generation of the table is
 $2^{32.886}$. Looking back to \ref{sec:benchkas} we know the
@@ -65,7 +65,7 @@ approximately 27 minutes. This is $\approx8\%$ more time used than
 expected. This can be seen as expected as time is required to write
 the table to a disk. Another explanation could be our sequential
 approach and the usage of the MD5 algorithm. TODO Some facts to back up maybe?
-\subsubsection*{Memory}
+\subsubsection{Memory}
 We also want to make sure that the actual memory usage matches up with
 the expected. From our parameter choice we can see the expected memory
 $M_{predicted}=134.22$MB. The previously generated table can easily be
@@ -89,7 +89,7 @@ perfectly. Because of this we will not discuss table size further, as
 adding additional bit to a binary file should not change the outcome.
 Going with the parameters chosen in \ref{sec:rainbowparam} we set
 $m=?$ and $t=?$.
-\subsubsection*{Scaling to 64-bit keysize}
+\subsubsection{Scaling to 64-bit keysize}
 From the chosen parameters we know that the pre-computational phase is
 estimated to require $2^{64.88}$ encryptions of KASUMI. This amount of encryptions
 is infeasible to run on the devices that we ran the
@@ -122,6 +122,7 @@ cores to generate the table in two years.
 
 
 \subsection{Online phase}
+\subsubsection{Time}
 As stated earlier are the tests preformed on a scaled down version of the keyspace.
 The tests are run on the 32 bit implementation and then scaled up.
 Firstly the Time it takes is compared to our computations, as Time is found by $Time=\frac{t\cdot(t-1)}{2}$.
@@ -159,7 +160,7 @@ This means that the biggest bottleneck in the implementation is the lookup time.
 \end{table}
 As \ref{fig:memory} shows the buffer size does not seem to matter much the results fluxuates half a second at most.
 The table also shows what the lookup time would be if the table was 8 tb. Where target table size is tts, table size is ts, s is the time one lookup takes in seconds and 3600 is to get it in hours $\frac{\frac{tts}{ts/s}}{3600}$
-\begin{figure}[th]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/AccessTime.png}
   \caption{Access time for different table sizes and buffer sizes\\
@@ -172,7 +173,54 @@ The table also shows what the lookup time would be if the table was 8 tb. Where 
 \end{figure}
 
 Also something to note when scaling the access time up to a table that is 8tb the lookup time is around 4.2-4.45 hours.
-One thing to note though is when the table is small enough to fit the memory it gives faster results, which can be ignored since the entire 8 tb table does not fit memory. Now where the access time is estimated we can give a approximation of the online phase for the \code{64-bit} keyspace. As previously stated the access time would lie around 4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$ this means that the lookup time comes to $t\cdot lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx \frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7 years$ so the online phase would approximately take $18008.7 years$. Which leads to the conclusion that our implementation would not work in its current state. To get a more realistic attack we will in section \ref{sec:Discussion} explain some memory optimizations and the RainbowDP table that reduces the amount from t to 1. To get the encryption time down to approximately one day one would need 1280 cores.
+One thing to note though is when the table is small enough to fit the
+memory it gives faster results, which can be ignored since the entire
+8 tb table does not fit memory. Now where the access time is estimated
+we can give a approximation of the online phase for the \code{64-bit}
+keyspace. As previously stated the access time would lie around
+4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$
+this means that the lookup time comes to $t\cdot
+lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The
+Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx
+\frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7
+years$ so the online phase would approximately take $18008.7
+years$. Which leads to the conclusion that our implementation would
+not work in its current state. To get a more realistic attack we will
+in section \ref{sec:Discussion} explain some memory optimizations and
+the RainbowDP table that reduces the amount from t to 1. To get the
+encryption time down to approximately one day one would need 1280
+cores.
+
+\subsubsection{Table Coverage}
+
+If the attack should be able to be carried out in a real-world
+scenario, we need to make sure the predicted table coverage matches up
+with the results from our implemenation. These tests can only be done
+on our \code{32-bit} implementation of the attack. If the results
+matches up with the expected, we can assume that our table is
+generated correctly. We also have to assume that if the results
+matches up for our \code{32-bit} implementation, they will also match
+up for the \code{64-bit} implementation.
+
+From \ref{tab:rainparam32} we know the table generated with the given
+parameters should result in a success rate of $73\%$. We can therefore
+expect the coverage of the table to be around $2^{32} * 0.73 =
+2^{31.54}$. In some smaller test cases with a smaller keysize, we were
+able to count how many distinct keys were in the table, but for
+\code{32-bit} we found this way of counting too slow. Instead we tried
+checking random keys to give an insight in how many keys we
+actually covered. We checked keys until a somewhat stable distribution was
+reached. Checking 100 random ciphers allowed us to give a pretty
+reasonable idea of how the success probability would match up to the
+actual coverage.
+
+From running our online phase on a generated table with 100 random
+generated ciphers, we found that $74\%$ of the ciphers found a
+matching key in the table. This is well within the expected
+distribution when only running 100 tests, and we can therefore expect
+our table to cover $\approx73\%$ of the keyspace.
+
+
 
 
 \section{Cost analysis}
