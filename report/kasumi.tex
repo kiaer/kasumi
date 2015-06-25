@@ -86,8 +86,7 @@ The output $left_3$ and $right_3$ after the $3$rd iteration will be
 the output of the function $FO$.
 \[o = left_3' || right_3'\]
 \subsection{FL Function}
-As in FO, the FL function takes an input of 32-bit $i$ and split it into
-halves of 16-bit.
+As in FO, the FL function takes an input of 32-bit $i$ and splits it into two 16-bit variables \code{left} and \code{right}.
 \[i = left || right\]
 The roundkey $KL_{i,j}$ from the keyschedule is used by $FL$.
 
@@ -132,14 +131,16 @@ The function will return the following 16-bit value as output
 \[o = left_4 || right_4\]
 
 \section{Previous Attacks}
-Since the release of KASUMI several cryptoanalysis have been published.
-The first full attack was in 2005 proposed \cite{rect}, the attack
+Since the release of KASUMI several cryptoanalysis of it has been published.
+The first attack on the full keyspace was proposed in 2005 \cite{rect}, the attack
 uses a mixture of the boomerang and rectangle
 attack\cite{rectangle}\cite{boom} and required $2^{54.6}$ data and $2^{76.1}$ encryption time.
-Five years later an improved attack on the full block cipher was proposed \cite{sand}. This paper also proposed an attack called the sandwich attack which would require $2^{26}$ data complexity, $2^{32}$ encryption time and $2^{32}$ memory. This attack was very practical, and the authors could simulate the efficiency of the attack using their personal computer. Both these attacks are Related Key attacks\cite{relate} attacks where several keys are known and some connection between them are also known. This assumption is considered impractical in most crypto systems as session keys usually are defined at random. In 2002 another attack was proposed on a 5-round KASUMI\cite{single2002} using higher order differential attack, which requires  $2^{22.1}$ data and $2^{60.7}$ encryption time. 2011 another higher order differential attack was proposed but on a 6 round KASUMI\cite{single} this would take $2^{60.8}$data $2^{65.4}$encryption time. Differential attacks were introduced by Biham and Shamir in \cite{diff}. In 2001 an impossible differential attack on a 6 round KASUMI was proposed\cite{imp}. The impossible differential attack tracks differences in the block cipher in question and exploits differences that are impossible such as having probability 0. The paper demonstrates an attack on a 5 round KASUMI which required $2^{55}$ data and $2^{100}$ encryption time.
+Five years later an improved attack on the full block cipher was proposed in \cite{sand}. This paper also proposed an attack called the sandwich attack which would require $2^{26}$ data complexity, $2^{32}$ encryption time and $2^{32}$ memory. This attack was very practical, and the authors could simulate the efficiency of the attack using their personal computer. Both these attacks are Related Key attacks\cite{relate} where several keys are known and some connection between them is also known. The assumption that you can collect related keys is considered impractical in most crypto systems as session keys usually are defined at random.
 
+In 2002 another attack was proposed on a 5-round KASUMI\cite{single2002} using higher order differential attack, which requires  $2^{22.1}$ data and $2^{60.7}$ encryption time. 2011 another higher order differential attack was proposed but on a 6 round KASUMI\cite{single} this would take $2^{60.8}$data $2^{65.4}$encryption time. Differential attacks were introduced by Biham and Shamir in \cite{diff}.
 
-Rigtidata skal i table!!
+In 2001 an impossible differential attack on a 6 round KASUMI was proposed\cite{imp}. The impossible differential attack tracks differences in the block cipher in question and exploits differences that are impossible such as having probability 0. The paper demonstrates an attack on a 5 round KASUMI which required $2^{55}$ data and $2^{100}$ encryption time.
+
 \begin{table}[H]
   \centering
 
@@ -156,7 +157,7 @@ Rigtidata skal i table!!
   \end{tabular}
   \captionsetup{justification=centering}
   \caption[justification=centering]{Summary of attacks - \textbf{HOD}: Higher Order
-    Differential Attack - \textbf{ID}: Impossible Differential Attack}
+    Differential Attack - \textbf{ID}: Impossible Differential Attack}  - \textbf{RKR}: Related Key Rectangle Attack}  - \textbf{RKS}: Related Key Sandwich attack}
   \label{tab:kasumiattacks}
 \end{table}
 

@@ -8,7 +8,7 @@
 #include "cipher/kasumi.h"
 
 
-uint16_t * keyGen(int m){
+uint16_t * keyGen(long m){
     int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
     unsigned char c[MD5_DIGEST_LENGTH];
@@ -26,7 +26,7 @@ uint16_t * keyGen(int m){
     return data;
 }
 
-uint16_t * keyGen32(int m){
+uint16_t * keyGen64(long m){
     int j,i, arrToInt,cntr=0;
     static uint16_t data[8];
     unsigned char c[MD5_DIGEST_LENGTH];
@@ -44,13 +44,13 @@ uint16_t * keyGen32(int m){
     return data;
 }
 
-uint16_t reduction(int n, uint16_t * tempkey){
+uint16_t reduction(long n, uint16_t * tempkey){
     uint16_t key;
     key = tempkey[0]+n;
     return key;
 }
 
-uint32_t reduction32(int n, uint16_t * tempkey){
+uint32_t reduction32(long n, uint16_t * tempkey){
     uint32_t key;
     key = (tempkey[0]+n)<<16 | (tempkey[1]+n);
     return key;
@@ -66,7 +66,7 @@ uint16_t * randomme(){
     return data;
 }
 
-uint64_t reduction64(int n, uint16_t * tempkey){
+uint64_t reduction64(long n, uint16_t * tempkey){
     uint64_t key;
     uint32_t key1;
     uint32_t key2;
