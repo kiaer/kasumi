@@ -17,7 +17,7 @@ As to gain an idea of how our implementation matches up with
 the math and parameter choices done in chapter \ref{ch:param}, we have to generate
 information on an actual attack on a \code{32-bit} key. If the \code{32-bit} test
 results match with our calculations, we can begin to give estimates
-on the actual attack(\code{64-bit} keysize).
+on the actual attack on code{64-bit} keysize.
 \subsection{Pre-computational phase}
 To test the table generation we will first set some parameters
 valid for \code{32-bit} testing.
@@ -30,11 +30,11 @@ testing of \code{32-bit} no boundaries were set.
   \text{\texttt{Success{ }={ }0.730000,{ }Rmsc{ }={ }1.849002,{ }l{ }={ }1,{ }Offline{ }phase{ }={ }2{\char`\^}32.886747}}
   \begin{tabular}{llll}
     m & t & M(MB) & T \\ \hline
-    $2^{25.00}$ & $2^{7.89}$ & $134.22$ & $2^{13.67}$ \\
-    $2^{25.50}$ & $2^{7.39}$ & $189.81$ & $2^{12.71}$ \\
-    $2^{26.00}$ & $2^{6.89}$ & $268.44$ & $2^{11.76}$ \\
-    $2^{26.50}$ & $2^{6.39}$ & $379.63$ & $2^{10.83}$ \\
-    $2^{27.00}$ & $2^{5.89}$ & $536.87$ & $2^{9.92}$ \\
+    $2^{25.00}$ & $2^{7.89}$ & $134.22$ & $2^{14.52}$ \\
+    $2^{25.20}$ & $2^{7.69}$ & $154.18$ & $2^{14.12}$ \\
+    $2^{25.40}$ & $2^{7.49}$ & $177.10$ & $2^{13.72}$ \\
+    $2^{25.60}$ & $2^{7.29}$ & $203.44$ & $2^{13.32}$ \\
+    $2^{25.80}$ & $2^{7.09}$ & $233.69$ & $2^{12.92}$ \\
   \end{tabular}
   \caption{Rainbow Parameters - 32-bit keysize}
   \label{tab:rainparam32}
@@ -64,8 +64,10 @@ implementation multiple times resulted in average running time of
 approximately 27 minutes. This is $\approx8\%$ more time used than
 expected. This can be seen as expected as time is required to write
 the table to a disk. Another explanation could be our sequential
-approach and the usage of the MD5 algorithm. TODO Some facts to back up maybe?
+approach and the usage of the MD5 algorithm.
+
 \subsubsection{Memory}
+
 We also want to make sure that the actual memory usage matches up with
 the expected. From our parameter choice we can see the expected memory
 $M_{predicted}=134.22$MB. The previously generated table can easily be
@@ -76,6 +78,7 @@ generated binary file. Performing this command on our generated table
 unsurprisingly gave us a result of
 $M_{actual}=134217728\text{B}\approx134.22$MB.
 
+\subsubsection{Scaling to 64-bit keysize}
 Knowing the time usage and memory usage in the pre-computational phase
 matches up with our expected values, we can now give an approximate of
 how scaling from a \code{32-bit} keysize to a \code{64-bit} keysize
@@ -88,8 +91,8 @@ will now be taken into account again. From the tests on the
 perfectly. Because of this we will not discuss table size further, as
 adding additional bit to a binary file should not change the outcome.
 Going with the parameters chosen in \ref{sec:rainbowparam} we set
-$m=?$ and $t=?$.
-\subsubsection{Scaling to 64-bit keysize}
+$m=2^{39.8}$ and $t=2^{25.08}$.
+
 From the chosen parameters we know that the pre-computational phase is
 estimated to require $2^{64.88}$ encryptions of KASUMI. This amount of encryptions
 is infeasible to run on the devices that we ran the
@@ -105,12 +108,12 @@ require more processing power than could be expected from even some the
 fastest super computers
 today\footnote{\url{http://www.top500.org/lists/2014/11/}}. First off
 we know from \ref{tab:zen} that for 1 encryption of
-\code{64-bit} of data, we need to use $68,76 * 8 \approx 550$ CPU
+\code{64-bit} of data, we need to use $68,76 \cdot 8 \approx 550$ CPU
 cycles.
 
 From the pre-computational time noted earlier we can now estimate how
 many cycles will be needed to compute all encryptions required.
-\[ cycles_{tot} = 550 * 2^{64.88} \approx 2^{74}\]
+\[ cycles_{tot} = 550 \cdot 2^{64.88} \approx 2^{74}\]
 From this we can estimate the required cycles per second a build needs
 to do.
 \[ cycles_{sec} = \frac{2^{74}}{550} \approx 2^{48}\]
@@ -123,12 +126,24 @@ cores to generate the table in two years.
 
 \subsection{Online phase}
 \subsubsection{Time}
-As stated earlier are the tests preformed on a scaled down version of the keyspace.
-The tests are run on the 32 bit implementation and then scaled up.
-Firstly the Time it takes is compared to our computations, as Time is found by $Time=\frac{t\cdot(t-1)}{2}$.
-Table\ref{tab:OnlineT} shows each of our test tables worst case run times and the calculated encryption time for each of them.
-Each  table has an online encryption time spanning from a few miliseconds to a few microseconds, wheras the total time is  much larger.
-Furthermore if we don't add in the fact that the computer is smart and caches memory it takes even longer, which is shown in the T lookup field(this the time one lookup takes when it isn't in memory multiplied with t which is the amount of lookups).
+As stated earlier the are tests preformed on a scaled down version of
+the keyspace.
+
+We again look to our \code{32-bit} implementation of the attack, to
+give us an idea of how the attack will perform. Firstly the actual
+online time is compared to our calculations. We know from table
+\ref{tab:rainparam32} that $T=2^{14.52}$.  The test is performed on a
+machine with a SSD with max read speed of 540 MB/s.
+ 
+Table\ref{tab:OnlineT} shows each of our test tables worst case run times and the calculated
+encryption time for each of them. Each  table has an online encryption
+time spanning from a few milliseconds to a few microseconds, wheras the
+total time is  much larger. Furthermore if we don't add in the fact
+that the computer is smart and caches memory it takes even longer,
+which is shown in the T lookup field(this the time one lookup takes
+when it isn't in memory multiplied with t which is the amount of
+lookups).
+
 \begin{table}[H]
 \centering
 \caption{Online Time Comparison}
@@ -143,7 +158,7 @@ Table          & \multicolumn{1}{c|}{t rounded up} & \multicolumn{1}{c|}{Total t
 17000MB / 73\%  & 2                             & 66.96 s                         & 65.11 s                       & 1.89E-07 s                 & 1.00                             \\ \cline{1-1}
 \end{tabular}
 \end{table}
-This means that the biggest bottleneck in the implementation is the lookup time. To further investigate this we calculate the lookup time for each table, and compare them to each other note that the test computer has a max read speed of 540 mb/s. One thing we noticed is when the entire table can fit in memory the access time of it increases dramatically, for the 4.3GB table the first table lookup took 4.4 seconds and the lookups afterwards took between 0.6-1 seconds. This is probably due to the table getting cached.
+This means that the biggest bottleneck in the implementation is the lookup time. To further investigate this we calculate the lookup time for each table, and compare them to each other. One thing we noticed is when the entire table can fit in memory the access time of it increases dramatically, for the 4.3GB table the first table lookup took 4.4 seconds and the lookups afterwards took between 0.6-1 seconds. This is probably due to the table getting cached.
 \begin{table}[H]
 \centering
 \caption{Access time}
@@ -158,8 +173,8 @@ This means that the biggest bottleneck in the implementation is the lookup time.
 \multicolumn{1}{|l|}{Scaled to 8 tb table}   & 0.6 Hours                  & 2.37 Hours                  & 4.45 Hours                   & 4.31 Hours                   & 4.25 Hours                   \\ \cline{1-1}
 \end{tabular}
 \end{table}
-As \ref{fig:memory} shows the buffer size does not seem to matter much the results fluxuates half a second at most.
-The table also shows what the lookup time would be if the table was 8 tb. Where target table size is tts, table size is ts, s is the time one lookup takes in seconds and 3600 is to get it in hours $\frac{\frac{tts}{ts/s}}{3600}$
+As \ref{tab:memory} shows the buffer size does not seem to matter much the results fluxuates half a second at most.
+The table also shows what the lookup time would be if the table was \code{8TB}. Where target table size is tts, table size is ts, s is the time one lookup takes in seconds and 3600 is to get it in hours $\frac{\frac{tts}{ts/s}}{3600}$
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.65\textwidth]{figures/AccessTime.png}
@@ -172,25 +187,26 @@ The table also shows what the lookup time would be if the table was 8 tb. Where 
   \label{fig:tableAccess}
 \end{figure}
 
-Also something to note when scaling the access time up to a table that is 8tb the lookup time is around 4.2-4.45 hours.
+From looking at figure \ref{fig:tableAccess} we can estimate the
+access time for a \code{8TB} table to be around 4.2-4.45 hours.
 One thing to note though is when the table is small enough to fit the
 memory it gives faster results, which can be ignored since the entire
-8 tb table does not fit memory. Now where the access time is estimated
-we can give a approximation of the online phase for the \code{64-bit}
-keyspace. As previously stated the access time would lie around
-4.2-4.45 hours for each lookup, so for $m=2^{39.80}$ and $t=2^{25.08}$
-this means that the lookup time comes to $t\cdot
-lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005 years$. The
-Encryption time would be $2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx
-\frac{6.2897672e+14 encryptions}{5291005 encryptions/sec} \approx 3.7
-years$ so the online phase would approximately take $18008.7
-years$. Which leads to the conclusion that our implementation would
-not work in its current state. To get a more realistic attack we will
-in section \ref{sec:Discussion} explain some memory optimizations and
-the RainbowDP table that reduces the amount from t to 1. To get the
-encryption time down to approximately one day one would need 1280
-cores.
+\code{8TB} table will not fit inn memory. 
 
+Now that the access time is estimated we can give a approximation of
+the online phase for the \code{64-bit} keyspace. As previously stated
+the access time would lie around 4.2-4.45 hours for each lookup, so
+for $m=2^{39.80}$ and $t=2^{25.08}$ this means that the lookup time
+comes to $t\cdot lookupTime=2^{25.08}\cdot 4.45 Hours \approx 18,005
+years$. The online time would be
+$2^{25.08}\cdot\frac{2^{25.08}-1}{2}\approx \frac{6.2897672e+14encryptions}{5291005 encryptions/sec} \approx 3.7 years$ so the
+online phase would approximately take $18008.7 years$. Which leads to
+the conclusion that our implementation would not work in its current
+state. 
+
+We will in chapter \ref{ch:disc} discuss memory optimizations and a
+combined approach of both the DP attack and the rainbow attack. This
+will give us a chance to implement a more realistic attack.
 \subsubsection{Table Coverage}
 
 If the attack should be able to be carried out in a real-world
@@ -224,8 +240,19 @@ our table to cover $\approx73\%$ of the keyspace.
 
 
 \section{Cost analysis}
-In this section we will assume that the memory optimizations has been implemented and the table is of Rainbow/DP\ref{sec:Discussion}. This gives a table access of 1, when a DP is reached.
-To pull this off for $m=2^{39.80}$ and $t=2^{25.08}$ the pre-computation will require \code{7.56TB}, and \code{$2^{64.88}$} encryptions. The online phase will require \code{$2^{49.16}$} encryptions, our cost analysis will aim at getting the online phases encryption time down to one day. This will require $\frac{2^{49.16}}{60*60*24}\approx 2^{32.76}$ encryptions per second. We have found a couple of candidates that fits the bill:
+In this section we will assume that the memory optimizations has been
+implemented. In its current stat, the bottleneck of the table look ups
+will be too huge to ignore. We have also chosen to ignore the cost of
+a setup able to generate the table. Such a machine will require way
+too much computational power to estimate a cost. 
+
+To pull the attack off, we know that at least \code{7.56TB} of memory
+is needed. We also know that the online phase will require \code{$2^{49.16}$} 
+encryptions. In our setup we would like to have power enough to run
+the online phase in 1 day. This will require
+$\frac{2^{49.16}}{60*60*24}\approx 2^{32.76}$ encryptions per
+second. Table \ref{my-label} consists of hardware that fits all of
+these goals and a price for such a build.
 
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
@@ -251,9 +278,13 @@ Hard Drive                                                          &           
 
 \end{tabular}
 \end{table}
-To build this system we would need approximately $20,020\$+2,712\$=22,732\$ \approx 151313 $dkk for the storage and cpus.
-Including racks, motherboards and everything inbetween it might easily reach $200,000-250,000$ dkk.
-
+To build this system we would need approximately
+$20020\$+2712\$=22732\$ \approx 151313 $DKK for the storage and
+CPUs. This is just an analysis of the computational and storage power
+needed. When cluster/HPC is to be build, we haven't consider racks,
+motherboard, RAM and power supplies. A final build might easily reach
+the double of the estimated price. Cost of electricity is also
+something to consider when building machines of this size.
 
 %%% Local Variables:
 %%% mode: latex

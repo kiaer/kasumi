@@ -12,8 +12,8 @@ chapter \ref{ch:kas}.
 \label{sec:benchkas}
 The benchmarks of the KASUMI cipher implemented is performed on two
 laptops. The Laptops will each compute the encryption on 64-bit of
-data 10.000.000 times. An average time of ten runs of this test is
-chosen as the result. Both machines run on Intels Hashwell
+data 10000000 times to test how fast encryptions are done. The average time of ten runs is
+chosen as the resulting time. Both machines run on Intels Hashwell
 architecture with Core i7 CPUs. The specifications of the laptops are
 listed in \ref{tab:specs}.
 \begin{table}[h!]
@@ -21,7 +21,7 @@ listed in \ref{tab:specs}.
                                     & Zenbook - i7           & Yoga
                                                                pro 2 -
       i7\\ \hline
-    CPU Frequency                   & 1,8 GHZ @ 2.9ghz TURBO & 2,0 GHZ @ 3.0ghz TURBO \\ \hline
+    CPU Frequency                   & 1,8 GHz @ 2.9GHz TURBO & 2,0 GHz @ 3.0GHz TURBO \\ \hline
     CPU Cycles/s                    & 2900000000             & 3000000000             \\ \hline
     Times encryption of 64 bit data & 10000000               & 10000000               \\ \hline
     Total bit encyrpted             & 640000000              & 640000000              \\
@@ -31,14 +31,14 @@ listed in \ref{tab:specs}.
 \end{table}\\
 The tests will be performed with the
 GCC-compiler \footnote{The Gnu Compiler Collection -
-  https://gcc.gnu.org/} and will  with different compile
+  https://gcc.gnu.org/} and will be compiled  with different compile
 flags for optimization, consisting of no flag, O2, O3 and Ofast. These
 flags are seen as the most common flags for optimization. The two tables
 \ref{tab:zen} and \ref{tab:yoga} will show the results of the KASUMI
 tests.
 \begin{table}[h!]
     \begin{tabular}{l|l|l|l|l}
-     Zenbook 1.8 ghz.  & ~                     & ~             & ~              & ~               \\
+     Zenbook @ 2.9GHz  & ~                     & ~             & ~              & ~               \\
     GCC compile flags. & Time in sec (average) & Cycles in tot & Cycles per bit & Cycles per byte \\ \hline
     None               & 7,2322                & 20973380000   & 32,77090625    & 262,16725       \\ \hline
     O2                 & 2,0035                & 5810150000    & 9,078359375    & 72,626875       \\ \hline
@@ -50,7 +50,7 @@ tests.
 \end{table}
 \begin{table}[h!]
     \begin{tabular}{l|l|l|l|l}
-     Yoga 2 pro 2.0 ghz. & ~                     & ~             & ~              & ~               \\
+     Yoga 2 pro @ 3.0 GHz & ~                     & ~             & ~              & ~               \\
     GCC compile flags.   & Time in sec (average) & Cycles in tot & Cycles per bit & Cycles per byte \\ \hline
     None                 & 6,885                 & 20655000000   & 32,2734375     & 258,1875        \\ \hline
     O2                   & 1,933636364           & 5800909091    & 9,063920455    & 72,51136364     \\ \hline
@@ -91,15 +91,12 @@ If we consider the results of \ref{lst:grpof} and look at both
 \ref{tab:zen} and \ref{tab:yoga}, this shows us that for each byte
 encrypted around 17 cycles of the CPU is used on generating the
 keyschedule. That leaves around 50 cycles remaining for the actual
-encryption of a text.
-
-TODO assembly vs C on bitwise operations?
+encryption of a given \code{64-bit} text.
 
 Further optimization could be gained by using a different compiler. As
 both test machines contain Intels i7 CPUs, noticeable performance
 increases could be gained by using a Intel compiler. Tests with the
-Intel compiler has not been performed. TODO bullshit?
-
+Intel compiler has not been performed\footnote{\url{https://software.intel.com/en-us/intel-compilers}}.
 
 \section{TMTO-Attack}
 
@@ -112,10 +109,7 @@ The TMTO-attack is implemented as a 64-bit attack, and for testing
 purpose a 32-bit version of the attack is also implemented.
 
 \subsection{Table generator}
-%
-% The table generator mainly consists of two loops looping over our
-% chosen parameters. This will allow us to generate an $m$ large table
-% of $t$
+
 The listing \ref{lst:pseudooff} shows basic pseudo code for the table generation.
 
 \begin{lstlisting}[frame=single, language=Pascal, mathescape,
@@ -141,6 +135,9 @@ generation. This allows us to save half the memory compared to using
 random start points. We chose to make use of the MD5 hashing algorithm
 in the key generation to get a more random distribution.
 
+The key generator will take an integer $i$ and return a MD5 hash of
+the given integer.
+
 The reduction function takes an integer and the current output of the encryption. The
 integer is the current position in the chain. The output is given as an
 $uint16\_t$ array. $n$ is added to each element of the array and is composed
@@ -157,10 +154,9 @@ uint64_t reduction64(int n, uint16_t * tempkey){
   }
 \end{lstlisting}
 
-The endpoints are stored in a binary file where the first 8 byte of
-the endpoint key is stored. The endpoints is stored using standard C
+The endpoints are stored in a binary file where the final output of
+the a given pre-computational chain key is stored. The endpoints is stored using standard C
 I/O as \code{fread} and \code{fwrite}. See listing \ref{lst:write}.
-\newpage
 \begin{lstlisting}[frame=single, language=C, mathescape,
 captionpos=b, caption={Writing to a binary}, label={lst:write}]
   FILE * write_ptr;
@@ -174,8 +170,8 @@ The online phase is implemented the same way as described in section
 \ref{sec:onlinerb}. Listing \ref{lst:pseudoonline} shows a general
 pseudo code example of how we implemented the online phase. First a
 online chain is computed and checked with \code{inTable}. This is done
-$t$ times. If a key is found in \code{inTable}, the key is returned as
-the key used to encrypt the corresponding ciphertext. The online phase
+at most $t$ times. If a key is found in \code{inTable}, the returned
+key is the key used to encrypt the corresponding ciphertext. The online phase
 makes use of the same reduction function mentioned earlier.
 \newpage
 \begin{lstlisting}[frame=single, language=Pascal, mathescape,

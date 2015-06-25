@@ -21,19 +21,18 @@ and benefits of such.
 \cite{nohl} proposed an alternative to the original Rainbow attack
 method. Instead of using the original approach, they combined the DP
 attack and rainbow attack thus resulting in a more efficient
-TMTO-attack doing fewer operations with the bottleneck of the
-harddrive. 
+TMTO-attack doing fewer lookups from the harddrive.
 
 The idea proposes chain computations with one reduction function
 until a distinguished point is reached, then changing the reduction
 function for the next chain computation. This allows for a improvement
 in lookups as the generated table will only require a lookup when a
-distinguished point is reached in the online phase. 
+distinguished point is reached in the online phase as in the DP attack. 
 
 At the same time the benefits of a rainbow attack is still maintained,
 as no loops or merged chains and the low amount of tables is still
 present. This is due to the combined approach still using different
-multiple different reduction functions.
+multiple reduction functions.
 
 \section{Storage improvements}
 
@@ -49,7 +48,7 @@ lookup times required.
 Since the binary search algorithm essentially finds an element in a
 sorted array, we could use this algorithm for lookup in our
 online phase. We will indeed have to change some major points of our
-implementation. The biggest change will be a change to the sequential
+implementation. The biggest change will be to the sequential
 approach. First off, since the binary search algorithm requires a
 sorted list, we need to sort the table by end points. This also means
 we need to store both start points and end points.
@@ -61,7 +60,7 @@ the efficiency in the online phase. Secondly when going from the
 sequential approach, where we can save memory, we have to 
 increase the memory by a factor 2. This means that we either have to
 generate new parameters if \code{8TB} of data is still the limit or
-rethink our cost analysis for \code{16TB} of data.
+rethink our cost analysis with \code{16TB} of data in mind.
 
 A increase of factor 2 memory consumption can be seen as a small
 increase compared to the increase in performance when doing a
@@ -70,31 +69,8 @@ $O(log_2(N)$, which when our parameters taken into consideration will
 have the following maximal amount of comparisons
 \[m  = 2^{40} \Rightarrow Comparisons = log_2(2^{40}) = 40\]
 \subsection{Hash map}
-% The index table method can be seen as a special case of a more general and widely known data structure
-% called hash tables. To store m starting point and ending point pairs,
-% one first fixes a hash function that maps elements of N to log m-bit
-% strings. This function need not be a cryptographic hash function,
-% although the same term is used. Instead of sorting the data, each starting point
-% and ending point pair is recorded at the position in the storage
-% addressed by the hash value of the ending point. Collisions of
-% addresses are inevitable, but there are various ways to deal with this
-% problem. Table lookups to hash tables are performed by first hashing
-% the ending point to be searched for in the table and fetching the data
-% located at the address pointed to by the hash value. Since the address
-% holds log m bits of information, even if almost log m bits from each
-% ending point are removed before storage, we can reliably determine
-% whether or not a match has occurred. One advantage of the hash table
-% method, other than reducing storage and not requiring any sorting, is
-% that it provides constant time table lookups. In comparison, a lookup
-% to a sorted table requires time that is logarithmic in the table
-% size. If the hash function is set to return the first ${(log m) - \epsilon }$
-% bits of its input and buckets to hold approximately 2 $\epsilon$ table entries
-% are placed at the position pointed to by each hash value, then the
-% hash table technique reduces to the index table technique.
 
 This is discussed in \cite[Appendix D]{176}.
-
-TODO Skal vi explaine? Orker det næsten ikke...
 
 \section{GPU Parallel/CUDA}
 
@@ -107,8 +83,8 @@ huge amount of similar computations, and this is where GPU
 parallelization really shines. All operations in a table generation
 are relatively simple, but requires huge amounts of repetitive work. 
 
-We chose to have a deeper look into NVIDIAs
-CUDA\footnote{\url{http://www.nvidia.com/object/cuda_home_new.html}}
+We chose to have a deeper look into NVIDIAs graphics cards
+\footnote{\url{http://www.nvidia.com/object/cuda_home_new.html}}
 as CUDA programming can be done using modified C. 
 
 Looking at the high-end consumer graphics cards available at the
@@ -152,13 +128,13 @@ our implementation as hardware.
 
 The first improvement that can be done looking at a hardware
 implementation, is implementing a hardware solution for
-KASUMI. Looking at \cite{TODO CITE HARDWARE PAPER} TODO, and the
+KASUMI. Looking at \cite{hwkas}, and the
 performance levels they reached, it can be seen that a huge increase
 in performance can be gained by running the KASUMI algorithm on
 dedicated hardware. A much lower cycle count is needed for encryptions
 and can be done with a much lower clock frequency. Since most of the
-computations done in KASUMI is bit manipulation, this can also be done
-with the mostly standard logic gates. 
+computations done in KASUMI are bit manipulation, this can also be done
+with mostly standard logic gates. 
 
 Now thinking about the pre-computation of the table required to
 perform the attack, we could also see a hardware implementation being
@@ -170,7 +146,6 @@ execution of repetitive tasks. A hardware solution could also reduce
 the cost of generating the tables. A rig consisting of chips designed for one specific
 purpose will often be cheaper to buy than the costs of similar power
 from a general purpose processor.
-
 
 %%% Local Variables:
 %%% mode: latex

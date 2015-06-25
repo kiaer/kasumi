@@ -25,7 +25,7 @@ time. Since generated TMTO tables for a \code{64-bit} key size will
 always be larger than a given built machines amount of RAM, look-ups are
 done directly on a HDD or SSD. Estimates of how much time is required
 for each lookup in a table is hard to do, but will be further analyzed
-in TODO SOMEWHERE?
+later in the thesis.
 
 As for success probability of the
 the different attacks, we went with $P = 73\%$ as an acceptable
@@ -139,7 +139,6 @@ $2^{13.80}$ & $2^{24.68}$ & $2^{26.20}$ & $8.81$ & $2^{50.89}$ \\
 \end{table}
 This leaves us to select our parameters in this case we have optimized the Dmsc, we could discuss lowering it to lower the precomputational cost but we go with the parameters: $m=2^{13.40}$  $t=2^{24.88}$  $l=2^{26.40}$.
 This gives us a table that is \code{7.67 TB}.
-
 \section{Rainbow Table}
 \label{sec:rainbowparam}
 For the Rainbow Table TMTO attack, we again set \code{8TB} as the
@@ -153,8 +152,8 @@ $P$ the trade-off effiency is actually lowest when the table count is
 set to 1.
 
 In our calculations, we assume a sequential approach is done in the
-pre-computational phase. This allows us to remove half of the memory
-cost compared to storing both start point and end point.
+pre-computational phase. This allows us to remove half of the memory,
+as only the end point needs to be stored.
 
 As we have a chosen success rate $P$ set, \cite[Proposition
 29]{176} shows that from a given $P$ we can calculate a lower bound
@@ -206,33 +205,56 @@ and \ref{fig:time73} shows the graphical representation of the table.
 \end{figure}
 Looking at table \ref{tab:rainparam} and figures \ref{fig:param73}
 and \ref{fig:time73}\footnote{See Appendix \ref{sec:rainbowgraphs} for
-  full size graphs} we select the parameters for our attack. As the trade-off at 73% is most efficient with one table $l=1$ as for m and t we decided to use $m=2^{39.8}$ and $t=2^{25.08}$.
+  full size graphs} we select the parameters for our attack. As the
+trade-off at 73$\%$ is most efficient with one table $l=1$ as for m
+and t we decided to use $m=2^{39.8}$ and $t=2^{25.08}$. This leaves us
+with $M = 2^{45.79} = 7.65$TB and $T = 2^{48.98}$ 
 
 \newpage
 \section{Comparison and choice of table}
-Three different attacks have been described and explored, the above tables provide a range of possible parameters which hold true for our constraints.
+Three different attacks have been described and explored. The above
+tables and graphs provide a range of possible parameters which hold true for our
+constraints.
 
-Table \ref{tab:compare} shows our selected parameters for each attack the size of it the precomputational cost and the online cost. As can be seen in the table Hellman and DP trade-off are quite similar in their parameters, the biggest differnece as also stated in \ref{sec:DP} is the amount of lookups that are required.
-Where Hellman requires $m*l$ DP only has one lookup per table.
-Now to choose between Rainbow Attack and DP, as the rainbow attack uses bigger tables and less of them it is harder to compare m, t and l but we can compare the pre-computational cost and the online cost.
-The precomputational cost is approximately the same for all the attacks but the
-online cost for DP and Hellman is almost 5 times larger than the Rainbow Attack.
+Table \ref{tab:compare} shows our selected parameters for each attack,
+the memory cost, the pre-computational time and the online time. 
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|cccccc}
-\hline
-\rowcolor[HTML]{EFEFEF}
-Attack  & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}m} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}t} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}l} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}M in TB} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Precomp} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Online} \\ \hline
-Hellman & $2^{13.2}$                                     & $2^{25.98}$                                    & $2^{25.64}$                                    & 7.85                                                 & $2^{64.82}$                                          & $2^{51.24}$                                         \\ \cline{1-1}
-\rowcolor[HTML]{EFEFEF}
-DP      & $2^{13.4}$                                     & $2^{24.88}$                                    & $2^{26.4}$                                     & 7.67                                                 & $2^{64.68}$                                          & $2^{51.29}$                                         \\
-Rainbow & $2^{39.8}$                                     & $2^{25.08}$                                    & 1                                              & 7.65                                                 & $2^{64.88}$                                          & $2^{48.98}$                                         \\ \cline{1-1}
-\end{tabular}
-\caption{Comparison of parameter choices}
-\label{tab:compare}
+It can can be seen in the table Hellman and DP trade-off are quite similar in
+their parameters. The biggest difference as stated in \ref{sec:dptheory}
+is the amount of look ups that are required. Where Hellman
+requires $m \cdot l$, the DP attack only need to look through each
+table once the distinguished point is reached. When attacks get
+larger, and more tables is required the Hellman attack will therefore
+scale badly, and the DP attack will be to prefer.
+
+Now to choose between rainbow attack and DP attack. As the rainbow attack
+uses less but much larger tables, it is harder to compare $m$, $m$ and
+$l$. However we can still compare the pre-computational and online time. The
+pre-computational cost is approximately the same for all the attacks,
+but the online time for the DP attack (and Hellman) is almost 5 times larger than
+the rainbow attack.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|cccccc}
+    \hline
+    \rowcolor[HTML]{EFEFEF}
+    Attack  & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}m} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}t} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}l} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}M in TB} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Precomp} & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}Online} \\ \hline
+    Hellman & $2^{13.2}$                                     & $2^{25.98}$                                    & $2^{25.64}$                                    & 7.85                                                 & $2^{64.82}$                                          & $2^{51.24}$                                         \\ \cline{1-1}
+    \rowcolor[HTML]{EFEFEF}
+    DP      & $2^{13.4}$                                     & $2^{24.88}$                                    & $2^{26.4}$                                     & 7.67                                                 & $2^{64.68}$                                          & $2^{51.29}$                                         \\
+    Rainbow & $2^{39.8}$                                     & $2^{25.08}$                                    & 1                                              & 7.65                                                 & $2^{64.88}$                                          & $2^{48.98}$                                         \\ \cline{1-1}
+  \end{tabular}
+  \caption{Comparison of parameter choices}
+  \label{tab:compare}
 \end{table}
-The compariso
+
+From these tables we can pretty easily see that theoretically the rainbow attack
+will be preferable. One thing the tables doesn't take into
+account, is the amount of look ups needed in the online phase of the
+rainbow attack. We know that $t$ look ups is required, but it is hard
+to estimate exactly how much time is required on each look up. The
+look ups and their effect on the attack will be tested in chapter \ref{ch:anal}.
+
 
 %%% Local Variables:
 %%% mode: latex
